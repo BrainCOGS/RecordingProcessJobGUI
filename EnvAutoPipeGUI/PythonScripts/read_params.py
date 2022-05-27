@@ -68,6 +68,7 @@ num_preparams_steps = 0
 for idx, preparam_modality_list in enumerate(preparams_steps):
     for dict in preparam_modality_list:
         dict['recording_modality'] = modalities[idx]
+        dict['steps_description'] = 'Preparam_list'+str(num_preparams_steps)
         if 'precluster_param_steps_id' in dict:
             dict['preprocessing_param_steps_id'] = dict.pop('precluster_param_steps_id')
     
