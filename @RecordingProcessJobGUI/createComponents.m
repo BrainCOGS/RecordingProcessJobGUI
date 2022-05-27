@@ -224,12 +224,12 @@ app.SelectParamsListLabel.Layout.Column = [1 3];
 app.SelectParamsListLabel.Text = '2. Select Processing Params';
 
 % Create SamePreParamListRecordingCheckBox
-app.SameParamListRecordingCheckBox = uicheckbox(app.GridLayout3);
-app.SameParamListRecordingCheckBox.Text = 'Use same processing params for all fragments (probe | fov) ? ';
-app.SameParamListRecordingCheckBox.Layout.Row = 6;
-app.SameParamListRecordingCheckBox.Layout.Column = [1 3];
-app.SameParamListRecordingCheckBox.Value = true;
-app.SameParamListRecordingCheckBox.Enable = 'on';
+app.SameParamsRecordingCheckBox = uicheckbox(app.GridLayout3);
+app.SameParamsRecordingCheckBox.Text = 'Use same processing params for all fragments (probe | fov) ? ';
+app.SameParamsRecordingCheckBox.Layout.Row = 6;
+app.SameParamsRecordingCheckBox.Layout.Column = [1 3];
+app.SameParamsRecordingCheckBox.Value = true;
+app.SameParamsRecordingCheckBox.Enable = 'on';
 
 % Create PreprocessingParamsLabel
 app.ParamListLabel = uilabel(app.GridLayout3);

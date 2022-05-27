@@ -27,9 +27,13 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         Label2                          matlab.ui.control.Label
         SelectProcessingParametersLabel  matlab.ui.control.Label
         SamePreParamListRecordingCheckBox matlab.ui.control.CheckBox
+        SameParamsRecordingCheckBox     matlab.ui.control.CheckBox
         ParamListLabel                  matlab.ui.control.Label
+        PreParamListLabel               matlab.ui.control.Label
         ListBoxFragmentRecording        matlab.ui.control.ListBox
+        PreprocessingParamsStepsList    matlab.ui.control.ListBox
         SelectPreParamsListLabel        matlab.ui.control.Label
+        SelectParamsListLabel           matlab.ui.control.Label
         PreprocessingParamsLabel        matlab.ui.control.Label
         PreprocessingParamsDropDown     matlab.ui.control.DropDown
         ProcessingParamsDropDownLabel   matlab.ui.control.Label
