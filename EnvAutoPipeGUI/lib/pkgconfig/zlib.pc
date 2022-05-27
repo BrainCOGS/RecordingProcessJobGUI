@@ -1,0 +1,13 @@
+prefix=/Users/alvaros/Documents/MATLAB/BrainCogsProjects/RecordingProcessJobGUI/EnvAutoPipeGUI
+exec_prefix=/Users/alvaros/Documents/MATLAB/BrainCogsProjects/RecordingProcessJobGUI/EnvAutoPipeGUI
+libdir=/Users/alvaros/Documents/MATLAB/BrainCogsProjects/RecordingProcessJobGUI/EnvAutoPipeGUI/lib
+sharedlibdir=/Users/alvaros/Documents/MATLAB/BrainCogsProjects/RecordingProcessJobGUI/EnvAutoPipeGUI/lib
+includedir=/Users/alvaros/Documents/MATLAB/BrainCogsProjects/RecordingProcessJobGUI/EnvAutoPipeGUI/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.12
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}

@@ -1,0 +1,11 @@
+{
+ "cat_gt": {
+    "use_cat_gt": 1,
+    "cat_gt_params": {
+      "apfilter": ["biquad",2,300,0],
+      "gfix": [0.40,0.10,0.02],
+      "extras": ["prb_fld", "t_miss_ok", "ap", "gblcar", "out_prb_fld"]
+   }
+ },
+"process_cluster": "tiger",
+"clustering_method": "Kilosort2"}

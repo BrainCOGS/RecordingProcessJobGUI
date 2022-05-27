@@ -1,0 +1,6 @@
+{
+	"System" : "NPX",
+	"BehaviorRig" : "Manuel-NPX",
+	"RecordingModality" : "electrophysiology",
+	"RecordingRootDirectory" : "/Users/alvaros/Documents/MATLAB/BrainCogsProjects/CalciumImagingData"
+}

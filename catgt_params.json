@@ -1,0 +1,8 @@
+{'cat_gt': {'use_cat_gt': 1,
+  'cat_gt_params': {'apfilter': ['biquad', 2, 300, 0],
+   'gfix': [0.4, 0.1, 0.02],
+   'extras': ['prb_fld', 't_miss_ok', 'ap', 'gblcar', 'out_prb_fld']}},
+ 'process_cluster': 'tiger',
+ 'process_repository': 'BrainCogsEphysSorters',
+ 'process_script': 'main_script.py',
+ 'clustering_method': 'Kilosort2'}

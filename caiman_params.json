@@ -1,0 +1,23 @@
+{
+"fr": 30,                             
+"decay_time": 0.4,
+"strides": [48, 48],
+"overlaps": [24, 24], 
+"max_shifts": [6,6], 
+"max_deviation_rigid": 3, 
+"pw_rigid": false, 
+"p": 1, 
+"gnb": 2,
+"merge_thr": 0.85,
+"rf": 15, 
+"stride_cnmf": 6, 
+"K": 4, 
+"gSig": [4, 4], 
+"method_init": "greedy_roi",
+"ssub": 1,
+"tsub": 1,
+"min_SNR": 2.0, 
+"rval_thr": 0.85,
+"cnn_thr": 0.99, 
+"cnn_lowest": 0.1
+}
