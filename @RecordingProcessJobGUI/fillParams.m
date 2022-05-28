@@ -6,7 +6,7 @@ if nargin < 2
 end
 
 %%%%%%%%%%%%%%%%%Fetch parameters from python script (not readable in MATLAB)
-out = system([RecordingProcessJobGUI.py_env ' ' RecordingProcessJobGUI.py_read_params]);
+out = system([app.py_env ' ' RecordingProcessJobGUI.py_read_params]);
 
 if out == 0
     

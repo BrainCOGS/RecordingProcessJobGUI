@@ -128,6 +128,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         PreProcessParamList
         ProcessParams
         BehaviorSessions
+        
+        py_env
               
     end
     
@@ -156,7 +158,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         
         gui_path = fileparts(mfilename('fullpath'));
-        py_env = fullfile(fileparts(RecordingProcessJobGUI.gui_path), 'EnvAutoPipeGUI', 'bin', 'python')
+        py_env_name    = 'EnvAutoPipeGUI';
         py_scripts_dir = fullfile(fileparts(RecordingProcessJobGUI.gui_path), 'EnvAutoPipeGUI', 'PythonScripts')
         py_read_params = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'read_params.py')
         preparams_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams.mat')
@@ -188,6 +190,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         configureSystem(app, event);
         startConfiguration(app,event);
+        getPythonEnv(app);
         
         createRecordingButton(app, event);
         createRecording(app, event);
@@ -197,6 +200,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         controlEnables(app, structEnables);
         updateBusyLabel(app, status);
+        
+        
         
         %setStyleBadSessions(app, bad_sessions);
         
@@ -208,6 +213,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         % Construct app
         function app = RecordingProcessJobGUI
             
+            getPythonEnv(app);
+
             % Create UIFigure and components
             createComponents(app)
             

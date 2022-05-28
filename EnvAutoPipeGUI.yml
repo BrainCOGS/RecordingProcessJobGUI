@@ -3,3 +3,8 @@ channels:
   - defaults
 dependencies:
   - python=3.9
+  - pip:
+    - scipy
+    - pandas
+    - datajoint
+prefix: C:\Experiments\RecordingProcessJobGUI\EnvAutoPipeGUI
