@@ -68,13 +68,14 @@ for idx, preparam_modality_list in enumerate(preparams_steps):
     for dict in preparam_modality_list:
         dict['param_set_hash'] = str(dict['param_set_hash'])
         dict['recording_modality'] = modalities[idx]
-        dict['steps_description'] = 'Preparam_list'+str(num_preparams_steps)
         if 'precluster_param_steps_id' in dict:
             dict['preprocessing_param_steps_id'] = dict.pop('precluster_param_steps_id')
+        dict['steps_description'] = 'Preparam_list'+str(dict['preprocessing_param_steps_id'])
     
         preparams_steps_dict_dict['param_'+str(num_preparams_steps)] = dict
         num_preparams_steps +=1
 
+print(preparams_steps_dict_dict)
 
 dj.conn().close()
 
