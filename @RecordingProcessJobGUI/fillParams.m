@@ -24,10 +24,15 @@ if app.py_enabled
     end
 else
     [app.PreProcessParams, app.ProcessParams, app.PreProcessParamList] = app.getParamsFromMatlab(); 
-    
-    
+      
 end
+
+app.PreProcessParamList = sortrows(app.PreProcessParamList,{'recording_modality','preprocessing_param_steps_id', 'step_number'});
     
+app.PreProcessParams = convertTable2Categorical(app.PreProcessParams);
+app.ProcessParams = convertTable2Categorical(app.ProcessParams);
+app.PreProcessParamList = convertTable2Categorical(app.PreProcessParamList);
+
 %app.PreprocessingParamsDropDown.Items = {app.PreProcessParams.paramset_desc};
 app.PreprocessingParamsDropDown_2.Items = app.PreProcessParams.paramset_desc;
 
