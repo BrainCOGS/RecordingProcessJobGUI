@@ -5,6 +5,7 @@ import os
 from scipy.io import savemat
 
 this_dir = os.path.dirname(__file__)
+print(this_dir)
 os.chdir(this_dir)
 
 import datajoint as dj
@@ -16,7 +17,7 @@ imaging_element =dj.create_virtual_module('u19_pipeline_imaging_element','u19_pi
 modalities             = ['electrophysiology', 'imaging']
 params_tables          = [ephys_element.ClusteringParamSet, imaging_element.ProcessingParamSet]
 preparams_tables       = [ephys_element.PreClusterParamSet]
-preparams_steps_tables = [(ephys_element.PreClusterParamSteps * ephys_element.PreClusterParamSteps.Step * ephys_element.PreClusterParamSet)]
+preparams_steps_tables = [(ephys_element.PreClusterParamSteps * ephys_element.PreClusterParamSteps.Step)]
 
 ###################################Fetch all params from all modalities
 params_dict_list = []
@@ -61,12 +62,12 @@ preparams_steps = []
 for table in preparams_steps_tables:
     preparams_steps.append(table.fetch(as_dict=True))
 
+
 #Append all preparams in the same dictionary
 preparams_steps_dict_dict = {}
 num_preparams_steps = 0
 for idx, preparam_modality_list in enumerate(preparams_steps):
     for dict in preparam_modality_list:
-        dict['param_set_hash'] = str(dict['param_set_hash'])
         dict['recording_modality'] = modalities[idx]
         dict['steps_description'] = 'Preparam_list'+str(num_preparams_steps)
         if 'precluster_param_steps_id' in dict:

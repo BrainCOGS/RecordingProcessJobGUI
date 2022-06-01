@@ -31,6 +31,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ParamListLabel                  matlab.ui.control.Label
         PreParamListLabel               matlab.ui.control.Label
         ListBoxFragmentRecording        matlab.ui.control.ListBox
+        ListBoxFragmentRecording2       matlab.ui.control.ListBox
         PreprocessingParamsStepsList    matlab.ui.control.ListBox
         SelectPreParamsListLabel        matlab.ui.control.Label
         SelectParamsListLabel           matlab.ui.control.Label
@@ -82,6 +83,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         TextArea_2                      matlab.ui.control.TextArea
         AcceptEditionCreationButton     matlab.ui.control.Button
         Label3                          matlab.ui.control.Label
+        Label4                          matlab.ui.control.Label
         RecordingUserDropDown_2Label    matlab.ui.control.Label
         RecordingUserDropDown_2         matlab.ui.control.DropDown
         SystemSetUpTab                  matlab.ui.container.Tab
@@ -130,6 +132,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         BehaviorSessions
         
         py_env
+        py_enabled
               
     end
     
@@ -159,7 +162,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         gui_path = fileparts(mfilename('fullpath'));
         py_env_name    = 'EnvAutoPipeGUI';
-        py_scripts_dir = fullfile(fileparts(RecordingProcessJobGUI.gui_path), 'EnvAutoPipeGUI', 'PythonScripts')
+        py_scripts_dir = fullfile(fileparts(RecordingProcessJobGUI.gui_path), 'PythonScripts')
         py_read_params = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'read_params.py')
         preparams_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams.mat')
         preparams_list_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams_list.mat')
@@ -179,7 +182,10 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         checkBoxSessionRecording(app, event);
         selectRecordingRootDirectory(app, event);
         ParamsSelected(app, event);
-        preparams_final = loadParamsFile(app, param_matfile)
+        ParamListSelected(app, event);
+        
+        preparams_final = loadParamsFile(app, param_matfile);
+        [PreProcessParams, ProcessParams, PreProcessParamList] = getParamsFromMatlab(app); 
         
         fillRecordingUser(app);
         fillRecordingSubject(app, key);

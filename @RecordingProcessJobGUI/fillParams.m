@@ -6,24 +6,28 @@ if nargin < 2
 end
 
 %%%%%%%%%%%%%%%%%Fetch parameters from python script (not readable in MATLAB)
-out = system([app.py_env ' ' RecordingProcessJobGUI.py_read_params]);
+if app.py_enabled
+    out = system([app.py_env ' ' RecordingProcessJobGUI.py_read_params]);
+    if out == 0
 
-if out == 0
-    
-    %%%%%%%%%%%%%%%%%%%%Fetch and integrate params matfiles
-    preparams_final = app.loadParamsFile(RecordingProcessJobGUI.preparams_mat);
-    params_list = app.loadParamsFile(RecordingProcessJobGUI.preparams_list_mat);
-    params_final = app.loadParamsFile(RecordingProcessJobGUI.params_mat);
+        %%%%%%%%%%%%%%%%%%%%Fetch and integrate params matfiles
+        preparams_final = app.loadParamsFile(RecordingProcessJobGUI.preparams_mat);
+        params_list = app.loadParamsFile(RecordingProcessJobGUI.preparams_list_mat);
+        params_final = app.loadParamsFile(RecordingProcessJobGUI.params_mat);
+        
+        app.PreProcessParams = struct2table(preparams_final, 'AsArray', true);
+        app.ProcessParams = struct2table(params_final, 'AsArray', true);
+        app.PreProcessParamList = struct2table(params_list, 'AsArray', true);
 
+    else
+        error('Could not read parameters')
+    end
 else
-    error('Could not read parameters')
+    [app.PreProcessParams, app.ProcessParams, app.PreProcessParamList] = app.getParamsFromMatlab(); 
+    
+    
 end
-
-app.PreProcessParams = struct2table(preparams_final, 'AsArray', true);
-app.ProcessParams = struct2table(params_final, 'AsArray', true);
-app.PreProcessParamList = struct2table(params_list, 'AsArray', true);
-
-
+    
 %app.PreprocessingParamsDropDown.Items = {app.PreProcessParams.paramset_desc};
 app.PreprocessingParamsDropDown_2.Items = app.PreProcessParams.paramset_desc;
 

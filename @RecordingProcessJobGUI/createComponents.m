@@ -165,22 +165,22 @@ app.SelectRecordingParametersTab.Title = 'Select Parameters';
 
 % Create GridLayout3
 app.GridLayout3 = uigridlayout(app.SelectRecordingParametersTab);
-app.GridLayout3.ColumnWidth = {'1x', '1x', '1x', '1x', '1x', '1x', '1x'};
-app.GridLayout3.RowHeight = {'1x', '1x', 2, '1x', '1x', '1x', 2, '1x', '1x', '1x', '1x', '1x', '1x', '1x'};
+app.GridLayout3.ColumnWidth = {'1x', '2x', '2x', '1x', '1x', '1x', '1x'};
+app.GridLayout3.RowHeight = {'1x', '1x', '1x', '1x', '1x', 2, '1x', '1x', '1x', '1x', '1x', '1x', '1x'};
 
 % Create Select Pre-Params List
 app.SelectPreParamsListLabel = uilabel(app.GridLayout3);
 app.SelectPreParamsListLabel.FontSize = 16;
 app.SelectPreParamsListLabel.FontWeight = 'bold';
 app.SelectPreParamsListLabel.Layout.Row = 1;
-app.SelectPreParamsListLabel.Layout.Column = [1 3];
+app.SelectPreParamsListLabel.Layout.Column = [1 2];
 app.SelectPreParamsListLabel.Text = '1. Select Pre-Params List';
 
 % Create SamePreParamListRecordingCheckBox
 app.SamePreParamListRecordingCheckBox = uicheckbox(app.GridLayout3);
 app.SamePreParamListRecordingCheckBox.Text = 'Use same pre-params list for all fragments (probe | fov) ? ';
 app.SamePreParamListRecordingCheckBox.Layout.Row = 2;
-app.SamePreParamListRecordingCheckBox.Layout.Column = [1 3];
+app.SamePreParamListRecordingCheckBox.Layout.Column = [1 2];
 app.SamePreParamListRecordingCheckBox.Value = true;
 app.SamePreParamListRecordingCheckBox.Enable = 'on';
 
@@ -188,45 +188,61 @@ app.SamePreParamListRecordingCheckBox.Enable = 'on';
 % Create ListBox Fragments
 app.ListBoxFragmentRecording = uilistbox(app.GridLayout3);
 app.ListBoxFragmentRecording.Layout.Row = [1 2];
-app.ListBoxFragmentRecording.Layout.Column = [4];
+app.ListBoxFragmentRecording.Layout.Column = [3];
+app.ListBoxFragmentRecording.Enable = 'off';
 app.ListBoxFragmentRecording.Items = {'(Probe|Fov)_0', '(Probe|Fov)_1', '(Probe|Fov)_2', '(Probe|Fov)_3', '(Probe|Fov)_4'};
 
 % Create PreprocessingParamsLabel
 app.PreParamListLabel = uilabel(app.GridLayout3);
 app.PreParamListLabel.HorizontalAlignment = 'right';
-app.PreParamListLabel.Layout.Row = 3;
+app.PreParamListLabel.Layout.Row = [3];
 app.PreParamListLabel.Layout.Column = 1;
 app.PreParamListLabel.Text = 'Preprocessing Params Lists';
 
 % Create PreprocessingParamsDropDown
 app.PreprocessingParamsDropDown = uidropdown(app.GridLayout3);
-app.PreprocessingParamsDropDown.Layout.Row = 3;
-app.PreprocessingParamsDropDown.Layout.Column = [2 3];
+app.PreprocessingParamsDropDown.Layout.Row = [3];
+app.PreprocessingParamsDropDown.Layout.Column = [2];
 %app.PreprocessingParamsDropDown.Items = {};
-%app.PreprocessingParamsDropDown.ValueChangedFcn = createCallbackFcn(app, @ParamsSelected, true);
+app.PreprocessingParamsDropDown.ValueChangedFcn = createCallbackFcn(app, @ParamListSelected, true);
 
 % Create ListBox Fragments
 app.PreprocessingParamsStepsList = uilistbox(app.GridLayout3);
 app.PreprocessingParamsStepsList.Layout.Row = [3 4];
-app.PreprocessingParamsStepsList.Layout.Column = [4 5];
+app.PreprocessingParamsStepsList.Layout.Column = [3 4];
+
+% Create Label2
+app.Label4 = uilabel(app.GridLayout3);
+app.Label4.BackgroundColor = [0 0 0];
+app.Label4.Layout.Row = 6;
+app.Label4.Layout.Column = [1 4];
+app.Label4.Text = 'Label2';
 
 % Create ParamsTextArea
 app.ParamsTextArea = uitextarea(app.GridLayout3);
-app.ParamsTextArea.Layout.Row = [2 14];
-app.ParamsTextArea.Layout.Column = [6 7];
+app.ParamsTextArea.Layout.Row = [1 14];
+app.ParamsTextArea.Layout.Column = [5 7];
 
 % Create Select Pre-Params List
 app.SelectParamsListLabel = uilabel(app.GridLayout3);
 app.SelectParamsListLabel.FontSize = 16;
 app.SelectParamsListLabel.FontWeight = 'bold';
-app.SelectParamsListLabel.Layout.Row = 5;
+app.SelectParamsListLabel.Layout.Row = 7;
 app.SelectParamsListLabel.Layout.Column = [1 3];
 app.SelectParamsListLabel.Text = '2. Select Processing Params';
+
+% Create ListBox Fragments
+app.ListBoxFragmentRecording2 = uilistbox(app.GridLayout3);
+app.ListBoxFragmentRecording2.Layout.Row = [8];
+app.ListBoxFragmentRecording2.Layout.Column = [3];
+app.ListBoxFragmentRecording2.Enable = 'off';
+app.ListBoxFragmentRecording2.Items = {'(Probe|Fov)_0', '(Probe|Fov)_1', '(Probe|Fov)_2', '(Probe|Fov)_3', '(Probe|Fov)_4'};
+
 
 % Create SamePreParamListRecordingCheckBox
 app.SameParamsRecordingCheckBox = uicheckbox(app.GridLayout3);
 app.SameParamsRecordingCheckBox.Text = 'Use same processing params for all fragments (probe | fov) ? ';
-app.SameParamsRecordingCheckBox.Layout.Row = 6;
+app.SameParamsRecordingCheckBox.Layout.Row = 8;
 app.SameParamsRecordingCheckBox.Layout.Column = [1 3];
 app.SameParamsRecordingCheckBox.Value = true;
 app.SameParamsRecordingCheckBox.Enable = 'on';
