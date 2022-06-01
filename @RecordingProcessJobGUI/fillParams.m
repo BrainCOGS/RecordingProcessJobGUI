@@ -34,7 +34,7 @@ app.ProcessParams = convertTable2Categorical(app.ProcessParams);
 app.PreProcessParamList = convertTable2Categorical(app.PreProcessParamList);
 
 %app.PreprocessingParamsDropDown.Items = {app.PreProcessParams.paramset_desc};
-app.PreprocessingParamsDropDown_2.Items = app.PreProcessParams.paramset_desc;
+app.PreprocessingParamsDropDown_2.Items = unique(app.PreProcessParams.paramset_desc);
 
 %app.ProcessingParamsDropDown.Items = {app.ProcessParams.paramset_desc};
 app.ProcessingParamsDropDown_2.Items = app.ProcessParams.paramset_desc;

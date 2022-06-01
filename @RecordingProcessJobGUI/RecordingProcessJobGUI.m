@@ -183,6 +183,10 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         selectRecordingRootDirectory(app, event);
         ParamsSelected(app, event);
         ParamListSelected(app, event);
+        PreparamStepSelected(app, event);
+        
+        SamePreParamCheckClicked(app, event);
+        SameParamCheckClicked(app, event);
         
         preparams_final = loadParamsFile(app, param_matfile);
         [PreProcessParams, ProcessParams, PreProcessParamList] = getParamsFromMatlab(app); 

@@ -77,8 +77,6 @@ for idx, preparam_modality_list in enumerate(preparams_steps):
         preparams_steps_dict_dict['param_'+str(num_preparams_steps)] = dict
         num_preparams_steps +=1
 
-print(preparams_steps_dict_dict)
-
 dj.conn().close()
 
 

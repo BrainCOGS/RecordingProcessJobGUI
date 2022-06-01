@@ -183,6 +183,7 @@ app.SamePreParamListRecordingCheckBox.Layout.Row = 2;
 app.SamePreParamListRecordingCheckBox.Layout.Column = [1 2];
 app.SamePreParamListRecordingCheckBox.Value = true;
 app.SamePreParamListRecordingCheckBox.Enable = 'on';
+app.SamePreParamListRecordingCheckBox.ValueChangedFcn = createCallbackFcn(app, @SamePreParamCheckClicked, true);
 
 
 % Create ListBox Fragments
@@ -210,6 +211,7 @@ app.PreprocessingParamsDropDown.ValueChangedFcn = createCallbackFcn(app, @ParamL
 app.PreprocessingParamsStepsList = uilistbox(app.GridLayout3);
 app.PreprocessingParamsStepsList.Layout.Row = [3 4];
 app.PreprocessingParamsStepsList.Layout.Column = [3 4];
+app.PreprocessingParamsStepsList.ValueChangedFcn = createCallbackFcn(app, @PreparamStepSelected, true);
 
 % Create Label2
 app.Label4 = uilabel(app.GridLayout3);
@@ -233,7 +235,7 @@ app.SelectParamsListLabel.Text = '2. Select Processing Params';
 
 % Create ListBox Fragments
 app.ListBoxFragmentRecording2 = uilistbox(app.GridLayout3);
-app.ListBoxFragmentRecording2.Layout.Row = [8];
+app.ListBoxFragmentRecording2.Layout.Row = [8 9];
 app.ListBoxFragmentRecording2.Layout.Column = [3];
 app.ListBoxFragmentRecording2.Enable = 'off';
 app.ListBoxFragmentRecording2.Items = {'(Probe|Fov)_0', '(Probe|Fov)_1', '(Probe|Fov)_2', '(Probe|Fov)_3', '(Probe|Fov)_4'};
@@ -246,27 +248,23 @@ app.SameParamsRecordingCheckBox.Layout.Row = 8;
 app.SameParamsRecordingCheckBox.Layout.Column = [1 3];
 app.SameParamsRecordingCheckBox.Value = true;
 app.SameParamsRecordingCheckBox.Enable = 'on';
+app.SamePreParamListRecordingCheckBox.ValueChangedFcn = createCallbackFcn(app, @SameParamCheckClicked, true);
+
 
 % Create PreprocessingParamsLabel
 app.ParamListLabel = uilabel(app.GridLayout3);
 app.ParamListLabel.HorizontalAlignment = 'right';
-app.ParamListLabel.Layout.Row = 3;
+app.ParamListLabel.Layout.Row = 10;
 app.ParamListLabel.Layout.Column = 1;
-app.ParamListLabel.Text = 'Preprocessing Params Lists';
+app.ParamListLabel.Text = 'Processing Params';
 
-% Create ProcessingParamsDropDownLabel
-%app.ProcessingParamsDropDownLabel = uilabel(app.GridLayout2);
-%app.ProcessingParamsDropDownLabel.HorizontalAlignment = 'right';
-%app.ProcessingParamsDropDownLabel.Layout.Row = 10;
-%app.ProcessingParamsDropDownLabel.Layout.Column = 1;
-%app.ProcessingParamsDropDownLabel.Text = 'Processing Params';
 
 % Create ProcessingParamsDropDown
-%app.ProcessingParamsDropDown = uidropdown(app.GridLayout2);
-%app.ProcessingParamsDropDown.Layout.Row = 10;
-%app.ProcessingParamsDropDown.Layout.Column = [2 3];
-%app.ProcessingParamsDropDown.Items = {};
-%app.ProcessingParamsDropDown.ValueChangedFcn = createCallbackFcn(app, @ParamsSelected, true);
+app.ProcessingParamsDropDown = uidropdown(app.GridLayout3);
+app.ProcessingParamsDropDown.Layout.Row = 10;
+app.ProcessingParamsDropDown.Layout.Column = 2;
+app.ProcessingParamsDropDown.Items = {};
+%app.ProcessingParamsDropDown.ValueChangedFcn = createCallbackFcn(app, @ParamSetSelected, true);
 
 
 
