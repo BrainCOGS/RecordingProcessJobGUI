@@ -31,7 +31,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ParamListLabel                  matlab.ui.control.Label
         PreParamListLabel               matlab.ui.control.Label
         ListBoxFragmentRecording        matlab.ui.control.ListBox
+        ListBoxFragmentRecordingPreParams matlab.ui.control.ListBox
         ListBoxFragmentRecording2       matlab.ui.control.ListBox
+        ListBoxFragmentRecording2Params matlab.ui.control.ListBox
         PreprocessingParamsStepsList    matlab.ui.control.ListBox
         SelectPreParamsListLabel        matlab.ui.control.Label
         SelectParamsListLabel           matlab.ui.control.Label
@@ -133,6 +135,10 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ProcessParams
         BehaviorSessions
         
+        %Param Selection table (when different for each probe)
+        PreParamSelectionTable
+        ParamSelectionTable
+        
         py_env
         py_enabled
               
@@ -187,6 +193,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ParamListSelected(app, event);
         PreparamStepSelected(app, event);
         
+        RegisterPreparamFragmentClicked(app, event);
+        RegisterParamFragmentClicked(app, event);
+        
         SamePreParamCheckClicked(app, event);
         SameParamCheckClicked(app, event);
         
@@ -224,6 +233,10 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         % Construct app
         function app = RecordingProcessJobGUI
+            
+            
+            app.PreParamSelectionTable  = cell2table(cell(0,2), 'VariableNames', {'fragment_number', 'preparam_list_id'});
+            app.ParamSelectionTable     = cell2table(cell(0,2), 'VariableNames', {'fragment_number', 'paramset_idx'});
             
             getPythonEnv(app);
 
