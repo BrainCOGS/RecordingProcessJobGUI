@@ -1,5 +1,5 @@
 
-function PreparamsStepSelected(app, event)
+function PreparamStepSelected(app, event)
 
 if app.py_enabled
     selected_list = app.PreprocessingParamsStepsList.Value;

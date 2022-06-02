@@ -40,6 +40,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ProcessingParamsDropDownLabel   matlab.ui.control.Label
         ProcessingParamsDropDown        matlab.ui.control.DropDown
         CreateProcessingJobButton       matlab.ui.control.Button
+        RegisterPreparamsFragment       matlab.ui.control.Button
+        RegisterParamsFragment          matlab.ui.control.Button
         ParamsTextArea                  matlab.ui.control.TextArea
         RecordingDateDatePickerLabel    matlab.ui.control.Label
         RecordingDateDatePicker         matlab.ui.control.DatePicker

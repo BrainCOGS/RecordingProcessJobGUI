@@ -248,7 +248,15 @@ app.SameParamsRecordingCheckBox.Layout.Row = 8;
 app.SameParamsRecordingCheckBox.Layout.Column = [1 3];
 app.SameParamsRecordingCheckBox.Value = true;
 app.SameParamsRecordingCheckBox.Enable = 'on';
-app.SamePreParamListRecordingCheckBox.ValueChangedFcn = createCallbackFcn(app, @SameParamCheckClicked, true);
+app.SameParamsRecordingCheckBox.ValueChangedFcn = createCallbackFcn(app, @SameParamCheckClicked, true);
+
+% Create SamePreParamListRecordingCheckBox
+app.RegisterPreparamsFragment = uibutton(app.GridLayout3);
+app.RegisterPreparamsFragment.Text = 'Register (probe|fov) 0';
+app.RegisterPreparamsFragment.Layout.Row = 9;
+app.RegisterPreparamsFragment.Layout.Column = [1 3];
+app.RegisterPreparamsFragment.Enable = 'off';
+%app.RegisterPreparamsFragment.ButtonPushedFcn = createCallbackFcn(app, @SameParamCheckClicked, true);
 
 
 % Create PreprocessingParamsLabel
@@ -262,10 +270,17 @@ app.ParamListLabel.Text = 'Processing Params';
 % Create ProcessingParamsDropDown
 app.ProcessingParamsDropDown = uidropdown(app.GridLayout3);
 app.ProcessingParamsDropDown.Layout.Row = 10;
-app.ProcessingParamsDropDown.Layout.Column = 2;
+app.ProcessingParamsDropDown.Layout.Column = [2 4];
 app.ProcessingParamsDropDown.Items = {};
 %app.ProcessingParamsDropDown.ValueChangedFcn = createCallbackFcn(app, @ParamSetSelected, true);
 
+% Create SamePreParamListRecordingCheckBox
+app.RegisterParamsFragment = uibutton(app.GridLayout3);
+app.RegisterParamsFragment.Text = 'Register (probe|fov) 0';
+app.RegisterParamsFragment.Layout.Row = 11;
+app.RegisterParamsFragment.Layout.Column = [2 4];
+app.RegisterParamsFragment.Enable = 'off';
+%app.RegisterPreparamsFragment.ButtonPushedFcn = createCallbackFcn(app, @SameParamCheckClicked, true);
 
 
 
