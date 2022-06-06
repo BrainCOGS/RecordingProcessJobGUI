@@ -42,6 +42,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ProcessingParamsDropDownLabel   matlab.ui.control.Label
         ProcessingParamsDropDown        matlab.ui.control.DropDown
         CreateProcessingJobButton       matlab.ui.control.Button
+        CreateProcessingJobButton2      matlab.ui.control.Button
         RegisterPreparamsFragment       matlab.ui.control.Button
         RegisterParamsFragment          matlab.ui.control.Button
         ParamsTextArea                  matlab.ui.control.TextArea
@@ -190,14 +191,18 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         checkBoxSessionRecording(app, event);
         selectRecordingRootDirectory(app, event);
         ParamsSelected(app, event);
+        ParamSetSelected(app, event);
         ParamListSelected(app, event);
         PreparamStepSelected(app, event);
         
         RegisterPreparamFragmentClicked(app, event);
-        RegisterParamFragmentClicked(app, event);
+        RegisterParamsFragmentClicked(app, event);
         
         SamePreParamCheckClicked(app, event);
         SameParamCheckClicked(app, event);
+        
+        SelectedListBoxFragmentRec(app, event)
+        SelectedListBoxFragmentRec2(app, event);
         
         preparams_final = loadParamsFile(app, param_matfile);
         [PreProcessParams, ProcessParams, PreProcessParamList] = getParamsFromMatlab(app); 

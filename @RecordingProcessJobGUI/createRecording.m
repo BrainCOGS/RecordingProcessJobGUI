@@ -4,6 +4,14 @@ function createRecording(app, event)
 % Get all info to insert recording.Recording table
 % ALS , modify when no behavior session is there %%%%%%%%%%%%%%%%%%%%%%%
 
+% Check if read default parameters 
+if app.DefaultParametersCheckBox.Value
+    
+    
+end
+
+
+
 %Filter behavior session
 behavior_session = app.BehaviorSessions( ...
     matches(app.BehaviorSessions.session_name, app.BehaviorSessionDropDown.Value), :);
