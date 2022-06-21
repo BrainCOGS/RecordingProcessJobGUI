@@ -1,4 +1,4 @@
-function data = fetchDataDJTable(table, key, fields, type, extra_query)
+function data = fetchDataDJTable(table, key, fields, type, extra_query, no_blobs)
 
 if nargin < 2
     key = [];
@@ -14,6 +14,24 @@ if nargin < 5
     extra_query = {};
 end
 
+if nargin < 6
+   no_blobs = false; 
+end
+
+%Remove blob fields from fetch
+if no_blobs
+    blob_fields = table.header.blobNames;
+    if fields{1} == '*'
+        fields = {table.header.attributes.name};
+    end
+    for i=1:length(blob_fields)
+        idx = find(ismember(fields, blob_fields{i}));
+        if ~isempty(idx)
+            fields(idx) = [];
+        end
+    end
+end
+            
 if ~isempty(extra_query)
     fields = [fields extra_query];
 end

@@ -1,0 +1,5 @@
+
+
+scipy
+datajoint
+element-interface @ git+https://github.com/datajoint/element-interface.git

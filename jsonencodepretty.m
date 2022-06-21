@@ -1,5 +1,9 @@
 function json_pretty = jsonencodepretty(text)
 
+if iscell(text)
+    text = text{1};
+end
+
 json_pretty = jsonencode(text);
 
 all_fields =  fieldnames(text);

@@ -1,9 +1,5 @@
 
-function fillParams(app, key)
-
-if nargin < 2
-    key = [];
-end
+function fillParams(app)
 
 %%%%%%%%%%%%%%%%%Fetch parameters from python script (not readable in MATLAB)
 if app.py_enabled
@@ -11,14 +7,14 @@ if app.py_enabled
     if out == 0
 
         %%%%%%%%%%%%%%%%%%%%Fetch and integrate params matfiles
-        preparams_final = app.loadParamsFile(RecordingProcessJobGUI.preparams_mat);
-        params_list = app.loadParamsFile(RecordingProcessJobGUI.preparams_list_mat);
-        params_final = app.loadParamsFile(RecordingProcessJobGUI.params_mat);
-        
-        app.PreProcessParams = struct2table(preparams_final, 'AsArray', true);
-        app.ProcessParams = struct2table(params_final, 'AsArray', true);
-        app.PreProcessParamList = struct2table(params_list, 'AsArray', true);
+        params_list      = app.loadParamsFile(RecordingProcessJobGUI.preparams_list_mat);
+        params_final     = app.loadParamsFile(RecordingProcessJobGUI.params_mat);
+        preparams_final  = app.loadParamsFile(RecordingProcessJobGUI.preparams_mat);
 
+        app.ProcessParams       = struct2table(params_final, 'AsArray', true);
+        app.PreProcessParams    = struct2table(preparams_final, 'AsArray', true);
+        app.PreProcessParamList = struct2table(params_list, 'AsArray', true);
+                
     else
         error('Could not read parameters')
     end
@@ -27,16 +23,21 @@ else
       
 end
 
-app.PreProcessParamList = sortrows(app.PreProcessParamList,{'recording_modality','preprocessing_param_steps_id', 'step_number'});
-    
+        
+[app.MehodsTable, app.PreMethodsTable] = app.getMethods();
+
+%Split description into (user - date - description)
+app.PreProcessParamList = splitDescriptionColumnParams(app, app.PreProcessParamList);
+app.ProcessParams = splitDescriptionColumnParams(app, app.ProcessParams);
+
+app.PreProcessParamList = sortrows(app.PreProcessParamList,{'recording_modality',app.preparam_steps_idx_field, 'step_number'});
+
 app.PreProcessParams = convertTable2Categorical(app.PreProcessParams);
 app.ProcessParams = convertTable2Categorical(app.ProcessParams);
 app.PreProcessParamList = convertTable2Categorical(app.PreProcessParamList);
 
-%app.PreprocessingParamsDropDown.Items = {app.PreProcessParams.paramset_desc};
-app.PreprocessingParamsDropDown_2.Items = unique(app.PreProcessParams.paramset_desc);
+app.MehodsTable = convertTable2Categorical(app.MehodsTable);
+app.PreMethodsTable = convertTable2Categorical(app.PreMethodsTable);
 
-%app.ProcessingParamsDropDown.Items = {app.ProcessParams.paramset_desc};
-app.ProcessingParamsDropDown_2.Items = app.ProcessParams.paramset_desc;
 
 end

@@ -8,8 +8,7 @@ enableSturct.Enable = {'SystemNameDropDown', 'AssociatedBehaviorRigDropDown', 'R
 app.controlEnables(enableSturct);
 
 rigs = fetchn(lab.Location, 'location', 'ORDER BY location');
-modalities = fetchn(app.RecordingSchema.v.RecordingModality, 'recording_modality');
-%modalities = fetchn(lab.RecordingModality, 'recording_modality');
+modalities = cellstr(app.RecordingModalityTable.recording_modality);
 
 app.SystemNameDropDown.Items = rigs;
 app.AssociatedBehaviorRigDropDown.Items = rigs;

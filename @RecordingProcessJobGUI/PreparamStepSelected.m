@@ -8,10 +8,13 @@ if app.py_enabled
     
     selected_params = app.PreProcessParamList{...
         app.PreProcessParamList.paramset_desc == categorical({steplist_desc}) & ...
-        app.PreProcessParamList.steps_description == app.PreprocessingParamsDropDown.Value, 'params'};
+        app.PreProcessParamList.(app.preparam_steps_name_field) == app.PreprocessingParamsDropDown.Value, 'params'};
     selected_params = selected_params(1);
        
     app.ParamsTextArea.Value = jsonencodepretty(selected_params);
+    
+    app.ParamsTextAreaTitle.Text = ['Preprocessing paramset:    ' selected_list];
+    
 end
 
 end

@@ -1,52 +1,63 @@
 function startupFcn(app)
 
-updateBusyLabel(app, 0);
-setenv('DB_PREFIX', 'u19_')
-connect_tech();
-
-prefix = getenv('DB_PREFIX');
-app.RecordingSchema = dj.Schema(dj.conn, 'recording', [prefix 'recording']);
-app.ProcessJobsSchema = dj.Schema(dj.conn, 'recording_process', [prefix 'recording_process']);
-
-% ALS, this should change if added sessions without behavior
-
-app.RecordingProcessTable = app.ProcessJobsSchema.v.Processing * ...
-    app.RecordingSchema.v.Recording * ...
-    app.RecordingSchema.v.RecordingBehaviorSession * ...
-    proj(subject.Subject,'subject_fullname', 'user_id') * ...
-    proj(lab.User,'user_id') * ...
-    app.ProcessJobsSchema.v.Status;
+updateBusyLabel(app, false);
+%Check if python is enabled in GUI
+getPythonEnv(app);
+hasInternet = true;
 
 
-app.RecordingTable = app.RecordingSchema.v.Recording * ...
-    app.RecordingSchema.v.RecordingBehaviorSession * ...
-    proj(subject.Subject,'subject_fullname', 'user_id') * ...
-    proj(lab.User,'user_id') * ...
-    app.RecordingSchema.v.Status;
 
-
-configuration_done = checkConfiguration(app);
-
-if configuration_done
-    postConfigurationActions(app);
+if hasInternet
     
-    key.session_location = app.Configuration.BehaviorRig;
-    fillSessions(app, key);
-    fillParams(app);
+    % ALS, this should change if added sessions without behavior
     
-    app.DropdownParamsPrevious = app.PreprocessingParamsDropDown_2;
-    ParamsSelected(app);
-    fillTable(app);
-    fillTableRT(app);
-    fillRecordingUser(app);
-    fillRecordingSubject(app);
-    fillRecordingUserRT(app);
-    fillRecordingSubjectRT(app);
-    app.FilterRecordingJob = struct;
+    app.RecordingProcessTable = recording_process.Processing * ...
+        recording.Recording * ...
+        recording.RecordingBehaviorSession * ...
+        proj(subject.Subject,'subject_fullname', 'user_id') * ...
+        proj(lab.User,'user_id') * ...
+        recording_process.Status;
+    
+    
+    app.RecordingTable = recording.Recording * ...
+        recording.RecordingBehaviorSession * ...
+        proj(subject.Subject,'subject_fullname', 'user_id') * ...
+        proj(lab.User,'user_id') * ...
+        recording.Status;
+    
+    app.RecordingModalityTable = fetchDataDJTable(recording.Modality, [], {'*'}, "table", [], true);
+    app.RecordingModalityTable = convertTable2Categorical(app.RecordingModalityTable);
+    app.ParamModalityDrop.Items = app.RecordingModalityTable.recording_modality;
+    
+    configuration_done = checkConfiguration(app);
+    
+    if configuration_done
+        
+        key.session_location = app.Configuration.BehaviorRig;
+        fillSessions(app, key);
+        fillParams(app);
+        postConfigurationActions(app);
+
+        fillTable(app);
+        fillTableRT(app);
+        fillRecordingUser(app);
+        fillRecordingSubject(app);
+        fillRecordingUserRT(app);
+        fillUsers(app, 'active_gui_user=1 and primary_tech="N/A"');
+        fillRecordingSubjectRT(app);
+        
+        app.ParamModalityDrop.Value = app.Configuration.RecordingModality;
+        app.FilterRecordingJob = struct;
+    else
+        app.ConfigurationNeededLabel.BackgroundColor = app.ErrorColor;
+        app.ConfigurationNeededLabel.Text = {'Configuration'; 'needed'};
+        
+    end
+    
+    copy_gui_vars(app);
+    
 else
-    app.ConfigurationNeededLabel.BackgroundColor = app.ErrorColor;
-    app.ConfigurationNeededLabel.Text = {'Configuration'; 'needed'};
-
+    app = load_gui_vars(app);
 end
 
 updateBusyLabel(app, 1);

@@ -1,5 +1,6 @@
-function data = fetch_table_except(conn, table_name, fields_remove)
+function data = fetch_table_except(conn, table_class, fields_remove)
 
+table_name= table_class.fullTableName;
 
 all_fields = conn.query(['DESCRIBE ' table_name]);
 all_fields = all_fields.Field;

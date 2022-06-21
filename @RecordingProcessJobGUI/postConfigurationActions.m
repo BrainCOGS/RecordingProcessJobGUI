@@ -20,10 +20,7 @@ app.TabGroup.SelectedTab = app.TabGroup.Children(1);
 query_modality.recording_modality = app.Configuration.RecordingModality;
 
 %rec_schema = dj.Schema(dj.conn, 'recording', 'u19_recording');
-%app.FileExtensions = fetch1(app.RecordingSchema.v.RecordingModality & query_modality, 'recording_file_extensions');
-app.FileExtensions = fetch1(app.RecordingSchema.v.RecordingModality & query_modality, 'recording_file_pattern');
-%app.FileExtensions = fetch1(lab.RecordingModality & query_modality, 'recording_file_extensions');
-%app.FileExtensions = strcat('^.*\', app.FileExtensions);
+%app.FileExtensions = fetch1(recroding.RecordingModality & query_modality, 'recording_file_pattern');
 
 %ALS Hardoced
 app.FileExtensions = {'^.*\g0'};
@@ -42,6 +39,8 @@ end
     
 key.session_location = app.Configuration.BehaviorRig;
 fillSessions(app, key);    
+fillPreParamsSets(app);
+fillDefaultParams(app);
 
 end
 
