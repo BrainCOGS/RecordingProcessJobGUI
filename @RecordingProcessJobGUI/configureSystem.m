@@ -8,6 +8,8 @@ app.Configuration.BehaviorRig = app.AssociatedBehaviorRigDropDown.Value;
 app.Configuration.RecordingModality = app.RecordingModalityDropDown.Value;
 app.Configuration.RecordingRootDirectory = app.RecordingRootDirectoryEdit.Value;
 
+app.Configuration.RecordingRootDirectory = strrep(app.Configuration.RecordingRootDirectory ,'\','\\');
+
 saveJSONfile(app.Configuration, app.ConfFileFullName);
 
 enableSturct.Disable = {'SystemNameDropDown', 'AssociatedBehaviorRigDropDown', 'RecordingModalityDropDown', ...

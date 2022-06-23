@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addonCore>
+  <label>GHToolbox</label>
+  <version>1.0.20</version>
+  <type>Toolbox</type>
+  <identifier>1ce553c9-7d0d-4a4b-9490-cc24c7934465</identifier>
+  <summary>'ghtb' provides a simple way to manage addon installation of open-source MATLAB Community Toolboxes linked to GitHub (via Releases).</summary>
+  <description>INSTALL(target, varargin)
+    Description:
+      Provides a way to directly 'install' MATLAB Community Toolboxes from 
+      Github. For upgrade and downgrade use-cases, users can set the `override` option to
+      force the install.
+    Inputs:
+      target[required]: (string) Toolbox repo (e.g. 'org1/repo1') or local path to *.mltbx
+      version[optional, default='latest']: (string||handle) Version to be installed e.g.
+                                           '1.0.0' or version handle of the form @(v) that
+                                           resolves to acceptable versions. Handle approach
+                                           should expect v to be a cell array of version
+                                           candidates and return a logical array of result.
+      override[optional, default=false]: (boolean) Flag to indicate if should override an
+                                         existing install
+    Assumptions:
+      - Community Toolbox linked on FileExchange to GitHub via GitHub Releases.
+      - Community Toolbox publicly available as open-source on GitHub.
+      - Community Toolbox attaches a single '.mltbx' artifact to GitHub Releases.
+      - Community Toolbox name matches the filename of '.mltbx' artifact.
+      - Users do not wish to have multiple simultaneous versions installed i.e. only a 
+        single version per Toolbox is installed at any given time.
+    Examples:
+      ghtb.install('guzman-raphael/compareVersions')
+      ghtb.install('guzman-raphael/compareVersions', 'version', '1.0.7')
+      ghtb.install('guzman-raphael/compareVersions', 'version', '1.0.6', 'override', true)
+      ghtb.install('guzman-raphael/compareVersions', 'version', ...
+                   @(v) cellfun(@(x) contains(x, '1.0.'), v, 'uni', true))
+      ghtb.install('compareVersions.mltbx') %install from local toolbox file
+
+  UNINSTALL(varargin)
+    Description:
+      Provides a way to directly 'uninstall' MATLAB Community Toolboxes from 
+      Github.
+    Inputs:
+      toolboxName[required]: (string) Toolbox name to be uninstalled e.g. 'toolbox1'
+    Assumptions:
+      - Users do not wish to have multiple simultaneous versions installed i.e. all
+        versions of specified toolbox are uninstalled (if applicable).
+    Examples:
+      ghtb.uninstall('compareVersions') % uninstalls all versions of Toolbox
+
+  REQUIRE(requiredToolboxes, varargin)
+    Description:
+      Provides a way to directly require specific toolboxes with the option to 'install' if
+      not satisfied. Unsatisfied toolboxes with trigger a
+      'GHToolbox:requireToolboxes:Failed' error.
+    Inputs:
+      requiredToolboxes[required]: (cell) Toolboxes to be required and (if applicable)
+                                   resolved with installation. Each cell should contain a
+                                   struct with fields: Name[required, string],
+                                   ResolveTarget[required, string],
+                                   Version[optional, string||handle]. For Version
+                                   specification, see below for examples or
+                                   see help(ghtb.install) for accepted Version assignment.
+      prompt[optional, default=true]: (boolean) Whether to silently install or use prompts.
+      resolveGHToolboxDeps[optional, default=true]: (boolean) Resolve dependencies related
+                                                    to GHToolbox.
+    Examples:
+      requiredToolboxes = {...
+          struct(...
+              'Name', 'GHToolbox', ...
+              'ResolveTarget', 'datajoint/GHToolbox'...
+          ), ...
+          struct(...
+              'Name', 'compareVersions', ...
+              'ResolveTarget', 'guzman-raphael/compareVersions', ...
+              'Version', '1.0.8'...
+          ), ...
+          struct(...
+              'Name', 'mym', ...
+              'ResolveTarget', 'datajoint/mym', ...
+              'Version', @(v) cellfun(@(x) contains(x, '2.7.'), v, 'uni', true)...
+          )...
+      };
+      ghtb.require(requiredToolboxes) % require with prompts
+      ghtb.require(requiredToolboxes, 'prompt', false)
+
+  PACKAGE(toolboxName, toolboxAuthor, toolboxContact, toolboxSummary, ...
+          toolboxDescription, toolboxExclusions, toolboxVersionHandle, ...
+          toolboxRootFiles, varargin)
+    Description:
+      Provides a programatic way to 'package' MATLAB Community Toolboxes.
+    Inputs:
+      toolboxName[required]: (string) Toolbox name, will create as '{{toolboxName}}.mltbx'.
+      toolboxAuthor[required]: (string) Toolbox author full name.
+      toolboxContact[required]: (string) Toolbox author email.
+      toolboxSummary[required]: (string) Toolbox summary. Limit to 140 characters.
+      toolboxDescription[required]: (string) Toolbox long description.
+      toolboxExclusions[required]: (cell) Filepaths to exclude. Based from
+                                   'toolboxRootDir'.
+      toolboxVersionHandle[required]: (handle) Function that will return semantic version
+                                               i.e. '0.0.0'
+      toolboxRootFiles[required]: (cell) Filepaths to include. Based from current
+                                  directory.
+      toolboxRootDir[optional, default=pwd]: (string) Local path of Toolbox base directory.
+      toolboxProjectDir[optional, default=pwd]: (string) Path where Toolbox/.prj will write
+      toolboxVersionDir[optional, default=pwd]: (string) Path necessary for version func
+      *toolboxRequiredAddons[optional, default={}]: (cell) Toolboxes or addons to include.
+      *toolboxScreenshotFile[optional, default='']: (string) Path to icon/screenshot file.
+      * = Experimental
+    Examples:
+      ghtb.package('GHToolbox', ...
+                   'Raphael Guzman', ...
+                   'raphael.h.guzman@gmail.com', ...
+                   ['''ghtb'' provides a simple way to manage addon installation of ' ...
+                    'open-source MATLAB Community Toolboxes linked to GitHub (via ' ...
+                    'Releases).'], ...
+                   'long description', ...
+                   {'.vscode', '.git', '.env', '.gitignore', '.travis.yml', 'tests', ...
+                    '*docker-compose.yml', 'LICENSE', 'matlab.prf', 'package.m', ...
+                    'README.md'}, ...
+                   @() ghtb.version, ...
+                   {'+ghtb'});
+      ghtb.package('mym', ...
+                   'Raphael Guzman', ...
+                   'raphael.h.guzman@gmail.com', ...
+                   'MySQL API for MATLAB with support for BLOB objects', ...
+                   'long description', ...
+                   {'mexa64/libmysqlclient.so.18.4.'}, ...
+                   @() strjoin(arrayfun(@(x) num2str(x), ...
+                                        cell2mat(struct2cell(mym('version'))), ...
+                                        'uni', false), ...
+                               '.'), ...
+                   {'distribution/mexa64', 'distribution/mexmaci64', ...
+                    'distribution/mexw64'}, ...
+                   'toolboxVersionDir', 'distribution/mexa64', ...
+                   'toolboxRootDir', 'distribution');
+
+  VERSION()
+    Description:
+      Prints GHToolbox version.
+    Outputs:
+      version: (string) Current semantic version e.g. '0.0.0'
+    Examples:
+      ghtb.version % display GHToolbox version
+      v = ghtb.version % return GHToolbox version
+    Source:
+      https://www.github.com/datajoint/GHToolbox.git
+    License:
+      MIT (use/copy/change/redistribute at your own risk)</description>
+  <createdBy name="Raphael Guzman"/>
+  <image>resources/screenshot.png</image>
+</addonCore>

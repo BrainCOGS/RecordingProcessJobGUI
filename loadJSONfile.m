@@ -4,7 +4,8 @@ success = 1;
 
 try
     fid = fopen(file);
-    json = jsondecode(char(fread(fid,inf)'));
+    so = char(fread(fid,inf)');
+    json = jsondecode(so);
     fclose(fid);
 catch
     success = 0;

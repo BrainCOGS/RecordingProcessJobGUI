@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addonCore>
+  <label>compareVersions</label>
+  <version>1.0.9</version>
+  <type>Toolbox</type>
+  <identifier>7c3f071d-dc3e-481b-ba6c-3ef5e2b82353</identifier>
+  <summary>Semantic version comparison m-function. Matlab function that will compare a cell array of values to a reference version (default: greater than or equal).</summary>
+  <description>compareVersions - Semantic version comparison (default: greater than or equal)
+ 
+  This function compares an array of semantic versions against a reference version.
+ 
+  DISTRIBUTION:
+   GitHub:       https://github.com/guzman-raphael/compareVersions
+   FileExchange: https://www.mathworks.com/matlabcentral/fileexchange/71849-compareversions
+ 
+  res = COMPAREVERSIONS(verArray, verComp, verCheck)
+  INPUT:
+    verArray: Cell array with the following conditions:
+               - be of length &gt;= 1,
+               - contain only string elements, and
+               - each element must be of length &gt;= 1.
+    verComp:  String or Char array that verArray will compare against for
+              greater than evaluation. Must be:
+               - be of length &gt;= 1, and
+               - a string.
+    verCheck: (Optional) Function handle for comparison with the following conditions:
+               - Must be of the form @(x,y)
+               - In an element of verArray, x represents a float for the part to compare
+               - In verComp, y represents a float for the part to compare
+               - Default is greater than or equal to i.e. @(x,y) x &gt;= y
+  OUTPUT:
+    res:      Logical array that identifies if each cell element in verArray
+              satisfies verCheck.
+  TESTS:
+    Tests included for reference. From root package directory,
+    use commands:
+        suite = TestSuite.fromFolder(pwd, 'IncludingSubfolders', true);
+        run(suite)
+ 
+  EXAMPLES:
+    output = compareVersions({'3.2.4beta','9.5.2.1','8.0'}, '8.0.0'); %logical([0 1 1])
+    output = compareVersions({'3.2.4beta','9.5.2.1','8.0'}, '8.0.0', @(x,y) x&amp;lt;y); %logical([1 0 0])
+    compareVersion_v = compareVersions('version'); %'1.0.9'
+ 
+  Tested: Matlab 9.1.0.441655 (R2016b) Linux
+  Author: Raphael Guzman, DataJoint
+ 
+  $License: MIT (use/copy/change/redistribute on own risk) $
+  $File: compareVersions.m $
+  History:
+  001: 2019-06-12 11:00, First version.
+ 
+  OPEN BUGS:
+   - None</description>
+  <createdBy name="Raphael Guzman"/>
+  <image>resources/screenshot.png</image>
+</addonCore>

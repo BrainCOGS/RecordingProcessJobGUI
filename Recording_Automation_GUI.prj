@@ -1,0 +1,325 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="415319456" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="C:\Experiments\RecordingAutomationGUI\Recording_Automation_GUI\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+    <param.appname>Recording_Automation_GUI</param.appname>
+    <param.icon />
+    <param.icons />
+    <param.version>1.0</param.version>
+    <param.authnamewatermark>Alvaro Luna</param.authnamewatermark>
+    <param.email>alvaros@princeton.edu</param.email>
+    <param.company>Princeton</param.company>
+    <param.summary>GUI to register recordings in the automatic pipeline</param.summary>
+    <param.description />
+    <param.screenshot>${PROJECT_ROOT}\brain_cogs_on_white_small_brain_cogs_on_white.png</param.screenshot>
+    <param.guid />
+    <param.installpath.string>\Princeton\Recording_Automation_GUI\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo>${PROJECT_ROOT}\brain_cogs_on_white_small_brain_cogs_on_white.png</param.logo>
+    <param.install.notes />
+    <param.target.install.notes />
+    <param.intermediate>\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing</param.intermediate>
+    <param.files.only>\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution_files_only</param.files.only>
+    <param.output>\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}\Recording_Automation_GUI</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.web.mcr>false</param.web.mcr>
+    <param.package.mcr>true</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>false</param.windows.command.prompt>
+    <param.create.log>true</param.create.log>
+    <param.log.file>logRecordngGUI.txt</param.log.file>
+    <param.native.matlab>false</param.native.matlab>
+    <param.checkbox>false</param.checkbox>
+    <param.example />
+    <param.help.text>Syntax 
+	  -? 
+	 
+ Input Arguments 
+	 -?  print help on how to use the application 
+	 input arguments</param.help.text>
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.description />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.install.notes />
+      <param.target.install.notes />
+      <param.logdir />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.target.type />
+      <param.support.packages />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.native.matlab />
+      <param.checkbox />
+      <param.example />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RecordingProcessJobGUI.m</file>
+    </fileset.main>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}\compareVersions</file>
+      <file>${PROJECT_ROOT}\dirwalk</file>
+      <file>${PROJECT_ROOT}\GHToolbox</file>
+      <file>${PROJECT_ROOT}\modDataJoint</file>
+      <file>${PROJECT_ROOT}\mym_mexw64</file>
+      <file>${PROJECT_ROOT}\PythonScripts</file>
+      <file>${PROJECT_ROOT}\system_conf_job_gui.json</file>
+      <file>C:\Experiments\U19-pipeline-matlab</file>
+    </fileset.resources>
+    <fileset.package />
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\AddPreParamStepNewList.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\app_data.mat</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkBoxParamMethod.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkBoxPreParamMethod.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkBoxSessionRecording.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkConfiguration.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkParamSelection.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\configParams.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\configureSystem.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\controlEnables.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createComponents.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createDefaultParamsRecord.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\CreatePreparamStepSelected.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createRecording.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createRecordingButton.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\DefaultParamsCheckBoxToggle.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\DeleteStepClicked.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillDefaultParams.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\FillEverything.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillParams.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillParams2Select.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillPreParamsSets.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingDirectories.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingModality.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingSubject.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingSubjectRT.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingUser.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingUserRT.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillSessions.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillSubjects.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillTable.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillTableRT.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillUserParams.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillUsers.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\filterTable.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\getDefaultParamsMod.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\getMethods.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\getParamsFromMatlab.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\getPythonEnv.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\jobTableSelected.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\loadParamsFile.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\MoveStepOrderClicked.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\ParamListSelected.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\ParamSetSelected.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\postConfigurationActions.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\PreparamStepSelected.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\recordingTableSelected.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RegisterParamsFragmentClicked.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RegisterPreparamFragmentClicked.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RegisterPreParamList.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\SameParamCheckClicked.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\SamePreParamCheckClicked.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\SelectedListBoxFragmentRec.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\SelectedListBoxFragmentRec2.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\selectRecordingRootDirectory.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\splitDescriptionColumnParams.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\startConfiguration.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\startupFcn.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\updateBusyLabel.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\UploadParamJsonFile.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\writeParametersDB.m</file>
+      <file>${PROJECT_ROOT}\catstruct.m</file>
+      <file>${PROJECT_ROOT}\connect_tech.p</file>
+      <file>${PROJECT_ROOT}\convertTable2Categorical.m</file>
+      <file>${PROJECT_ROOT}\copy_gui_vars.m</file>
+      <file>${PROJECT_ROOT}\fetch_table_except.m</file>
+      <file>${PROJECT_ROOT}\fetchDataDJTable.m</file>
+      <file>${PROJECT_ROOT}\jsonencodepretty.m</file>
+      <file>${PROJECT_ROOT}\load_gui_vars.m</file>
+      <file>${PROJECT_ROOT}\loadJSONfile.m</file>
+      <file>${PROJECT_ROOT}\OneDrive_Folder_Icon.svg.png</file>
+      <file>${PROJECT_ROOT}\reload.png</file>
+      <file>${PROJECT_ROOT}\saveJSONfile.m</file>
+      <file>${PROJECT_ROOT}\struct2string.m</file>
+      <file>C:\Experiments\ViRMEn\database\@SessionFlagger\brain_cogs_on_white_small_brain_cogs_on_white.png</file>
+      <file>C:\Experiments\ViRMEn\database\accumfun.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@DataJointLabUserTable\DataJointLabUserTable.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@DataJointLabUserTable\get_GUI_table_info.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@DataJointLabUserTable\get_values_table_field.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@DataJointLabUserTable\insert_user.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\close_figure.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\create_buttons.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\create_gui.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\create_GUI_input.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\create_label.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\create_table_grid.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\create_title.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\define_figure_position.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\GUI_add_user.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\@NewRecordsGUI\NewRecordsGUI.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\GUI_Inputs\GUI_Input.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\GUI_Inputs\GUI_Input_Edit.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\GUI_Inputs\GUI_Input_HBox.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\GUI_Inputs\GUI_Input_Popup.m</file>
+      <file>C:\Experiments\ViRMEn\database\AddLabUsers\utils\ScreenProperties.m</file>
+      <file>C:\Experiments\ViRMEn\database\AnimalDatabase.m</file>
+      <file>C:\Experiments\ViRMEn\database\asort\asort.m</file>
+      <file>C:\Experiments\ViRMEn\database\auto_balance.m</file>
+      <file>C:\Experiments\ViRMEn\database\Canvas.m</file>
+      <file>C:\Experiments\ViRMEn\database\conditional.m</file>
+      <file>C:\Experiments\ViRMEn\database\designPalette.m</file>
+      <file>C:\Experiments\ViRMEn\database\EntryState.m</file>
+      <file>C:\Experiments\ViRMEn\database\getMonitorBySize.m</file>
+      <file>C:\Experiments\ViRMEn\database\HandlingStatus.m</file>
+      <file>C:\Experiments\ViRMEn\database\hasLowWeight.m</file>
+      <file>C:\Experiments\ViRMEn\database\isWeightFalling.m</file>
+      <file>C:\Experiments\ViRMEn\database\java\findjobj.m</file>
+      <file>C:\Experiments\ViRMEn\database\listInputDialog.m</file>
+      <file>C:\Experiments\ViRMEn\database\LocationState.m</file>
+      <file>C:\Experiments\ViRMEn\database\makePositionedFigure.m</file>
+      <file>C:\Experiments\ViRMEn\database\nonEmptyInputValidator.m</file>
+      <file>C:\Experiments\ViRMEn\database\notInListValidator.m</file>
+      <file>C:\Experiments\ViRMEn\database\positiveInputValidator.m</file>
+      <file>C:\Experiments\ViRMEn\database\Responsibility.m</file>
+      <file>C:\Experiments\ViRMEn\database\Sex.m</file>
+      <file>C:\Experiments\ViRMEn\database\SplitVec\SplitVec.m</file>
+      <file>C:\Experiments\ViRMEn\database\validatedInputDialog.m</file>
+      <file>C:\Experiments\ViRMEn\database\withinRangeConfirmation.m</file>
+      <file>C:\Experiments\ViRMEn\database\YesNoMaybe.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\classes\MovementSensor.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\angleMPiPi.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\arraysize.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\cprintf.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\displayException.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\executeCallback.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\findParent.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\numobj.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\parsePath.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\rdir.m</file>
+      <file>C:\Experiments\ViRMEn\extras\RigParameters.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\+mixin\Container.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\+mixin\Flex.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\+mixin\Panel.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Box.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\ButtonBox.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\calcPixelSizes.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\ChildEvent.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\ChildObserver.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Container.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Divider.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Empty.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\FigureData.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\FigureObserver.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Grid.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\HBox.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\HBoxFlex.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\HButtonBox.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\loadIcon.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Node.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Panel.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\PointerManager.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\ScrollingPanel.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\SelectionData.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\setPosition.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\TabPanel.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\tracking.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\VBox.m</file>
+      <file>C:\Experiments\ViRMEn\GUILayout\+uix\VBoxFlex.m</file>
+      <file>C:\Experiments\ViRMEn\movements\moveArduino.m</file>
+      <file>C:\Experiments\ViRMEn\movements\moveArduinoLinearVelocityMEX.m</file>
+      <file>C:\Experiments\ViRMEn\movements\moveArduinoLiteralMEX.m</file>
+      <file>C:\Experiments\ViRMEn\movements\moveArduinoViewPinnedMEX.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\checkActionItems.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\checkCageReturn.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\checkMouseWeighing.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\getCurrentlyActiveMouseLogs.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\manageNotificationTimers.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\notificationTimer.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\notifyAnimalStatusChange.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\notifyLowWeight.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\notifyNewAnimal.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\notifyVeryLowWeight.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\send_email.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\send_msg\send_msg.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\send_notification.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\send_weeklyEmailSummary.m</file>
+      <file>C:\Experiments\ViRMEn\sensors\serialCommunications\arduinoReader.mexw64</file>
+      <file>${MATLAB_ROOT}\toolbox\local\userpath.m</file>
+    </fileset.depfun>
+    <build-deliverables>
+      <file location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing" name="Recording_Automation_GUI.exe" optional="false">\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing\Recording_Automation_GUI.exe</file>
+      <file location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing" name="splash.png" optional="false">\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing\splash.png</file>
+      <file location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing" name="readme.txt" optional="true">\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing\readme.txt</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2021a</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

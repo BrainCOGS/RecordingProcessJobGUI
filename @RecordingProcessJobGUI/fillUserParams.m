@@ -16,6 +16,6 @@ all_users(idx_gen) = [];
 all_users = categorical([{'all'; 'general-user'}; all_users]);
     
 app.UserParamsDropDown.Items = all_users;
-app.UserParamsDropDown.Value = all_users(1);
+app.UserParamsDropDown.Value = cellstr(all_users(1));
 
 end
