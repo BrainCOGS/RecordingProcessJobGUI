@@ -3,9 +3,10 @@ channels:
   - defaults
 dependencies:
   - python=3.9
+  - pip
   - pip:
     - scipy
     - pandas
     - datajoint
-    - "--element-interface=git+https://github.com/datajoint/element-interface.git
-prefix: C:\Experiments\RecordingProcessJobGUI\EnvAutoPipeGUI
+    - pip
+      - git+https://github.com/datajoint/element-interface.git

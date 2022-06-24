@@ -21,7 +21,7 @@ user_id = user_id{1};
 key_part.session_date        = behavior_session.session_date{:};
 key_part.session_number      = behavior_session.session_number;
 
-session_date = [key_part.session_date(6:7) key_part.session_date(9:10) key_part.session_date(1:4)];
+session_date = [key_part.session_date(1:4) key_part.session_date(6:7) key_part.session_date(9:10)];
 
 % Generate key for recording table
 key.recording_modality  = app.Configuration.RecordingModality;
@@ -32,7 +32,11 @@ last_folder             = strsplit(local_directory,filesep);
 last_folder             = last_folder{end};
 %key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, [session_date '_g' num2str(key_part.session_number)], last_folder);
 key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, last_folder);
-key.local_directory     = local_directory; 
+if ispc
+    key.local_directory     = strrep(local_directory,'\','/');
+else
+    key.local_directory     = local_directory;
+end
 key.status_recording_id = 0;
 
 

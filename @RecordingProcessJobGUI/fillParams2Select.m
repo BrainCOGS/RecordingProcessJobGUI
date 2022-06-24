@@ -9,7 +9,7 @@ if ~strcmp(app.UserParamsDropDown.Value,'all')
     idx_process =    idx_process    & app.ProcessParams.user_params  == app.UserParamsDropDown.Value;
 end
 
-preprocess_names = app.PreProcessParamList{idx_preprocess, app.preparam_steps_name_field};
+preprocess_names = app.PreProcessParamList{idx_preprocess, app.preprocess_steps_name_field};
 
 params_desc = app.ProcessParams{idx_process, app.params_desc_field};
 

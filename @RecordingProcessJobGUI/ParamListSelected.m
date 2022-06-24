@@ -15,13 +15,13 @@ if isempty(event.Value)
 end
 
 %Idx all lists
-idx_selected_lists = app.PreProcessParamList.(app.preparam_steps_name_field) == event.Value;
+idx_selected_lists = app.PreProcessParamList.(app.preprocess_steps_name_field) == event.Value;
 idx_selected_list1 = find(idx_selected_lists, 1, 'first');
 
 %Date and description
 user_date = app.PreProcessParamList{idx_selected_list1, {'user_params', 'date_params'}};
 user_date = strjoin(string(user_date));
-list_description = app.PreProcessParamList{idx_selected_list1, {app.preparam_steps_desc_field}}; 
+list_description = app.PreProcessParamList{idx_selected_list1, {app.preprocess_steps_desc_field}}; 
 
 
 %Get steps

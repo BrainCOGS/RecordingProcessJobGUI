@@ -27,14 +27,14 @@ paramlist_description = [app.UserPreparamListDrop.Value '_' ...
     '_' app.PreparamListNewDescEdit.Value];
 
 %Get last id for steps "list" inserted
-id_steps_field = this_steps_table.preprocess_idx_field;
+id_steps_field = this_steps_table.preprocess_steps_idx_field;
 last_id = fetch1(this_steps_table.table_class(),id_steps_field, ['ORDER BY ' id_steps_field ' desc LIMIT 1']);
 
 
 %Create record for the new steps "list"
 new_step_record = struct();
-new_step_record.(this_steps_table.preprocess_name_field) = app.PreparamListNewNameEdit.Value;
-new_step_record.(this_steps_table.preprocess_desc_field) = paramlist_description;
+new_step_record.(this_steps_table.preprocess_steps_name_field) = app.PreparamListNewNameEdit.Value;
+new_step_record.(this_steps_table.preprocess_steps_desc_field) = paramlist_description;
 new_step_record.(id_steps_field) = last_id+1;
 
 
@@ -42,7 +42,7 @@ new_step_record.(id_steps_field) = last_id+1;
 num_steps = length(app.NewPreParamsListStepsList.Items);
 %Get field names depending on modality
 this_steps_step_table = app.preparam_steps_step_table_names.(app.ParamModalityDrop.Value); 
-steps_step_fieldnames = {this_steps_step_table.preprocess_idx_field, ...
+steps_step_fieldnames = {this_steps_step_table.preprocess_steps_idx_field, ...
                          this_steps_step_table.step_field, ...
                          this_steps_step_table.paramset_idx_field};
 

@@ -9,10 +9,10 @@ try
         setenv('PATH', this_path);
     end
 
-
         [~, conda_envs] = system('conda env list');
 
         idx_py_env = strfind(conda_envs, RecordingProcessJobGUI.py_env_name);
+        
         app.py_env = strtrim(conda_envs(idx_py_env(1)+length(RecordingProcessJobGUI.py_env_name): ...
             idx_py_env(2)+length(RecordingProcessJobGUI.py_env_name)));
 
@@ -27,4 +27,3 @@ catch
     app.py_enabled = false;
 
 end
-

@@ -20,7 +20,7 @@ if app.CreateRecordingOrJob
             default_preparams_record.fragment_number = 0;
             default_preparams_record.default_same_preparams_all = 1;
             
-            idx_selected_list = find(app.PreProcessParamList.(app.preparam_steps_name_field) == app.PreprocessingParamsDropDown.Value,1,'first');
+            idx_selected_list = find(app.PreProcessParamList.(app.preprocess_steps_name_field) == app.PreprocessingParamsDropDown.Value,1,'first');
             default_preparams_record.preprocess_param_steps_id = app.PreProcessParamList{idx_selected_list, app.preparam_steps_idx_field };
             default_preparams_record = struct2table(default_preparams_record, 'AsArray', true);
         else

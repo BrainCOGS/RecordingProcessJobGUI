@@ -232,8 +232,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         params_desc_field
         
         preparam_steps_idx_field
-        preparam_steps_name_field
-        preparam_steps_desc_field
+        preprocess_steps_name_field
+        preprocess_steps_desc_field
         
         preparam_methods_method_field
         preparam_methods_desc_field
