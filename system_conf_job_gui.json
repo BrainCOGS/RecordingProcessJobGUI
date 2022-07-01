@@ -1,9 +1,6 @@
 {
-	"System" : "188-Recording",
-	"RecordingModality" : "electrophysiology",
-	"RecordingRootDirectory" : "/Users/alvaros/Documents/MATLAB/BrainCogsProjects/Datajoint_proj/VRrigs-documentation",
-	"BehaviorRig" : [
-		"188-Rig1",
-		"188-Rig2"
-	]
+	"System" : "",
+	"RecordingModality" : "",
+	"RecordingRootDirectory" : "",
+	"BehaviorRig" : ""
 }

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="415319456" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="C:\Experiments\RecordingAutomationGUI\Recording_Automation_GUI\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="1744015244" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon />
     <param.icons />
@@ -69,18 +69,8 @@
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RecordingProcessJobGUI.m</file>
     </fileset.main>
     <fileset.resources>
-      <file>${PROJECT_ROOT}\compareVersions</file>
-      <file>${PROJECT_ROOT}\dirwalk</file>
-      <file>${PROJECT_ROOT}\GHToolbox</file>
-      <file>${PROJECT_ROOT}\modDataJoint</file>
-      <file>${PROJECT_ROOT}\mym_mexw64</file>
-      <file>${PROJECT_ROOT}\PythonScripts</file>
-      <file>${PROJECT_ROOT}\system_conf_job_gui.json</file>
-      <file>C:\Experiments\U19-pipeline-matlab</file>
-    </fileset.resources>
-    <fileset.package />
-    <fileset.depfun>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\AddPreParamStepNewList.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\addRig2System.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\app_data.mat</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkBoxParamMethod.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkBoxPreParamMethod.m</file>
@@ -92,13 +82,17 @@
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\controlEnables.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createComponents.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createDefaultParamsRecord.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\CreateNewJob.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\CreatePreparamStepSelected.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createRecording.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createRecordingButton.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\DefaultParamsCheckBoxToggle.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\DeleteStepClicked.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\dropRig2System.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillDefaultParams.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\FillEverything.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillJobStatusTable.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillJobTable.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillParams.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillParams2Select.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillPreParamsSets.m</file>
@@ -106,12 +100,11 @@
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingModality.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingSubject.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingSubjectRT.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingTable.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingUser.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillRecordingUserRT.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillSessions.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillSubjects.m</file>
-      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillTable.m</file>
-      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillTableRT.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillUserParams.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\fillUsers.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\filterTable.m</file>
@@ -126,21 +119,36 @@
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\ParamSetSelected.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\postConfigurationActions.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\PreparamStepSelected.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RecordingProcessJobGUI.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\recordingTableSelected.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RegisterParamsFragmentClicked.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RegisterPreparamFragmentClicked.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RegisterPreParamList.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RerunJob.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RunJobDiffParams.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\SameParamCheckClicked.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\SamePreParamCheckClicked.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\SelectedListBoxFragmentRec.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\SelectedListBoxFragmentRec2.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\selectRecordingRootDirectory.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\setStyleCellsTable.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\splitDescriptionColumnParams.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\startConfiguration.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\startupFcn.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\updateBusyLabel.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\UploadParamJsonFile.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\writeParametersDB.m</file>
+      <file>${PROJECT_ROOT}\compareVersions</file>
+      <file>${PROJECT_ROOT}\dirwalk</file>
+      <file>${PROJECT_ROOT}\GHToolbox</file>
+      <file>${PROJECT_ROOT}\modDataJoint</file>
+      <file>${PROJECT_ROOT}\mym_mexw64</file>
+      <file>${PROJECT_ROOT}\PythonScripts</file>
+      <file>${PROJECT_ROOT}\system_conf_job_gui.json</file>
+      <file>C:\Experiments\U19-pipeline-matlab</file>
+    </fileset.resources>
+    <fileset.package />
+    <fileset.depfun>
       <file>${PROJECT_ROOT}\catstruct.m</file>
       <file>${PROJECT_ROOT}\connect_tech.p</file>
       <file>${PROJECT_ROOT}\convertTable2Categorical.m</file>

@@ -25,6 +25,11 @@ for i=1:length(conf_fields)
     end
 end
 
+%Always read behavior rig as a "list"
+if ~iscell(app.Configuration.BehaviorRig)
+    app.Configuration.BehaviorRig = {app.Configuration.BehaviorRig};
+end
+
 %configuration_done = 0
 if configuration_done
     app.SystemLabel.Text = app.Configuration.System;
