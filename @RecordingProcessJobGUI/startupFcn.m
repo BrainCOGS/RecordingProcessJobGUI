@@ -37,12 +37,12 @@ if hasInternet
     app.ParamModalityDrop.Items = app.RecordingModalityTable.recording_modality;
     
     configuration_done = checkConfiguration(app);
+    fillParams(app);
     
     if configuration_done
         
         key = cell2struct(app.Configuration.BehaviorRig', 'session_location');
         fillSessions(app, key);
-        fillParams(app);
         postConfigurationActions(app);
 
         FillEverything(app);
