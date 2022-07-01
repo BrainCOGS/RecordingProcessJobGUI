@@ -19,6 +19,8 @@ sessions = fetchDataDJTable(t.proj('CONCAT(subject_fullname, "         " ,sessio
 
 app.BehaviorSessions = sessions;
 
-app.BehaviorSessionDropDown.Items = sessions.session_name;
+if ~isempty(sessions)
+    app.BehaviorSessionDropDown.Items = sessions.session_name;
+end
 
 end

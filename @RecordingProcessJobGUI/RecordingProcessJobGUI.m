@@ -84,7 +84,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         SubjectDropDownRT               matlab.ui.control.DropDown
         DateDatePickerRTLabel           matlab.ui.control.Label
         DateDatePickerRT                matlab.ui.control.DatePicker
-        UITableRT                       matlab.ui.control.Table
+        RecordingTableRT                matlab.ui.control.Table
         Label_div3_1                    matlab.ui.control.Label
         RecordingHistoryLabel           matlab.ui.control.Label
         RecordingHistortyTable          matlab.ui.control.Table
@@ -100,9 +100,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         SubjectDropDown_2               matlab.ui.control.DropDown
         DateDatePickerLabel             matlab.ui.control.Label
         DateDatePicker                  matlab.ui.control.DatePicker
-        UITable                         matlab.ui.control.Table
-        EditselectedjobButton           matlab.ui.control.Button
-        CreatenewjobforselectedrecordingButton  matlab.ui.control.Button
+        JobTable                        matlab.ui.control.Table
+        RunJobDiffParamsButton          matlab.ui.control.Button
+        RerunJobStartButton             matlab.ui.control.Button
         Label3                          matlab.ui.control.Label
         JobHistoryLabel                 matlab.ui.control.Label
         JobHistoryTable                 matlab.ui.control.Table
@@ -165,12 +165,15 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         RecordingRootDirectoryEdit      matlab.ui.control.EditField
         AssociatedBehaviorRigDropDownLabel  matlab.ui.control.Label
         AssociatedBehaviorRigDropDown   matlab.ui.control.DropDown
+        AssociatedBehaviorRigListBox    matlab.ui.control.ListBox
+        DeleteAssociatedRigButton       matlab.ui.control.Button
+        AddAssociatedRigButton          matlab.ui.control.Button   
         ConfigurationOptionsLabel       matlab.ui.control.Label
         ConfigureSystemButton           matlab.ui.control.Button
         SystemLabel                     matlab.ui.control.Label
-        BehaviorRigLabel                matlab.ui.control.Label
         RecordingModalityLabel          matlab.ui.control.Label
         RecordingRootDirectoryLabel     matlab.ui.control.Label
+        AssociatedBehaviorRigLabel      matlab.ui.control.Label
         StartConfigurationButton        matlab.ui.control.Button
         SearchDirectoryButton           matlab.ui.control.Button
 
@@ -190,6 +193,12 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         %Recording Table & JobId table
         RecordingTable
         RecordingProcessTable
+        
+        %Min and max status
+        min_job_status
+        max_job_status
+        min_rec_status
+        max_rec_status
         
         %All params and related tables
         PreProcessParamList
@@ -214,6 +223,12 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %General (Tab2 select params)
         CreateRecordingOrJob       % true if create whole recording 0 if creating job only
+        
+        %Last selection on Job or Recording Table
+        selectedRecordingRow
+        selectedJobRow
+        jobid_to_copy
+        modality_job_id_copy
         
         %Python environment flags and variables
         py_env
@@ -245,6 +260,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         %Config, Status history class names
         recording_history_table_class
         job_id_history_table_class
+        job_part_parms_table
    
     end
     
@@ -258,12 +274,12 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ConfFileName = 'system_conf_job_gui.json';
         
         
-        COLUMNS_TABLE      = {             'job_id', 'recording_id', 'subject_fullname', 'session_date', 'session_number', 'fragment_number', 'status_processing_id', 'status_processing_definition', 'recording_modality',   'recording_process_pre_path'};
-        COLUMNS_NAMES      = {             'job_id', 'recording_id',          'subject',        'date',       'sess_num',     '(probe|fov)',           'status_job',                  'status_desc',            'modality',           'raw_data_directory'};
-        COLUMNS_EDITABLE   = false(size(RecordingProcessJobGUI.COLUMNS_TABLE));
-        COLUMNS_SORTABLE   = true(size(RecordingProcessJobGUI.COLUMNS_TABLE));
-        COLUMNS_FORMAT     = {             'numeric',        'char',            'char',         'char',         'numeric',        'numeric',            'numeric',                          'char',                 'char',                        'char'};
-        COLUMNS_WIDTH      = {                    60,           100,               180,             90,                90,               90,                   85,                             220,                    130,                        'auto'};
+        COLUMNS_JOB_TABLE      = {             'job_id', 'recording_id', 'fragment_number', 'subject_fullname', 'session_date', 'session_number', 'status_processing_id', 'status_processing_definition', 'recording_modality',   'recording_process_pre_path'};
+        COLUMNS_JOB_NAMES      = {             'job_id', 'recording_id',     '(probe|fov)',          'subject',        'date',       'sess_num',           'status_job',                  'status_desc',            'modality',           'raw_data_directory'};
+        COLUMNS_JOB_EDITABLE   = false(size(RecordingProcessJobGUI.COLUMNS_JOB_TABLE));
+        COLUMNS_JOB_SORTABLE   = true(size(RecordingProcessJobGUI.COLUMNS_JOB_TABLE));
+        COLUMNS_JOB_FORMAT     = {             'numeric',        'char',        'numeric',            'char',          'char',         'numeric',            'numeric',                          'char',                 'char',                        'char'};
+        COLUMNS_JOB_WIDTH      = {                    60,           100,                90,               180,             90,               90,                   90,                             220,                    130,                        'auto'};
                 
         COLUMNS_TABLE_RT   = {'recording_id', 'subject_fullname', 'session_date', 'session_number', 'status_recording_id',  'status_recording_definition',   'recording_modality', 'recording_directory'};
         COLUMNS_NAMES_RT   = {'recording_id',           'subject',        'date',       'sess_num',          'status_rec',                 'status_desc',            'modality',            'directory'};
@@ -274,14 +290,14 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         COLUMNS_RECORDING_STATUS_TABLE  = {'recording_log_id', 'recording_id', 'status_recording_id_old', 'status_recording_id_new', 'recording_status_timestamp', 'recording_error_message', 'recording_error_exception'};
         COLUMNS_RECORDING_STATUS_NAMES  = {          'log_id', 'recording_id',             'old_status' ,              'new_status',                  'timestamp',           'error_message',           'error_exception'};
-        COLUMNS_RECORDING_STATUS_EDITABLE = false(size(RecordingProcessJobGUI.COLUMNS_RECORDING_STATUS_NAMES));
+        COLUMNS_RECORDING_STATUS_EDITABLE = true(size(RecordingProcessJobGUI.COLUMNS_RECORDING_STATUS_NAMES));
         COLUMNS_RECORDING_STATUS_SORTABLE = true(size(RecordingProcessJobGUI.COLUMNS_RECORDING_STATUS_NAMES));
         COLUMNS_RECORDING_STATUS_FORMAT = {         'numeric',     'numeric',                 'numeric',                 'numeric',                       'char',                    'char',                      'char'};
         COLUMNS_RECORDING_STATUS_WIDTH  = {                60,           100,                        90,                        95,                          120,                    'auto',                      'auto'};
 
         COLUMNS_JOB_STATUS_TABLE  = {'log_id', 'job_id',  'status_processing_id_old', 'status_processing_id_new', 'status_timestamp', 'error_message', 'error_exception'};
         COLUMNS_JOB_STATUS_NAMES  = {'log_id', 'job_id',                'old_status',               'new_status',        'timestamp', 'error_message', 'error_exception'};
-        COLUMNS_JOB_STATUS_EDITABLE = false(size(RecordingProcessJobGUI.COLUMNS_RECORDING_STATUS_NAMES));
+        COLUMNS_JOB_STATUS_EDITABLE = true(size(RecordingProcessJobGUI.COLUMNS_RECORDING_STATUS_NAMES));
         COLUMNS_JOB_STATUS_SORTABLE = true(size(RecordingProcessJobGUI.COLUMNS_RECORDING_STATUS_NAMES));
         COLUMNS_JOB_STATUS_FORMAT = {'numeric','numeric',                 'numeric',                   'numeric',             'char',          'char',            'char'};
         COLUMNS_JOB_STATUS_WIDTH  = {      60,       65,                         90,                          95,                120,           'auto',           'auto'};
@@ -297,6 +313,13 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         COLUMNS_DEF_PARAMS_FORMAT   = {                 'char',               'char',        'char',        'char'};
         COLUMNS_DEF_PARAMS_SORTABLE = false(size(RecordingProcessJobGUI.COLUMNS_DEF_PARAMS_TABLE));
         COLUMNS_DEF_PARAMS_EDITABLE = false(size(RecordingProcessJobGUI.COLUMNS_DEF_PARAMS_TABLE));
+        
+        %Style vars
+        RED_COLOR          = [1 0.8 0.8];
+        GREEN_COLOR        = [0.8 1 0.8];
+        RED_STYLE          = uistyle('BackgroundColor', RecordingProcessJobGUI.RED_COLOR);
+        GREEN_STYLE        = uistyle('BackgroundColor', RecordingProcessJobGUI.GREEN_COLOR);
+        
         
         %Python environment variables
         gui_path = fileparts(mfilename('fullpath'));
@@ -348,7 +371,11 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         recordingTableSelected(app,event);
 
         %Tab4
-        jobTableSelected(app, event)
+        jobTableSelected(app, event);
+        fillJobStatusTable(app, event);
+        RerunJob(app, event)
+        RunJobDiffParams(app, event);
+        CreateNewJob(app, event);
         
         %Tab5 Create Params
         checkBoxPreParamMethod(app, event);
@@ -366,6 +393,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         startConfiguration(app,event);
         configuration_done = checkConfiguration(app);
         postConfigurationActions(app);
+        addRig2System(app,event);
+        dropRig2System(app,event);
                 
         %Utility
         split_param_table = splitDescriptionColumnParams(app, param_table);
@@ -378,7 +407,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         fillSubjects(app, key);
         fillSessions(app, key);
         fillUsers(app,key);
-        fillTable(app, key);
+        fillJobTable(app, key);
         filterTable(app, event);
         fillPreParamsSets(app, event);
         fillRecordingModality(app);

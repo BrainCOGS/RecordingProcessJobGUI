@@ -2,17 +2,24 @@ function jobTableSelected(app, event)
 %JOBTABLESELECTED Summary of this function goes here
 %   Detailed explanation goes here
 
-job_id = app.UITable.Data{event.Indices(1),1};
-query.job_id = job_id;
+app.RerunJobStartButton.Enable = 'off';
 
-columns = [app.COLUMNS_JOB_STATUS_TABLE, {'ORDER BY status_timestamp desc'}];
-
-job_status_history = fetch(app.job_id_history_table_class() & query,columns{:});
-
-if ~isempty(job_status_history)
-    data = struct2cell(job_status_history);
-    app.JobHistoryTable.Data = data';
+if length(unique(event.Indices(:,1))) == 1
+    
+    app.selectedJobRow = event.Indices(1,1);
+    idx_job_id_column = find(ismember(app.COLUMNS_JOB_TABLE,'job_id'),1);
+    
+    job_id = app.JobTable.Data{event.Indices(1),idx_job_id_column};
+    query.job_id = job_id;
+    
+    fillJobStatusTable(app, query)
+    
+    idx_status_job_id = find(ismember(app.COLUMNS_JOB_TABLE,'status_processing_id'),1);
+    status_job_id = app.JobTable.Data{event.Indices(1),idx_status_job_id};
+    
+    if status_job_id == -1
+        app.RerunJobStartButton.Enable = 'on';
+    end
+    
+    
 end
-
-end
-

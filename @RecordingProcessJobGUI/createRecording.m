@@ -4,6 +4,8 @@ function createRecording(app, event)
 % Get all info to insert recording.Recording table
 % ALS , modify when no behavior session is there %%%%%%%%%%%%%%%%%%%%%%%
 
+updateBusyLabel(app, false);
+
 % Get default parameters record (or records)
 default_params_record = createDefaultParamsRecord(app);
 
@@ -54,15 +56,14 @@ try
     insert(recording.DefaultParams, default_params_record);
     conn.commitTransaction
     
-    fillTable(app);
-    fillRecordingUser(app);
-    fillRecordingSubject(app);
+    fillRecordingTable(app);
+    fillRecordingSubjectRT(app);
+    fillRecordingUserRT(app);
+    app.TabGroup.SelectedTab = app.RecordingTableTab;
     
-    event.Source.Enable = 'on';
     updateBusyLabel(app, true);
     
-    
-    uiconfirm(app.UIFigure,'Recording was registered successfully', ...
+    uiconfirm(app.UIFigure,['Recording was registered successfully with id: ' num2str(recording_id.recording_id)] , ...
     'Job Creation Success', ...
     'Options',{'OK'}, ...
     'Icon','success');
@@ -72,7 +73,8 @@ try
     
     app.ListBoxFragmentRecordingPreParams.Items = {'0', '1', '2', '3', '4'};
     app.ListBoxFragmentRecording2Params.Items = {'0', '1', '2', '3', '4'};
-
+    
+    app.CreateProcessingJobButton2.Enable = 'off';
 
 
 catch err

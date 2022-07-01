@@ -4,9 +4,12 @@ app.ConfigurationNeededLabel.Text = '';
 app.ConfigurationNeededLabel.BackgroundColor = 'none';
 
 %Write configuration on the front to inform user
+
+behavior_rig_str = strjoin(string(app.Configuration.BehaviorRig), ', ');
+
 conf_label = app.InfoStyle;
 conf_label = conf_label + "<b>System:</b> " + string(app.Configuration.System);
-conf_label = conf_label + "&nbsp&nbsp&nbsp<b>Behavior Rig:</b> " + string(app.Configuration.BehaviorRig);
+conf_label = conf_label + "&nbsp&nbsp&nbsp<b>Behavior Rig:</b> " + behavior_rig_str;
 conf_label = conf_label + "&nbsp&nbsp&nbsp<b>Modality:</b> " + string(app.Configuration.RecordingModality);
 conf_label = conf_label + "&nbsp&nbsp<br>";
 conf_label = conf_label + "<b>Recording root directory:</b> " + string(app.Configuration.RecordingRootDirectory);
@@ -37,7 +40,7 @@ else
     app.RecordingDirectoryDropDown.Items = {'dummy'};
 end
     
-key.session_location = app.Configuration.BehaviorRig;
+key = cell2struct(app.Configuration.BehaviorRig','session_location');
 fillSessions(app, key);    
 fillPreParamsSets(app);
 fillDefaultParams(app);

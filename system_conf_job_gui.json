@@ -1,6 +1,9 @@
 {
-	"System" : "NPX",
-	"BehaviorRig" : "Manuel-NPX",
+	"System" : "188-Recording",
 	"RecordingModality" : "electrophysiology",
-	"RecordingRootDirectory" : "C:\\Data\\josh\\data\\testuser_test70"
+	"RecordingRootDirectory" : "/Users/alvaros/Documents/MATLAB/BrainCogsProjects/Datajoint_proj/VRrigs-documentation",
+	"BehaviorRig" : [
+		"188-Rig1",
+		"188-Rig2"
+	]
 }

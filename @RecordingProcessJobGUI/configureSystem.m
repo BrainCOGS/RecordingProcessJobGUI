@@ -4,7 +4,7 @@ function configureSystem(app, event)
 updateBusyLabel(app, 0);
 
 app.Configuration.System =  app.SystemNameDropDown.Value;
-app.Configuration.BehaviorRig = app.AssociatedBehaviorRigDropDown.Value;
+app.Configuration.BehaviorRig = string(app.AssociatedBehaviorRigListBox.Items);
 app.Configuration.RecordingModality = app.RecordingModalityDropDown.Value;
 app.Configuration.RecordingRootDirectory = app.RecordingRootDirectoryEdit.Value;
 
@@ -12,7 +12,8 @@ app.Configuration.RecordingRootDirectory = strrep(app.Configuration.RecordingRoo
 
 saveJSONfile(app.Configuration, app.ConfFileFullName);
 
-enableSturct.Disable = {'SystemNameDropDown', 'AssociatedBehaviorRigDropDown', 'RecordingModalityDropDown', ...
+enableSturct.Disable = {'SystemNameDropDown', 'AssociatedBehaviorRigDropDown', 'AssociatedBehaviorRigListBox'...
+    'AddAssociatedRigButton', 'DeleteAssociatedRigButton', 'RecordingModalityDropDown', ...
     'RecordingRootDirectoryEdit', 'ConfigureSystemButton', 'SearchDirectoryButton'};
 
 app.controlEnables(enableSturct);

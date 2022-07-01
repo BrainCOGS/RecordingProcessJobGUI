@@ -112,6 +112,14 @@ app.preparam_methods_table_names.electrophysiology.desc_field   = 'precluster_me
 %app.preparam_methods_table_names.imaging.method_field  = 'preprocess_method';
 %app.preparam_methods_table_names.imaging.desc_field    = 'preprocess_method_desc';
 
+app.job_part_parms_table = struct(); 
+
+app.job_part_parms_table.electrophysiology = struct();
+app.job_part_parms_table.electrophysiology.table_class = recording_process.ProcessingEphysParams; 
+
+app.job_part_parms_table.imaging = struct();
+app.job_part_parms_table.imaging.table_class = recording_process.ProcessingImagingParams; 
+
 % Status tables
 app.recording_history_table_class = recording.LogStatus;
 app.job_id_history_table_class = recording_process.LogStatus;
@@ -120,6 +128,8 @@ app.job_id_history_table_class = recording_process.LogStatus;
 app.PreParamSelectionTable  = cell2table(cell(0,2), 'VariableNames', {'fragment_number', app.preparam_steps_idx_field});
 app.ParamSelectionTable     = cell2table(cell(0,2), 'VariableNames', {'fragment_number', app.params_idx_field});
 app.CreateRecordingOrJob    = true;
+app.selectedRecordingRow    = -1;
+app.selectedJobRow          = -1;
 app.NewParamJsonFile        = '';
 app.NewPreParamJsonFile     = '';
 

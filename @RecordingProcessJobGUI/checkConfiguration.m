@@ -22,10 +22,21 @@ conf_fields = fieldnames(app.Configuration);
 for i=1:length(conf_fields)
     if isempty(app.Configuration.(conf_fields{i}))
         configuration_done = 0;
-    else
-        app.([conf_fields{i} 'Label']).Text = app.Configuration.(conf_fields{i});
     end
 end
+
+%configuration_done = 0
+if configuration_done
+    app.SystemLabel.Text = app.Configuration.System;
+    app.RecordingModalityLabel.Text = app.Configuration.RecordingModality;
+    app.RecordingRootDirectoryLabel.Text = app.Configuration.RecordingRootDirectory;
+    app.AssociatedBehaviorRigListBox.Items = cellstr(app.Configuration.BehaviorRig);
+    app.AssociatedBehaviorRigLabel.Text = strjoin(app.Configuration.BehaviorRig, ', ');
+else
+    app.Configuration.System = '';
+    app.Configuration.RecordingModality = '';
+    app.Configuration.RecordingRootDirectory = '';
+    app.Configuration.BehaviorRig = '';
         
 end
 

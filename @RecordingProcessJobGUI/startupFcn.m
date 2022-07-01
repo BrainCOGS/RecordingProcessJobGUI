@@ -6,7 +6,6 @@ getPythonEnv(app);
 hasInternet = true;
 
 
-
 if hasInternet
     
     % ALS, this should change if added sessions without behavior
@@ -18,12 +17,20 @@ if hasInternet
         proj(lab.User,'user_id') * ...
         recording_process.Status;
     
+    job_statuses = fetchn(recording_process.Status,'status_processing_id');
+    app.min_job_status = min(job_statuses);
+    app.max_job_status = max(job_statuses);
+    
     
     app.RecordingTable = recording.Recording * ...
         recording.RecordingBehaviorSession * ...
         proj(subject.Subject,'subject_fullname', 'user_id') * ...
         proj(lab.User,'user_id') * ...
         recording.Status;
+    
+    recording_statuses = fetchn(recording.Status,'status_recording_id');
+    app.min_rec_status = min(recording_statuses);
+    app.max_rec_status = max(recording_statuses);
     
     app.RecordingModalityTable = fetchDataDJTable(recording.Modality, [], {'*'}, "table", [], true);
     app.RecordingModalityTable = convertTable2Categorical(app.RecordingModalityTable);
@@ -33,18 +40,12 @@ if hasInternet
     
     if configuration_done
         
-        key.session_location = app.Configuration.BehaviorRig;
+        key = cell2struct(app.Configuration.BehaviorRig', 'session_location');
         fillSessions(app, key);
         fillParams(app);
         postConfigurationActions(app);
 
-        fillTable(app);
-        fillTableRT(app);
-        fillRecordingUser(app);
-        fillRecordingSubject(app);
-        fillRecordingUserRT(app);
-        fillUsers(app, 'active_gui_user=1 and primary_tech="N/A"');
-        fillRecordingSubjectRT(app);
+        FillEverything(app);
         
         app.ParamModalityDrop.Value = app.Configuration.RecordingModality;
         app.FilterRecordingJob = struct;
