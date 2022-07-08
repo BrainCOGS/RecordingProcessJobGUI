@@ -5,6 +5,11 @@ function CreateNewJob(app, event)
 
 updateBusyLabel(app, false);
 
+modality = app.modality_job_id_copy;
+this_PreProcessParamList = app.PreProcessParamList(app.PreProcessParamList.recording_modality == modality, :);
+this_ProcessParams = app.ProcessParams(app.ProcessParams.recording_modality == modality, :);
+
+
 job_data = fetch(recording_process.Processing & app.jobid_to_copy,'recording_id', 'fragment_number', 'recording_process_pre_path');
 
 job_data = rmfield(job_data, 'job_id');
@@ -25,12 +30,12 @@ try
         
         %Get preparam selected for new job
         preprocess_idx_field = app.preparam_steps_table_names.electrophysiology.preprocess_steps_idx_field;
-        idx_selected_preparam = find(app.PreProcessParamList.(app.preprocess_steps_name_field) == app.PreprocessingParamsDropDown.Value,1,'first');
-        new_record_params.(preprocess_idx_field) = idx_selected_preparam;
+        idx_selected_preparam = find(this_PreProcessParamList.(app.preprocess_steps_name_field) == app.PreprocessingParamsDropDown.Value,1,'first');
+        new_record_params.(preprocess_idx_field) = this_PreProcessParamList{idx_selected_preparam, app.preparam_steps_idx_field};
         
         %Get param selected for new job
-        idx_params = find(app.ProcessParams.paramset_desc == app.ProcessingParamsDropDown.Value,1,'first');
-        new_record_params.(app.params_idx_field) = idx_params;
+        idx_params = find(this_ProcessParams.paramset_desc == app.ProcessingParamsDropDown.Value,1,'first');
+        new_record_params.(app.params_idx_field) = this_ProcessParams{idx_params, app.params_idx_field};
     
         insert(app.job_part_parms_table.electrophysiology.table_class, new_record_params);
     

@@ -1,11 +1,15 @@
 
-function fillUserParams(app)
+function fillUserParams(app, modality)
+
+if nargin < 2
+    modality = app.Configuration.RecordingModality;
+end
 
 user_preprocessing = app.PreProcessParamList{...
-        app.PreProcessParamList.recording_modality == app.Configuration.RecordingModality, 'user_params'};
+        app.PreProcessParamList.recording_modality == modality, 'user_params'};
     
 user_proccessing = app.ProcessParams{...
-        app.ProcessParams.recording_modality == app.Configuration.RecordingModality, 'user_params'};
+        app.ProcessParams.recording_modality == modality, 'user_params'};
     
 
 all_users = sort(unique([user_preprocessing; user_proccessing]));

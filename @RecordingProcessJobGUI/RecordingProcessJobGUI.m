@@ -274,12 +274,12 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ConfFileName = 'system_conf_job_gui.json';
         
         
-        COLUMNS_JOB_TABLE      = {             'job_id', 'recording_id', 'fragment_number', 'subject_fullname', 'session_date', 'session_number', 'status_processing_id', 'status_processing_definition', 'recording_modality',   'recording_process_pre_path'};
-        COLUMNS_JOB_NAMES      = {             'job_id', 'recording_id',     '(probe|fov)',          'subject',        'date',       'sess_num',           'status_job',                  'status_desc',            'modality',           'raw_data_directory'};
+        COLUMNS_JOB_TABLE      = {             'job_id', 'recording_id', 'fragment_number', 'subject_fullname', 'session_date', 'session_number', 'status_processing_id', 'status_processing_definition', 'recording_modality',  'processing_method', 'paramset_desc', 'preprocess_param_steps_name'};
+        COLUMNS_JOB_NAMES      = {             'job_id', 'recording_id',     '(probe|fov)',          'subject',        'date',       'sess_num',           'status_job',                  'status_desc',            'modality',   'process_method',   'process_set_desc', 'preprocess_set_desc'};
         COLUMNS_JOB_EDITABLE   = false(size(RecordingProcessJobGUI.COLUMNS_JOB_TABLE));
         COLUMNS_JOB_SORTABLE   = true(size(RecordingProcessJobGUI.COLUMNS_JOB_TABLE));
-        COLUMNS_JOB_FORMAT     = {             'numeric',        'char',        'numeric',            'char',          'char',         'numeric',            'numeric',                          'char',                 'char',                        'char'};
-        COLUMNS_JOB_WIDTH      = {                    60,           100,                90,               180,             90,               90,                   90,                             220,                    130,                        'auto'};
+        COLUMNS_JOB_FORMAT     = {             'numeric',        'char',        'numeric',            'char',          'char',         'numeric',            'numeric',                          'char',                 'char',                       'char', 'char', 'char'};
+        COLUMNS_JOB_WIDTH      = {                    60,           100,                90,               180,             90,               90,                   90,                             220,                    130,                          'auto', 'auto', 'auto'};
                 
         COLUMNS_TABLE_RT   = {'recording_id', 'subject_fullname', 'session_date', 'session_number', 'status_recording_id',  'status_recording_definition',   'recording_modality', 'recording_directory'};
         COLUMNS_NAMES_RT   = {'recording_id',           'subject',        'date',       'sess_num',          'status_rec',                 'status_desc',            'modality',            'directory'};
@@ -302,6 +302,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         COLUMNS_JOB_STATUS_FORMAT = {'numeric','numeric',                 'numeric',                   'numeric',             'char',          'char',            'char'};
         COLUMNS_JOB_STATUS_WIDTH  = {      60,       65,                         90,                          95,                120,           'auto',           'auto'};
 
+ 
         COLUMNS_DEF_PREPARAMS_TABLE    = {'preprocess_param_steps_name', 'preprocess_param_steps_desc', 'step_number', 'preprocess_method',    'paramset_desc', 'user_params', 'date_params'};
         COLUMNS_DEF_PREPARAMS_NAMES    = {      'Preprocess Param name',       'Preprocess Param desc', 'step number', 'preprocess_method', 'step_description',        'User',        'Date'};
         COLUMNS_DEF_PREPARAMS_FORMAT   = {                       'char',                        'char',        'char',              'char',             'char',        'char',        'char'};

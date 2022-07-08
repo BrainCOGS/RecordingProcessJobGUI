@@ -38,7 +38,7 @@ if hasInternet
     
     configuration_done = checkConfiguration(app);
     fillParams(app);
-    
+
     if configuration_done
         
         key = cell2struct(app.Configuration.BehaviorRig', 'session_location');

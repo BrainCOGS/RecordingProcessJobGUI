@@ -1,8 +1,12 @@
 
-function fillParams2Select(app, event)
+function fillParams2Select(app, modality)
 
-idx_preprocess = app.PreProcessParamList.recording_modality == app.Configuration.RecordingModality;
-idx_process = app.ProcessParams.recording_modality == app.Configuration.RecordingModality;
+if nargin < 2
+    modality = app.Configuration.RecordingModality;
+end
+
+idx_preprocess = app.PreProcessParamList.recording_modality == modality;
+idx_process = app.ProcessParams.recording_modality == modality;
 
 if ~strcmp(app.UserParamsDropDown.Value,'all')
     idx_preprocess = idx_preprocess & app.PreProcessParamList.user_params == app.UserParamsDropDown.Value;
@@ -10,11 +14,9 @@ if ~strcmp(app.UserParamsDropDown.Value,'all')
 end
 
 preprocess_names = app.PreProcessParamList{idx_preprocess, app.preprocess_steps_name_field};
-
 params_desc = app.ProcessParams{idx_process, app.params_desc_field};
 
 app.PreprocessingParamsDropDown.Items = unique(preprocess_names);
-
 app.ProcessingParamsDropDown.Items = unique(params_desc);
 
 % If the user has no processing parameters
@@ -22,6 +24,7 @@ if isempty(app.ProcessingParamsDropDown.Items)
     app.UserDateParamsLabel2.Text = '';
 else
     app.ParamSetSelected(app.ProcessingParamsDropDown);
+end
     
 % If the user has no preprocessing parameters
 if isempty(app.PreprocessingParamsDropDown.Items)

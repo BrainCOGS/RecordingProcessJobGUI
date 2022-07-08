@@ -3,6 +3,9 @@ function default_all_params_record = createDefaultParamsRecord(app)
 
 default_all_params_record = struct;
 
+this_PreProcessParamList = app.PreProcessParamList(app.PreProcessParamList.recording_modality == app.Configuration.RecordingModality, :);
+this_ProcessParams = app.ProcessParams(app.ProcessParams.recording_modality == app.Configuration.RecordingModality, :);
+
 if app.CreateRecordingOrJob
     %Get default parameters if selected
     if app.DefaultParametersCheckBox.Value
@@ -20,8 +23,8 @@ if app.CreateRecordingOrJob
             default_preparams_record.fragment_number = 0;
             default_preparams_record.default_same_preparams_all = 1;
             
-            idx_selected_list = find(app.PreProcessParamList.(app.preprocess_steps_name_field) == app.PreprocessingParamsDropDown.Value,1,'first');
-            default_preparams_record.preprocess_param_steps_id = app.PreProcessParamList{idx_selected_list, app.preparam_steps_idx_field };
+            idx_selected_list = find(this_PreProcessParamList.(app.preprocess_steps_name_field) == app.PreprocessingParamsDropDown.Value,1,'first');
+            default_preparams_record.preprocess_param_steps_id = this_PreProcessParamList{idx_selected_list, app.preparam_steps_idx_field };
             default_preparams_record = struct2table(default_preparams_record, 'AsArray', true);
         else
             %Table for not all the same preparams already created
@@ -33,8 +36,8 @@ if app.CreateRecordingOrJob
             default_params_record.fragment_number = 0;
             default_params_record.default_same_params_all = 1;
             
-            idx_params = find(app.ProcessParams.paramset_desc == app.ProcessingParamsDropDown.Value,1,'first');
-            default_params_record.paramset_idx = app.ProcessParams{idx_params, app.params_idx_field};
+            idx_params = find(this_ProcessParams.paramset_desc == app.ProcessingParamsDropDown.Value,1,'first');
+            default_params_record.paramset_idx = this_ProcessParams{idx_params, app.params_idx_field};
             default_params_record = struct2table(default_params_record, 'AsArray', true);
         else
             default_params_record = app.ParamSelectionTable;
