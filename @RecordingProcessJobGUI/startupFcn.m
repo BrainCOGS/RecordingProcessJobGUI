@@ -49,9 +49,10 @@ if hasInternet
         
         app.ParamModalityDrop.Value = app.Configuration.RecordingModality;
         app.FilterRecordingJob = struct;
+        app.ConfigurationNeededLabel.Text = {['Version: ', app.Version]};
     else
         app.ConfigurationNeededLabel.BackgroundColor = app.ErrorColor;
-        app.ConfigurationNeededLabel.Text = {'Configuration'; 'needed'};
+        app.ConfigurationNeededLabel.Text = {['Version: ', app.Version]; 'Configuration needed'};
         
     end
     

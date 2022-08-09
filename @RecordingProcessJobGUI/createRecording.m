@@ -33,7 +33,7 @@ local_directory         = fullfile(app.Configuration.RecordingRootDirectory, app
 last_folder             = strsplit(local_directory,filesep);
 last_folder             = last_folder{end};
 %key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, [session_date '_g' num2str(key_part.session_number)], last_folder);
-key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, last_folder);
+key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, [session_date '_g' num2str(key_part.session_number)], last_folder);
 if ispc
     key.local_directory     = strrep(local_directory,'\','/');
 else

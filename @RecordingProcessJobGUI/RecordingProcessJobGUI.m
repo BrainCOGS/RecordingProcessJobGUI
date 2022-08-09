@@ -34,6 +34,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         Label2                          matlab.ui.control.Label
         SelectProcessingParametersLabel matlab.ui.control.Label
         DefaultParametersCheckBox       matlab.ui.control.CheckBox
+        DefaultParametersLabel          matlab.ui.control.Label
         DefaultPreParamNameLabel        matlab.ui.control.Label
         DefaultPreParamTable            matlab.ui.control.Table
         Label0                          matlab.ui.control.Label
@@ -189,6 +190,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         RootFolder
         ConfFileFullName
         FileExtensions
+        AllFileExtensions
         
         %Recording Table & JobId table
         RecordingTable
@@ -266,13 +268,16 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
     
     properties (Constant = true)
     
+        Version      = '1.0';
         OKColor      = [0.7608        1     0.7922];
         ErrorColor   = [1         0.6588    0.6588];
         ActiveColor  = [0.5078    0.7078         1];
         WhiteColor   = [1             1          1];
+        NotifyColor  = [0.2078    0.4078    0.9137];
+        GreenBColor  = [0.7804    0.9294    0.6784];
+        YellowBColor = [0.9294    0.9294       0.5];
         InfoStyle    = "<p style='color: rgb(53, 104, 233); text-align: right; font-size:13px;'>";
         ConfFileName = 'system_conf_job_gui.json';
-        
         
         COLUMNS_JOB_TABLE      = {             'job_id', 'recording_id', 'fragment_number', 'subject_fullname', 'session_date', 'session_number', 'status_processing_id', 'status_processing_definition', 'recording_modality',  'processing_method', 'paramset_desc', 'preprocess_param_steps_name'};
         COLUMNS_JOB_NAMES      = {             'job_id', 'recording_id',     '(probe|fov)',          'subject',        'date',       'sess_num',           'status_job',                  'status_desc',            'modality',   'process_method',   'process_set_desc', 'preprocess_set_desc'};

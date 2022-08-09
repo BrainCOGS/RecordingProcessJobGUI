@@ -45,7 +45,7 @@ app.preparam_steps_table_names.electrophysiology.preprocess_steps_desc_field = .
 % Imaging
 app.preparam_steps_table_names.imaging           = struct();
 app.preparam_steps_table_names.imaging.table_class = ...
-    'pipeline_imaging_element.PreProcessParamSteps';
+    pipeline_imaging_element.PreprocessParamSteps;
 app.preparam_steps_table_names.imaging.preprocess_steps_idx_field = ...
     'preprocess_param_steps_id';
 app.preparam_steps_table_names.imaging.preprocess_steps_name_field = ...
@@ -70,7 +70,7 @@ app.preparam_steps_step_table_names.electrophysiology.paramset_idx_field = ...
 
 app.preparam_steps_step_table_names.imaging           = struct();
 app.preparam_steps_step_table_names.imaging.table_class = ...
-    'pipeline_imaging_element.PreProcessParamStepsStep';
+    pipeline_imaging_element.PreprocessParamStepsStep;
 app.preparam_steps_step_table_names.imaging.preprocess_steps_idx_field = ...
     'preprocess_param_steps_id';
 app.preparam_steps_step_table_names.imaging.step_field = ...
@@ -107,10 +107,10 @@ app.preparam_methods_table_names.electrophysiology.table_class = pipeline_ephys_
 app.preparam_methods_table_names.electrophysiology.method_field = 'precluster_method';
 app.preparam_methods_table_names.electrophysiology.desc_field   = 'precluster_method_desc';
 
-%app.preparam_methods_table_names.imaging               = struct();
-%app.preparam_methods_table_names.imaging.table_class   = 'pipeline_imaging_element.PreProcessMethod';
-%app.preparam_methods_table_names.imaging.method_field  = 'preprocess_method';
-%app.preparam_methods_table_names.imaging.desc_field    = 'preprocess_method_desc';
+app.preparam_methods_table_names.imaging               = struct();
+app.preparam_methods_table_names.imaging.table_class   = pipeline_imaging_element.PreprocessMethod;
+app.preparam_methods_table_names.imaging.method_field  = 'preprocess_method';
+app.preparam_methods_table_names.imaging.desc_field    = 'preprocess_method_desc';
 
 app.job_part_parms_table = struct(); 
 
@@ -132,6 +132,12 @@ app.selectedRecordingRow    = -1;
 app.selectedJobRow          = -1;
 app.NewParamJsonFile        = '';
 app.NewPreParamJsonFile     = '';
+
+%File extensions:
+app.AllFileExtensions = struct;
+app.AllFileExtensions.electrophysiology = {'^.*\g0'};
+app.AllFileExtensions.imaging = {'^.*\tiff', '^.*\tif', '^.*\avi'};
+
 
 
 end

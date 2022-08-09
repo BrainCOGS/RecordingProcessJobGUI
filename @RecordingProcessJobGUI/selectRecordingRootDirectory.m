@@ -3,7 +3,7 @@ function selectRecordingRootDirectory(app, event)
 
 app.UIFigure.Visible = 'off';
 
-sel_dir = uigetdir('/Users/alvaros/Documents/MATLAB/BrainCogsProjects/Datajoint_proj');
+sel_dir = uigetdir(app.RecordingRootDirectoryEdit.Value);
 
 app.UIFigure.Visible = 'on';
 

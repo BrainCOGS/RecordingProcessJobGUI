@@ -1,6 +1,6 @@
 function postConfigurationActions(app)
 
-app.ConfigurationNeededLabel.Text = '';
+app.ConfigurationNeededLabel.Text = {['Version: ', app.Version]};
 app.ConfigurationNeededLabel.BackgroundColor = 'none';
 
 %Write configuration on the front to inform user
@@ -20,24 +20,34 @@ app.ConfigurationLabel.HTMLSource = conf_label;
 app.TabGroup.SelectedTab = app.TabGroup.Children(1);
 
 % Get file extension for this system
-query_modality.recording_modality = app.Configuration.RecordingModality;
-
-%rec_schema = dj.Schema(dj.conn, 'recording', 'u19_recording');
-%app.FileExtensions = fetch1(recroding.RecordingModality & query_modality, 'recording_file_pattern');
-
-%ALS Hardoced
-app.FileExtensions = {'^.*\g0'};
+app.FileExtensions = app.AllFileExtensions.(app.Configuration.RecordingModality);
 
 %Fill possible recording directories from modality and selected root dir
 [rec_dirs, ~] = dirwalk(app.Configuration.RecordingRootDirectory, @visitor2, app.FileExtensions{:});
 rec_dirs = rec_dirs(~cellfun('isempty',rec_dirs));
 
+%Delete repeated directories (for probes)
+if ~isempty(rec_dirs)
+idx_good = 1:length(rec_dirs);
+for i=1:length(rec_dirs)
+    comp = rec_dirs{i};
+    for j=i+1:length(rec_dirs)
+        if contains(rec_dirs{j},comp)
+            idx_good(idx_good == j) = [];
+        end
+    end
+end
+rec_dirs = rec_dirs(idx_good); 
+end
+
 if ~isempty(rec_dirs)
     rec_dirs = strrep(rec_dirs, app.Configuration.RecordingRootDirectory, '');
     rec_dirs = rec_dirs(~cellfun('isempty',rec_dirs));
     app.RecordingDirectoryDropDown.Items = rec_dirs;
+    app.CreateProcessingJobButton.Enable = 'on';
 else
-    app.RecordingDirectoryDropDown.Items = {'dummy'};
+    app.RecordingDirectoryDropDown.Items = {'No recordings found'};
+    app.CreateProcessingJobButton.Enable = 'off';
 end
     
 key = cell2struct(app.Configuration.BehaviorRig','session_location');

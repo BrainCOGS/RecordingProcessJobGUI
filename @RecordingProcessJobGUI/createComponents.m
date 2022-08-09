@@ -197,14 +197,24 @@ app.SelectProcessingParametersLabel.Text = '3. Select Processing Parameters';
 % Create DefaultParametersCheckBox
 app.DefaultParametersCheckBox = uicheckbox(app.GridLayout2);
 app.DefaultParametersCheckBox.Text = 'Use default processing parameters for recording ? ';
-app.DefaultParametersCheckBox.FontSize = 13;
+app.DefaultParametersCheckBox.FontSize = 17;
 app.DefaultParametersCheckBox.Layout.Row = 8;
 app.DefaultParametersCheckBox.Layout.Column = [3 4];
 app.DefaultParametersCheckBox.Value = true;
 app.DefaultParametersCheckBox.Enable = 'on';
 app.DefaultParametersCheckBox.ValueChangedFcn = createCallbackFcn(app, @DefaultParamsCheckBoxToggle, true);
+%app.DefaultParametersCheckBox.HorizontalAlignment = 'right';
 
-
+% Create DefaultParametersCheckBox
+app.DefaultParametersLabel = uilabel(app.GridLayout2);
+app.DefaultParametersLabel.Text = '<<< Uncheck this if you want to select another set of parameters for the recording';
+app.DefaultParametersLabel.FontSize = 17;
+app.DefaultParametersLabel.Layout.Row = 8;
+app.DefaultParametersLabel.Layout.Column = [5 7];
+app.DefaultParametersLabel.Layout.Column = [5 7];
+app.DefaultParametersLabel.FontColor = app.NotifyColor;
+app.DefaultParametersLabel.HorizontalAlignment = 'left';
+app.DefaultParametersLabel.VerticalAlignment = 'center';
 
 % Create PreprocessingParamsLabel
 app.DefaultPreParamNameLabel = uilabel(app.GridLayout2);
@@ -256,7 +266,7 @@ app.DefaultParamTable.ColumnWidth = 'auto';
 
 % Create CreateProcessingJobButton
 app.CreateProcessingJobButton = uibutton(app.GridLayout2, 'push');
-app.CreateProcessingJobButton.BackgroundColor = [0.7804 0.9294 0.6784];
+app.CreateProcessingJobButton.BackgroundColor = app.GreenBColor;
 app.CreateProcessingJobButton.FontWeight = 'bold';
 app.CreateProcessingJobButton.FontSize = 16;
 app.CreateProcessingJobButton.Layout.Row = 15;
@@ -489,7 +499,7 @@ app.RegisterParamsFragment.ButtonPushedFcn = createCallbackFcn(app, @RegisterPar
 
 % Create CreateProcessingJobButton
 app.CreateProcessingJobButton2 = uibutton(app.GridLayout3, 'push');
-app.CreateProcessingJobButton2.BackgroundColor = [0.7804 0.9294 0.6784];
+app.CreateProcessingJobButton2.BackgroundColor = app.GreenBColor;
 app.CreateProcessingJobButton2.FontSize = 16;
 app.CreateProcessingJobButton.FontWeight = 'bold';
 app.CreateProcessingJobButton2.Layout.Row = 14;
@@ -874,7 +884,7 @@ app.UploadParamSetFile.ButtonPushedFcn = createCallbackFcn(app, @UploadParamJson
 
 app.RegisterParamSetButton = uibutton(app.GridLayoutCP);
 app.RegisterParamSetButton.Text = 'Register Proc. Param Set';
-app.RegisterParamSetButton.BackgroundColor = [0.7804 0.9294 0.6784];
+app.RegisterParamSetButton.BackgroundColor = app.GreenBColor;
 app.RegisterParamSetButton.Layout.Row = 6;
 app.RegisterParamSetButton.Layout.Column = [4 6];
 app.RegisterParamSetButton.ButtonPushedFcn = createCallbackFcn(app, @writeParametersDB, true);
@@ -953,7 +963,7 @@ app.UploadPreParamSetFile.ButtonPushedFcn = createCallbackFcn(app, @UploadParamJ
 
 app.RegisterPreParamSetButton = uibutton(app.GridLayoutCP);
 app.RegisterPreParamSetButton.Text = 'Register Preproc. Param Set';
-app.RegisterPreParamSetButton.BackgroundColor = [0.7804 0.9294 0.6784];
+app.RegisterPreParamSetButton.BackgroundColor = app.GreenBColor;
 app.RegisterPreParamSetButton.Layout.Row = 10;
 app.RegisterPreParamSetButton.Layout.Column = [4 6];
 app.RegisterPreParamSetButton.ButtonPushedFcn = createCallbackFcn(app, @writeParametersDB, true);
@@ -1053,7 +1063,7 @@ app.DeleteStep.ButtonPushedFcn = createCallbackFcn(app, @DeleteStepClicked, true
 
 % Create AddPreParamStepButton
 app.RegisterPreParamListButton = uibutton(app.GridLayoutCP);
-app.RegisterPreParamListButton.BackgroundColor = [0.7804 0.9294 0.6784];
+app.RegisterPreParamListButton.BackgroundColor = app.GreenBColor;
 app.RegisterPreParamListButton.Text = 'Register pre param list';
 app.RegisterPreParamListButton.Layout.Row = 16;
 app.RegisterPreParamListButton.Layout.Column = [4 6];

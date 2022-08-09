@@ -23,11 +23,13 @@ method_modalities = fieldnames(app.preparam_methods_table_names);
 for i=1:length(method_modalities)
     this_mod = app.preparam_methods_table_names.(method_modalities{i});
     this_method_table = fetchDataDJTable(this_mod.table_class(), [], {this_mod.method_field}, "table");
-    if ismember("precluster_method", this_method_table.Properties.VariableNames)
-        this_method_table = renamevars(this_method_table,"precluster_method","preprocess_method");
+    if ~isempty(this_method_table)
+        if ismember("precluster_method", this_method_table.Properties.VariableNames)
+            this_method_table = renamevars(this_method_table,"precluster_method","preprocess_method");
+        end
+        this_method_table.recording_modality = repmat(method_modalities(i),size(this_method_table,1),1);
+        PreMethods = [PreMethods; this_method_table];
     end
-    this_method_table.recording_modality = repmat(method_modalities(i),size(this_method_table,1),1);
-    PreMethods = [PreMethods; this_method_table];
 end
     
 
