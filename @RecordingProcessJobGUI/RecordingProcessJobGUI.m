@@ -107,6 +107,11 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         Label3                          matlab.ui.control.Label
         JobHistoryLabel                 matlab.ui.control.Label
         JobHistoryTable                 matlab.ui.control.Table
+        OpenResultsLabel                matlab.ui.control.Label
+        OpenPhyFileButton               matlab.ui.control.Button
+        OpenOutLogButton                matlab.ui.control.Button
+        OpenErrLogButton                matlab.ui.control.Button
+
             
         %Tab5 Create Params
         CreateParamsTab                 matlab.ui.container.Tab
@@ -263,6 +268,11 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         recording_history_table_class
         job_id_history_table_class
         job_part_parms_table
+        
+        %Paths
+        ProcessedDataPath
+        ErrorLogsPath
+        OutputLogsPath  
    
     end
     
@@ -300,12 +310,12 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         COLUMNS_RECORDING_STATUS_FORMAT = {         'numeric',     'numeric',                 'numeric',                 'numeric',                       'char',                    'char',                      'char'};
         COLUMNS_RECORDING_STATUS_WIDTH  = {                60,           100,                        90,                        95,                          120,                    'auto',                      'auto'};
 
-        COLUMNS_JOB_STATUS_TABLE  = {'log_id', 'job_id',  'status_processing_id_old', 'status_processing_id_new', 'status_timestamp', 'error_message', 'error_exception'};
-        COLUMNS_JOB_STATUS_NAMES  = {'log_id', 'job_id',                'old_status',               'new_status',        'timestamp', 'error_message', 'error_exception'};
+        COLUMNS_JOB_STATUS_TABLE  = {'log_id', 'job_id',  'status_processing_id_old', 'status_processing_id_new', 'status_timestamp', 'error_message'};
+        COLUMNS_JOB_STATUS_NAMES  = {'log_id', 'job_id',                'old_status',               'new_status',        'timestamp', 'error_message'};
         COLUMNS_JOB_STATUS_EDITABLE = true(size(RecordingProcessJobGUI.COLUMNS_RECORDING_STATUS_NAMES));
         COLUMNS_JOB_STATUS_SORTABLE = true(size(RecordingProcessJobGUI.COLUMNS_RECORDING_STATUS_NAMES));
-        COLUMNS_JOB_STATUS_FORMAT = {'numeric','numeric',                 'numeric',                   'numeric',             'char',          'char',            'char'};
-        COLUMNS_JOB_STATUS_WIDTH  = {      60,       65,                         90,                          95,                120,           'auto',           'auto'};
+        COLUMNS_JOB_STATUS_FORMAT = {'numeric','numeric',                 'numeric',                   'numeric',             'char',          'char'};
+        COLUMNS_JOB_STATUS_WIDTH  = {      60,       65,                         90,                          95,                120,          'auto'};
 
  
         COLUMNS_DEF_PREPARAMS_TABLE    = {'preprocess_param_steps_name', 'preprocess_param_steps_desc', 'step_number', 'preprocess_method',    'paramset_desc', 'user_params', 'date_params'};
@@ -338,7 +348,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         preparams_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams.mat')
         preparams_list_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams_list.mat')
         params_mat          = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'params.mat')
-        
+                
     end
         
     % Component initialization
@@ -382,6 +392,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         RerunJob(app, event)
         RunJobDiffParams(app, event);
         CreateNewJob(app, event);
+        OpenLog(app, event, type)
         
         %Tab5 Create Params
         checkBoxPreParamMethod(app, event);

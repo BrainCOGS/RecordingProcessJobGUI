@@ -138,6 +138,10 @@ app.AllFileExtensions = struct;
 app.AllFileExtensions.electrophysiology = {'^.*\g0'};
 app.AllFileExtensions.imaging = {'^.*\tiff', '^.*\tif', '^.*\avi'};
 
+%DataPaths
+[~, app.ProcessedDataPath] = lab.utils.get_path_from_official_dir('braininit/Data/Processed');
+app.ErrorLogsPath     = fullfile(app.ProcessedDataPath, 'LOGS', 'ErrorLogs');
+app.OutputLogsPath     = fullfile(app.ProcessedDataPath, 'LOGS', 'OutputLogs');
 
 
 end
