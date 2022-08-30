@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="3405021868" file="C:\Users\stephan\Documents\MATLAB\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Users\stephan\Documents\MATLAB\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="4257040783" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon />
     <param.icons />
@@ -69,7 +69,6 @@
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\RecordingProcessJobGUI.m</file>
     </fileset.main>
     <fileset.resources>
-      <file>C:\Experiments\U19-pipeline-matlab</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\AddPreParamStepNewList.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\addRig2System.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkBoxParamMethod.m</file>
@@ -145,9 +144,24 @@
       <file>${PROJECT_ROOT}\mym_mexw64</file>
       <file>${PROJECT_ROOT}\PythonScripts</file>
       <file>${PROJECT_ROOT}\system_conf_job_gui.json</file>
+      <file>C:\Experiments\U19-pipeline-matlab</file>
     </fileset.resources>
     <fileset.package />
     <fileset.depfun>
+      <file>${PROJECT_ROOT}\catstruct.m</file>
+      <file>${PROJECT_ROOT}\connect_tech.p</file>
+      <file>${PROJECT_ROOT}\convertTable2Categorical.m</file>
+      <file>${PROJECT_ROOT}\copy_gui_vars.m</file>
+      <file>${PROJECT_ROOT}\fetch_table_except.m</file>
+      <file>${PROJECT_ROOT}\fetchDataDJTable.m</file>
+      <file>${PROJECT_ROOT}\jsonencodepretty.m</file>
+      <file>${PROJECT_ROOT}\load_gui_vars.m</file>
+      <file>${PROJECT_ROOT}\loadJSONfile.m</file>
+      <file>${PROJECT_ROOT}\OneDrive_Folder_Icon.svg.png</file>
+      <file>${PROJECT_ROOT}\reload.png</file>
+      <file>${PROJECT_ROOT}\saveJSONfile.m</file>
+      <file>${PROJECT_ROOT}\struct2string.m</file>
+      <file>C:\Experiments\ViRMEn\database\@SessionFlagger\brain_cogs_on_white_small_brain_cogs_on_white.png</file>
       <file>C:\Experiments\ViRMEn\database\accumfun.m</file>
       <file>C:\Experiments\ViRMEn\database\AddLabUsers\@DataJointLabUserTable\DataJointLabUserTable.m</file>
       <file>C:\Experiments\ViRMEn\database\AddLabUsers\@DataJointLabUserTable\get_GUI_table_info.m</file>
@@ -251,17 +265,6 @@
       <file>C:\Experiments\ViRMEn\notifications\send_weeklyEmailSummary.m</file>
       <file>C:\Experiments\ViRMEn\sensors\serialCommunications\arduinoReader.mexw64</file>
       <file>${MATLAB_ROOT}\toolbox\local\userpath.m</file>
-      <file>${PROJECT_ROOT}\catstruct.m</file>
-      <file>${PROJECT_ROOT}\connect_tech.p</file>
-      <file>${PROJECT_ROOT}\convertTable2Categorical.m</file>
-      <file>${PROJECT_ROOT}\copy_gui_vars.m</file>
-      <file>${PROJECT_ROOT}\fetch_table_except.m</file>
-      <file>${PROJECT_ROOT}\fetchDataDJTable.m</file>
-      <file>${PROJECT_ROOT}\jsonencodepretty.m</file>
-      <file>${PROJECT_ROOT}\load_gui_vars.m</file>
-      <file>${PROJECT_ROOT}\loadJSONfile.m</file>
-      <file>${PROJECT_ROOT}\saveJSONfile.m</file>
-      <file>${PROJECT_ROOT}\struct2string.m</file>
     </fileset.depfun>
     <build-deliverables>
       <file location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing" name="Recording_Automation_GUI.exe" optional="false">\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing\Recording_Automation_GUI.exe</file>
@@ -270,17 +273,24 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2020b</root>
+      <root>C:\Program Files\MATLAB\R2021a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
         <toolbox name="gpucoder" />
         <toolbox name="fixedpoint" />
         <toolbox name="matlabhdlcoder" />
+        <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
       </toolbox>
       <toolbox>
         <gpucoder>
@@ -296,6 +306,11 @@
         <matlabhdlcoder>
           <enabled>true</enabled>
         </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
       </toolbox>
     </matlab>
     <platform>
