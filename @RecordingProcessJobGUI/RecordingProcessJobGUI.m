@@ -273,6 +273,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ProcessedDataPath
         ErrorLogsPath
         OutputLogsPath  
+        RootDirectories
    
     end
     
