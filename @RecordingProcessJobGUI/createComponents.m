@@ -268,7 +268,7 @@ app.DefaultParamTable.ColumnWidth = 'auto';
 app.CreateProcessingJobButton = uibutton(app.GridLayout2, 'push');
 app.CreateProcessingJobButton.BackgroundColor = app.GreenBColor;
 app.CreateProcessingJobButton.FontWeight = 'bold';
-app.CreateProcessingJobButton.FontSize = 16;
+app.CreateProcessingJobButton.FontSize = 19;
 app.CreateProcessingJobButton.Layout.Row = 15;
 app.CreateProcessingJobButton.Layout.Column = [5 7];
 app.CreateProcessingJobButton.Text = 'Register Recording';
@@ -631,7 +631,7 @@ app.ManageProcessingJobsTab.Title = 'Manage Processing Jobs';
 % Create GridLayoutJobs
 app.GridLayoutJobs = uigridlayout(app.ManageProcessingJobsTab);
 app.GridLayoutJobs.ColumnWidth = {'1x', '0.5x', '1.5x', '1x', '1.5x', '0.2x', '1x', '1.5x'};
-app.GridLayoutJobs.RowHeight = {'1x', '1x', '6x', '1x', 2, '1x', '4x'};
+app.GridLayoutJobs.RowHeight = {'1x', '1x', '6x', '1x', 2, '1x', '1x', '1x', '1x', '1x'};
 
 % Create FilterprocessingjobLabel
 app.FilterprocessingjobLabel = uilabel(app.GridLayoutJobs);
@@ -734,7 +734,7 @@ app.Label3.Layout.Row = 5;
 app.Label3.Layout.Column = [1 8];
 app.Label3.Text = 'Label3';
 
-% Create DateDatePickerLabelRT
+% Create JobHistoryLabel
 app.JobHistoryLabel = uilabel(app.GridLayoutJobs);
 app.JobHistoryLabel.HorizontalAlignment = 'left';
 app.JobHistoryLabel.FontSize = 16;
@@ -751,8 +751,52 @@ app.JobHistoryTable.ColumnFormat   = app.COLUMNS_JOB_STATUS_FORMAT;
 app.JobHistoryTable.ColumnSortable = app.COLUMNS_JOB_STATUS_SORTABLE;
 app.JobHistoryTable.ColumnWidth    = app.COLUMNS_JOB_STATUS_WIDTH;
 app.JobHistoryTable.RowName = {};
-app.JobHistoryTable.Layout.Row = 7;
-app.JobHistoryTable.Layout.Column = [1 8];
+app.JobHistoryTable.Layout.Row = [7 10];
+app.JobHistoryTable.Layout.Column = [1 6];
+
+% Create OpenResultsLabel
+app.JobHistoryLabel = uilabel(app.GridLayoutJobs);
+app.JobHistoryLabel.HorizontalAlignment = 'left';
+app.JobHistoryLabel.FontSize = 16;
+app.JobHistoryLabel.FontWeight = 'bold';
+app.JobHistoryLabel.Layout.Row = 7;
+app.JobHistoryLabel.Layout.Column = [7 8];
+app.JobHistoryLabel.Text = 'Open results:' ;
+
+% Create OpenPhyFileButton
+app.OpenPhyFileButton = uibutton(app.GridLayoutJobs, 'push');
+%app.OpenPhyFileButton.BackgroundColor = [0.9412 0.9804 0.6745];
+app.OpenPhyFileButton.FontSize = 14;
+app.OpenPhyFileButton.FontWeight = 'bold';
+app.OpenPhyFileButton.Layout.Row = 8;
+app.OpenPhyFileButton.Layout.Column = [7 8];
+app.OpenPhyFileButton.Text = 'Open results file';
+app.OpenPhyFileButton.Enable = 'on';
+%app.OpenPhyFileButton.ButtonPushedFcn = createCallbackFcn(app, @OpenPhyFile, true);
+
+% Create OpenOutLogButton
+app.OpenOutLogButton = uibutton(app.GridLayoutJobs, 'push');
+%app.OpenOutLogButton.BackgroundColor = [0.9412 0.9804 0.6745];
+app.OpenOutLogButton.FontSize = 14;
+app.OpenOutLogButton.FontWeight = 'bold';
+app.OpenOutLogButton.Layout.Row = 9;
+app.OpenOutLogButton.Layout.Column = [7 8];
+app.OpenOutLogButton.Text = 'Open Output log file';
+app.OpenOutLogButton.Enable = 'on';
+app.OpenOutLogButton.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);
+
+% Create OpenErrLogButton
+app.OpenErrLogButton = uibutton(app.GridLayoutJobs, 'push');
+%app.OpenErrLogButton.BackgroundColor = [0.9412 0.9804 0.6745];
+app.OpenErrLogButton.FontSize = 14;
+app.OpenErrLogButton.FontWeight = 'bold';
+app.OpenErrLogButton.Layout.Row = 10;
+app.OpenErrLogButton.Layout.Column = [7 8];
+app.OpenErrLogButton.Text = 'Open Error log file';
+app.OpenErrLogButton.Enable = 'on';
+app.OpenErrLogButton.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%  TAB5  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

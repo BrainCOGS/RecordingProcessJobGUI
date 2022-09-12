@@ -12,10 +12,10 @@ params_epys_table = proj(recording_process.ProcessingEphysParams, 'precluster_pa
 params_epys_table = fetchDataDJTable(params_epys_table);
 params_epys_table.recording_modality = repmat(categorical({'electrophysiology'}),size(params_epys_table,1),1);
 
-%params_imaging_table = fetchDataDJTable(recording_process.ProcessingImagingParams);
-%params_imaging_table.recording_modality = repmat({'imaging'},size(params_imaging_table,1),1);
+params_imaging_table = fetchDataDJTable(recording_process.ProcessingImagingParams);
+params_imaging_table.recording_modality = repmat({'imaging'},size(params_imaging_table,1),1);
 
-params_all_table = [params_epys_table];
+params_all_table = [params_imaging_table; params_epys_table];
 
 columns_join = {'paramset_idx', 'paramset_desc', 'processing_method', 'recording_modality'};
 t1 = outerjoin(params_all_table, app.ProcessParams(:, columns_join), 'Keys', {'recording_modality', 'paramset_idx'}, ...
