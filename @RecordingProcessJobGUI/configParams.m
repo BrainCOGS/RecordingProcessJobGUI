@@ -139,6 +139,21 @@ app.AllFileExtensions.electrophysiology = {'^.*\g0'};
 app.AllFileExtensions.imaging = {'^.*\tiff', '^.*\tif', '^.*\avi'};
 
 
+% Root directories
+key = struct();
+key.custom_variable = 'ephys_root_data_dir';
+key.index = 0;
+modality_root_dir = fetch1(lab.DjCustomVariables & key, 'value');
+[~, modality_root_dir] =  lab.utils.get_path_from_official_dir(modality_root_dir);
+app.RootDirectories.electrophysiology = modality_root_dir;
+
+key = struct();
+key.custom_variable = 'imaging_root_data_dir';
+key.index = 0;
+modality_root_dir = fetch1(lab.DjCustomVariables & key, 'value');
+[~, modality_root_dir] =  lab.utils.get_path_from_official_dir(modality_root_dir);
+app.RootDirectories.imaging = modality_root_dir;
+
 
 end
 

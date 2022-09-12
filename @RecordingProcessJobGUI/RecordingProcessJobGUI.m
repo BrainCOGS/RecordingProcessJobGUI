@@ -360,6 +360,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         controlEnables(app, structEnables);
         createRecordingButton(app, event);
         createRecording(app, event);
+        copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
         
         %Tab2 Parameter Selection
         fillUserParams(app, event);
