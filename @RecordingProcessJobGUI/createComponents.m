@@ -50,17 +50,18 @@ app.BusyLabel.BackgroundColor = [0.7608 1 0.7922];
 app.BusyLabel.HorizontalAlignment = 'center';
 app.BusyLabel.FontSize = 14;
 app.BusyLabel.Layout.Row = [1 2];
-app.BusyLabel.Layout.Column = 5;
+app.BusyLabel.Layout.Column = 4;
 app.BusyLabel.Text = 'OK';
 
 % Create ConfigurationNeededLabel
 app.ConfigurationNeededLabel = uilabel(app.GridLayout4);
 app.ConfigurationNeededLabel.BackgroundColor = 'none';
-app.ConfigurationNeededLabel.HorizontalAlignment = 'center';
+app.ConfigurationNeededLabel.HorizontalAlignment = 'right';
 app.ConfigurationNeededLabel.FontSize = 13;
 app.ConfigurationNeededLabel.Layout.Row = [1];
-app.ConfigurationNeededLabel.Layout.Column = 4;
+app.ConfigurationNeededLabel.Layout.Column = 5;
 app.ConfigurationNeededLabel.Text = '';
+app.ConfigurationNeededLabel.FontWeight = 'bold';
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%  TAB1       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -775,12 +776,34 @@ app.OpenPhyFileButton.Enable = 'on';
 %app.OpenPhyFileButton.ButtonPushedFcn = createCallbackFcn(app, @OpenPhyFile, true);
 
 % Create OpenOutLogButton
+app.OpenExtGUIButton = uibutton(app.GridLayoutJobs, 'push');
+%app.OpenOutLogButton.BackgroundColor = [0.9412 0.9804 0.6745];
+app.OpenExtGUIButton.FontSize = 14;
+app.OpenExtGUIButton.FontWeight = 'bold';
+app.OpenExtGUIButton.Layout.Row = 9;
+app.OpenExtGUIButton.Layout.Column = 8;
+app.OpenExtGUIButton.Text = 'Open Phy';
+app.OpenExtGUIButton.Enable = 'on';
+%app.OpenExtGUIButton.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);
+
+% Create OpenErrLogButton
+app.OpenExtGUIButton2 = uibutton(app.GridLayoutJobs, 'push');
+%app.OpenErrLogButton.BackgroundColor = [0.9412 0.9804 0.6745];
+app.OpenExtGUIButton2.FontSize = 14;
+app.OpenExtGUIButton2.FontWeight = 'bold';
+app.OpenExtGUIButton2.Layout.Row = 10;
+app.OpenExtGUIButton2.Layout.Column = 8;
+app.OpenExtGUIButton2.Text = 'Open IBL-Atlas';
+app.OpenExtGUIButton2.Enable = 'on';
+%app.OpenExtGUIButton2.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);
+
+% Create OpenOutLogButton
 app.OpenOutLogButton = uibutton(app.GridLayoutJobs, 'push');
 %app.OpenOutLogButton.BackgroundColor = [0.9412 0.9804 0.6745];
 app.OpenOutLogButton.FontSize = 14;
 app.OpenOutLogButton.FontWeight = 'bold';
 app.OpenOutLogButton.Layout.Row = 9;
-app.OpenOutLogButton.Layout.Column = [7 8];
+app.OpenOutLogButton.Layout.Column = 7;
 app.OpenOutLogButton.Text = 'Open Output log file';
 app.OpenOutLogButton.Enable = 'on';
 app.OpenOutLogButton.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);
@@ -790,8 +813,8 @@ app.OpenErrLogButton = uibutton(app.GridLayoutJobs, 'push');
 %app.OpenErrLogButton.BackgroundColor = [0.9412 0.9804 0.6745];
 app.OpenErrLogButton.FontSize = 14;
 app.OpenErrLogButton.FontWeight = 'bold';
-app.OpenErrLogButton.Layout.Row = 10;
-app.OpenErrLogButton.Layout.Column = [7 8];
+app.OpenErrLogButton.Layout.Row = 9;
+app.OpenErrLogButton.Layout.Column = 8;
 app.OpenErrLogButton.Text = 'Open Error log file';
 app.OpenErrLogButton.Enable = 'on';
 app.OpenErrLogButton.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);

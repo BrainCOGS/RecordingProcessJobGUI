@@ -46,8 +46,12 @@ removeStyle(app.JobTable);
 
 if ~isempty(app.DataTable)
     app.JobTable.Data = table2cell(app.DataTable(:, app.COLUMNS_JOB_TABLE));
-    app.setStyleCellsTable(app.JobTable, app.RED_STYLE, idx_cells_red);
-    app.setStyleCellsTable(app.JobTable, app.GREEN_STYLE, idx_cells_green);
+    if ~isempty(idx_cells_red)
+        app.setStyleCellsTable(app.JobTable, app.RED_STYLE, idx_cells_red);
+    end
+    if ~isempty(idx_cells_green)
+        app.setStyleCellsTable(app.JobTable, app.GREEN_STYLE, idx_cells_green);
+    end
 else
     app.JobTable.Data = {};
 end

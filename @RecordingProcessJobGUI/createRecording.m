@@ -2,7 +2,6 @@
 function createRecording(app, event)
 
 % Get all info to insert recording.Recording table
-% ALS , modify when no behavior session is there %%%%%%%%%%%%%%%%%%%%%%%
 
 updateBusyLabel(app, false);
 
@@ -16,9 +15,8 @@ behavior_session = app.BehaviorSessions( ...
 %Generate key for part table
 key_part.subject_fullname    = behavior_session.subject_fullname{:};
 
-%ALS, get user_id from behavior session merge
-user_id = strsplit(key_part.subject_fullname,'_');
-user_id = user_id{1};
+%user_id = strsplit(key_part.subject_fullname,'_');
+user_id = behavior_session.user_id{:};
 
 key_part.session_date        = behavior_session.session_date{:};
 key_part.session_number      = behavior_session.session_number;
@@ -41,13 +39,16 @@ else
     key.local_directory     = this_local_directory;
     this_recording_directory = key.recording_directory;
 end
-key.status_recording_id = 0;
+% With new method we already copy recording so we skip status 0 & 1
+key.status_recording_id = 2;
 
 
+% Copy recording directory from local machine to cup
 try
-    status = copy_recording(app, this_recording_directory, this_local_directory, key.recording_modality);
+    status = copyRecording(app, this_recording_directory, this_local_directory, key.recording_modality);
 catch err
-    uiconfirm(app.UIFigure,['Recording was not created' err.message], ...
+    status = -1;
+    uiconfirm(app.UIFigure,['Recording was not created ' err.message], ...
         '', ...
         'Options',{'OK'}, ...
         'Icon','error');
@@ -55,15 +56,7 @@ catch err
     updateBusyLabel(app, true);
 end
 %error(err.message);
-if status == -1
-    uiconfirm(app.UIFigure,['Recording was not created transfer did not succed' ], ...
-        '', ...
-        'Options',{'OK'}, ...
-        'Icon','error');
-    event.Source.Enable = 'on';
-    updateBusyLabel(app, true);
-    
-else
+if status ~= -1
     
     %insert values
     conn = dj.conn();

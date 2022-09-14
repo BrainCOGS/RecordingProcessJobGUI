@@ -111,8 +111,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         OpenPhyFileButton               matlab.ui.control.Button
         OpenOutLogButton                matlab.ui.control.Button
         OpenErrLogButton                matlab.ui.control.Button
-
-            
+        OpenExtGUIButton                matlab.ui.control.Button
+        OpenExtGUIButton2               matlab.ui.control.Button
+        
         %Tab5 Create Params
         CreateParamsTab                 matlab.ui.container.Tab
         GridLayoutCP                    matlab.ui.container.GridLayout
@@ -371,7 +372,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         controlEnables(app, structEnables);
         createRecordingButton(app, event);
         createRecording(app, event);
-        copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
+        status = copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
         
         %Tab2 Parameter Selection
         fillUserParams(app, event);
