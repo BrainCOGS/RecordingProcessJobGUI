@@ -795,7 +795,7 @@ app.OpenExtGUIButton2.Layout.Row = 10;
 app.OpenExtGUIButton2.Layout.Column = 8;
 app.OpenExtGUIButton2.Text = 'Open IBL-Atlas';
 app.OpenExtGUIButton2.Enable = 'on';
-%app.OpenExtGUIButton2.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);
+app.OpenExtGUIButton2.ButtonPushedFcn = createCallbackFcn(app, @OpenExtGUI2, true);
 
 % Create OpenOutLogButton
 app.OpenOutLogButton = uibutton(app.GridLayoutJobs, 'push');

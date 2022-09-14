@@ -21,6 +21,20 @@ try
         else
             app.py_env = fullfile( app.py_env, 'bin', 'python');
         end
+        
+        idx_py_iblenv = strfind(conda_envs, RecordingProcessJobGUI.py_iblenv_name);
+        
+        app.py_ibl_env = strtrim(conda_envs(idx_py_iblenv(1)+length(RecordingProcessJobGUI.py_env_name): ...
+            idx_py_iblenv(2)+length(RecordingProcessJobGUI.py_iblenv_name)));
+
+        if ispc
+            app.py_ibl_env = fullfile( app.py_ibl_env, 'python');
+        else
+            app.py_ibl_env = fullfile( app.py_ibl_env, 'bin', 'python');
+        end
+        
+        
+        
         app.py_enabled = true;
 catch
     app.py_env = [];
