@@ -18,7 +18,7 @@ import atlaselectrophysiology.ColorBar as cb
 import atlaselectrophysiology.ephys_gui_setup as ephys_gui
 from atlaselectrophysiology.create_overview_plots import make_overview_plot
 from pathlib import Path
-import qt
+import PyQt5 as qt
 import matplotlib.pyplot as mpl  # noqa  # This is needed to make qt show properly :/
 
 
