@@ -143,7 +143,7 @@ app.AllFileExtensions.imaging = {'^.*\tiff', '^.*\tif', '^.*\avi'};
 app.ErrorLogsPath     = fullfile(app.ProcessedDataPath, 'LOGS', 'ErrorLogs');
 app.OutputLogsPath     = fullfile(app.ProcessedDataPath, 'LOGS', 'OutputLogs');
 
-% Root directories
+% Root Raw directories
 key = struct();
 key.custom_variable = 'ephys_root_data_dir';
 key.index = 0;
@@ -157,6 +157,21 @@ key.index = 0;
 modality_root_dir = fetch1(lab.DjCustomVariables & key, 'value');
 [~, modality_root_dir] =  lab.utils.get_path_from_official_dir(modality_root_dir);
 app.RootDirectories.imaging = modality_root_dir;
+
+% Root Processed directories
+key = struct();
+key.custom_variable = 'ephys_root_data_dir';
+key.index = 1;
+modality_root_dir = fetch1(lab.DjCustomVariables & key, 'value');
+[~, modality_root_dir] =  lab.utils.get_path_from_official_dir(modality_root_dir);
+app.RootProcessedDirectories.electrophysiology = modality_root_dir;
+
+key = struct();
+key.custom_variable = 'imaging_root_data_dir';
+key.index = 1;
+modality_root_dir = fetch1(lab.DjCustomVariables & key, 'value');
+[~, modality_root_dir] =  lab.utils.get_path_from_official_dir(modality_root_dir);
+app.RootProcessedDirectories.imaging = modality_root_dir;
 
 
 end

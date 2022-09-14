@@ -111,8 +111,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         OpenPhyFileButton               matlab.ui.control.Button
         OpenOutLogButton                matlab.ui.control.Button
         OpenErrLogButton                matlab.ui.control.Button
-
-            
+        OpenExtGUIButton                matlab.ui.control.Button
+        OpenExtGUIButton2               matlab.ui.control.Button
+        
         %Tab5 Create Params
         CreateParamsTab                 matlab.ui.container.Tab
         GridLayoutCP                    matlab.ui.container.GridLayout
@@ -239,6 +240,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %Python environment flags and variables
         py_env
+        py_ibl_env
         py_enabled
 
         %Config table configuration
@@ -274,6 +276,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         ErrorLogsPath
         OutputLogsPath  
         RootDirectories
+        RootProcessedDirectories
    
     end
     
@@ -341,6 +344,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         %Python environment variables
         gui_path = fileparts(mfilename('fullpath'));
         py_env_name    = 'EnvAutoPipeGUI';
+        py_iblenv_name = 'iblenv';
         %Python scripts
         py_scripts_dir = fullfile(fileparts(RecordingProcessJobGUI.gui_path), 'PythonScripts')
         py_read_params = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'read_params.py')
@@ -349,6 +353,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         preparams_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams.mat')
         preparams_list_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams_list.mat')
         params_mat          = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'params.mat')
+        
+        ibl_apps_dir = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'iblapps-master')
+        ibl_atlas_script = fullfile(RecordingProcessJobGUI.ibl_apps_dir, 'atlaselectrophysiology', 'ephys_atlas_gui.py')
                 
     end
         
@@ -371,7 +378,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         controlEnables(app, structEnables);
         createRecordingButton(app, event);
         createRecording(app, event);
-        copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
+        status = copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
         
         %Tab2 Parameter Selection
         fillUserParams(app, event);
@@ -394,7 +401,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         RerunJob(app, event)
         RunJobDiffParams(app, event);
         CreateNewJob(app, event);
-        OpenLog(app, event, type)
+        OpenLog(app, event);
+        OpenExtGUI2(app, event);
         
         %Tab5 Create Params
         checkBoxPreParamMethod(app, event);

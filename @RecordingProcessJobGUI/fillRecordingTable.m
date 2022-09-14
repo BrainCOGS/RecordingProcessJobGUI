@@ -17,8 +17,12 @@ idx_cells_green = [rec_finished repmat(idx_status_rec_id_column,size(rec_finishe
 removeStyle(app.RecordingTableRT);
 if ~isempty(app.DataTable)
     app.RecordingTableRT.Data = table2cell(app.DataRecordingTable(:,app.COLUMNS_TABLE_RT));
-    app.setStyleCellsTable(app.RecordingTableRT, app.RED_STYLE, idx_cells_red);
-    app.setStyleCellsTable(app.RecordingTableRT, app.GREEN_STYLE, idx_cells_green);
+    if ~isempty(idx_cells_red)
+        app.setStyleCellsTable(app.RecordingTableRT, app.RED_STYLE, idx_cells_red);
+    end
+    if ~isempty(idx_cells_green)
+        app.setStyleCellsTable(app.RecordingTableRT, app.GREEN_STYLE, idx_cells_green);
+    end
 else
     app.RecordingTableRT.Data = {};
 end

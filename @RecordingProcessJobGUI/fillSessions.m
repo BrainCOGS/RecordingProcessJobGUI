@@ -6,16 +6,16 @@ if nargin < 2
 end
 
 if isempty(key)
-    t = acquisition.SessionStarted();
+    t = (acquisition.SessionStarted * subject.Subject);
 else
-    t = acquisition.SessionStarted & key;
+    t = (acquisition.SessionStarted * subject.Subject) & key;
 end
 
 %sessions = struct2table(fetch(t.proj('CONCAT(subject_fullname, "         " ,session_date, "         " ,session_number)-> session_name'), ...
 %    'session_name', 'ORDER BY session_date desc'));
 
-sessions = fetchDataDJTable(t.proj('CONCAT(subject_fullname, "         " ,session_date, "         " ,session_number)-> session_name'), ...
-    [], {'session_name', 'ORDER BY session_date desc'}, "table");
+sessions = fetchDataDJTable(t.proj('CONCAT(subject_fullname, "         " ,session_date, "         " ,session_number)-> session_name', 'user_id'), ...
+    [], {'session_name', 'user_id', 'ORDER BY session_date desc'}, "table");
 
 app.BehaviorSessions = sessions;
 
