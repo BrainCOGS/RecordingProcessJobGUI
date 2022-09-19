@@ -21,5 +21,14 @@ if length(unique(event.Indices(:,1))) == 1
         app.RerunJobStartButton.Enable = 'on';
     end
     
+    this_modality = app.DataTable{app.DataTable.job_id == job_id, 'recording_modality'}{:};
+    
+    if this_modality == "electrophysiology"
+        app.OpenExtGUIButton2.Text = 'Open IBL-Atlas';
+        app.OpenExtGUIButton2.Enable = 'on';
+    elseif this_modality == "imaging"
+        app.OpenExtGUIButton2.Text = 'Open Suite2p-GUI';
+        app.OpenExtGUIButton2.Enable = 'off';
+    end
     
 end

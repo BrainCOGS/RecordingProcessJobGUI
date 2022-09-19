@@ -772,7 +772,7 @@ app.OpenPhyFileButton.FontWeight = 'bold';
 app.OpenPhyFileButton.Layout.Row = 8;
 app.OpenPhyFileButton.Layout.Column = [7 8];
 app.OpenPhyFileButton.Text = 'Open results file';
-app.OpenPhyFileButton.Enable = 'on';
+app.OpenPhyFileButton.Enable = 'off';
 %app.OpenPhyFileButton.ButtonPushedFcn = createCallbackFcn(app, @OpenPhyFile, true);
 
 % Create OpenOutLogButton
@@ -783,7 +783,7 @@ app.OpenExtGUIButton.FontWeight = 'bold';
 app.OpenExtGUIButton.Layout.Row = 9;
 app.OpenExtGUIButton.Layout.Column = 8;
 app.OpenExtGUIButton.Text = 'Open Phy';
-app.OpenExtGUIButton.Enable = 'on';
+app.OpenExtGUIButton.Enable = 'off';
 %app.OpenExtGUIButton.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);
 
 % Create OpenErrLogButton
@@ -813,8 +813,8 @@ app.OpenErrLogButton = uibutton(app.GridLayoutJobs, 'push');
 %app.OpenErrLogButton.BackgroundColor = [0.9412 0.9804 0.6745];
 app.OpenErrLogButton.FontSize = 14;
 app.OpenErrLogButton.FontWeight = 'bold';
-app.OpenErrLogButton.Layout.Row = 9;
-app.OpenErrLogButton.Layout.Column = 8;
+app.OpenErrLogButton.Layout.Row = 10;
+app.OpenErrLogButton.Layout.Column = 7;
 app.OpenErrLogButton.Text = 'Open Error log file';
 app.OpenErrLogButton.Enable = 'on';
 app.OpenErrLogButton.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);

@@ -20,7 +20,9 @@ if ~isempty(app.selectedJobRow)
         
         %CellArray to char with spaces
         system_call = char(strjoin(string(system_call)));
+        progressdlg = uiprogressdlg(app.UIFigure, 'Message','Opening IBL Atlas GUI, no progress shown, be patinet');
         [out, cmdout] = system(system_call);
+        close(progressdlg);
         
         
     end

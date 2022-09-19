@@ -45,7 +45,9 @@ key.status_recording_id = 2;
 
 % Copy recording directory from local machine to cup
 try
+    progressdlg = uiprogressdlg(app.UIFigure, 'Message','Copying session to cup Data directory. Be patient, no progress shown');
     status = copyRecording(app, this_recording_directory, this_local_directory, key.recording_modality);
+    close(progressdlg)
 catch err
     status = -1;
     uiconfirm(app.UIFigure,['Recording was not created ' err.message], ...
