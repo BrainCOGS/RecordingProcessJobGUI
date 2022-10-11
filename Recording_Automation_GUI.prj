@@ -1,9 +1,9 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="2505795931" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="2367628641" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon />
     <param.icons />
-    <param.version>1.0</param.version>
+    <param.version>1.1</param.version>
     <param.authnamewatermark>Alvaro Luna</param.authnamewatermark>
     <param.email>alvaros@princeton.edu</param.email>
     <param.company>Princeton</param.company>
@@ -45,7 +45,6 @@
     <unset>
       <param.icon />
       <param.icons />
-      <param.version />
       <param.description />
       <param.guid />
       <param.installpath.string />
@@ -148,8 +147,14 @@
     </fileset.resources>
     <fileset.package />
     <fileset.depfun>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\addSurgeryData.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\app_data.mat</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\closeSurgeryFigure.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\copyRecording.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createComponentsSurgeryFigure.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenExtGUI2.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenLog.m</file>
-      <file>${PROJECT_ROOT}\app_data.mat</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\registerSurgery.m</file>
       <file>${PROJECT_ROOT}\catstruct.m</file>
       <file>${PROJECT_ROOT}\connect_tech.p</file>
       <file>${PROJECT_ROOT}\convertTable2Categorical.m</file>
