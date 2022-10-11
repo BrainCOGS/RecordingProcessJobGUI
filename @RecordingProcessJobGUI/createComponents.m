@@ -9,7 +9,7 @@ offset = (1-ratio)/2;
 
 app.UIFigure.Position = [screenSize(3)*offset screenSize(4)*offset ...
                          screenSize(3)*ratio screenSize(4)*ratio];
-app.UIFigure.Name = 'MATLAB App';
+app.UIFigure.Name = 'U19 Automatic Processing Pipeline GUI';
 
 % Create GridLayout4
 app.GridLayout4 = uigridlayout(app.UIFigure);
@@ -96,6 +96,16 @@ app.RecordingDirectoryDropDown = uidropdown(app.GridLayout2);
 app.RecordingDirectoryDropDown.Layout.Row = 2;
 app.RecordingDirectoryDropDown.Layout.Column = [2 4];
 app.RecordingDirectoryDropDown.Items = {};
+
+% Create SurgeryCheckBox
+app.SurgeryCheckBox = uicheckbox(app.GridLayout2);
+app.SurgeryCheckBox.Text = 'Add surgery & insertion device if missing ?';
+app.SurgeryCheckBox.Layout.Row = 2;
+app.SurgeryCheckBox.Layout.Column = [5 7];
+app.SurgeryCheckBox.Value = true;
+app.SurgeryCheckBox.FontSize = 14;
+app.SurgeryCheckBox.Enable = 'on';
+
 
 % Create IstherebehaviorSessionCheckBox
 app.IstherebehaviorSessionCheckBox = uicheckbox(app.GridLayout2);

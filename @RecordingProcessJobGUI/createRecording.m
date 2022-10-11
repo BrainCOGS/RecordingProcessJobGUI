@@ -1,6 +1,5 @@
 
 function createRecording(app, event)
-
 % Get all info to insert recording.Recording table
 
 updateBusyLabel(app, false);
@@ -15,8 +14,16 @@ behavior_session = app.BehaviorSessions( ...
 %Generate key for part table
 key_part.subject_fullname    = behavior_session.subject_fullname{:};
 
+
 %user_id = strsplit(key_part.subject_fullname,'_');
 user_id = behavior_session.user_id{:};
+
+% Add surgery if needed
+surgery_info = fetch(action.Surgery & key_part);
+if app.SurgeryCheckBox.Value && isempty(surgery_info)
+   addSurgeryData(app, key_part.subject_fullname, user_id, app.Configuration.RecordingModality);
+end
+
 
 key_part.session_date        = behavior_session.session_date{:};
 key_part.session_number      = behavior_session.session_number;

@@ -20,6 +20,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         SelectRecordingDirectoryLabel   matlab.ui.control.Label
         RecordingDirectoryDropDownLabel matlab.ui.control.Label
         RecordingDirectoryDropDown      matlab.ui.control.DropDown
+        SurgeryCheckBox                 matlab.ui.control.CheckBox
         IstherebehaviorSessionCheckBox  matlab.ui.control.CheckBox
         BehaviorSessionDropDownLabel    matlab.ui.control.Label
         BehaviorSessionDropDown         matlab.ui.control.DropDown
@@ -278,11 +279,13 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         RootDirectories
         RootProcessedDirectories
    
+        
+        AllSurgeryStuff
     end
     
     properties (Constant = true)
     
-        Version      = '1.0';
+        Version      = '1.1';
         OKColor      = [0.7608        1     0.7922];
         ErrorColor   = [1         0.6588    0.6588];
         ActiveColor  = [0.5078    0.7078         1];
@@ -365,6 +368,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         %Startup and param name configuration 
         startupFcn(app, event);
         createComponents(app);
+        createComponentsSurgeryFigure(app);
         configParams(app);
         
         %Parameter fetching related functions (from python or Matlab)
@@ -379,6 +383,11 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         createRecordingButton(app, event);
         createRecording(app, event);
         status = copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
+        
+        %Sub surgery figure
+        addSurgeryData(app, subject_fullname, user_id, modality);
+        closeSurgeryFigure(app, event);
+        registerSurgery(app, event);
         
         %Tab2 Parameter Selection
         fillUserParams(app, event);

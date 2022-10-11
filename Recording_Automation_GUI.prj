@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="4257040783" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="2505795931" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon />
     <param.icons />
@@ -148,6 +148,8 @@
     </fileset.resources>
     <fileset.package />
     <fileset.depfun>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenLog.m</file>
+      <file>${PROJECT_ROOT}\app_data.mat</file>
       <file>${PROJECT_ROOT}\catstruct.m</file>
       <file>${PROJECT_ROOT}\connect_tech.p</file>
       <file>${PROJECT_ROOT}\convertTable2Categorical.m</file>
