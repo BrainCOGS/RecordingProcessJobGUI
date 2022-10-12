@@ -1,6 +1,5 @@
 function getPythonEnv(app)
-%GETPYTHONENV Summary of this function goes here
-%   Detailed explanation goes here
+%get python environments filepaths
 
 try
     if ismac
@@ -9,12 +8,17 @@ try
         setenv('PATH', this_path);
     end
 
+        % Get all conda environments and find with specific names
+        % (py_env_name, py_iblenv_name)
         [~, conda_envs] = system('conda env list');
 
         idx_py_env = strfind(conda_envs, RecordingProcessJobGUI.py_env_name);
         
         app.py_env = strtrim(conda_envs(idx_py_env(1)+length(RecordingProcessJobGUI.py_env_name): ...
             idx_py_env(2)+length(RecordingProcessJobGUI.py_env_name)));
+        
+        %Surround with double quotes for filepaths with spaces
+        app.py_env = ['"' app.py_env '"'];
 
         if ispc
             app.py_env = fullfile( app.py_env, 'python');
@@ -32,6 +36,9 @@ try
         else
             app.py_ibl_env = fullfile( app.py_ibl_env, 'bin', 'python');
         end
+        
+        %Surround with double quotes for filepaths with spaces
+        app.py_ibl_env = ['"' app.py_ibl_env '"'];
         
         
         

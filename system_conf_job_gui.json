@@ -1,6 +1,6 @@
 {
-	"System" : "185A-Recording",
-	"RecordingModality" : "electrophysiology",
-	"RecordingRootDirectory" : "C:\\Users\\stephan\\Documents\\FakePhysData",
-	"BehaviorRig" : "165A-Rig5-T"
+	"System" : "",
+	"RecordingModality" : "",
+	"RecordingRootDirectory" : "",
+	"BehaviorRig" : ""
 }

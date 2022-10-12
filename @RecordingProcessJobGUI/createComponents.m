@@ -56,9 +56,9 @@ app.BusyLabel.Text = 'OK';
 % Create ConfigurationNeededLabel
 app.ConfigurationNeededLabel = uilabel(app.GridLayout4);
 app.ConfigurationNeededLabel.BackgroundColor = 'none';
-app.ConfigurationNeededLabel.HorizontalAlignment = 'right';
+app.ConfigurationNeededLabel.HorizontalAlignment = 'center';
 app.ConfigurationNeededLabel.FontSize = 13;
-app.ConfigurationNeededLabel.Layout.Row = [1];
+app.ConfigurationNeededLabel.Layout.Row = [1 2];
 app.ConfigurationNeededLabel.Layout.Column = 5;
 app.ConfigurationNeededLabel.Text = '';
 app.ConfigurationNeededLabel.FontWeight = 'bold';
@@ -103,7 +103,7 @@ app.SurgeryCheckBox.Text = 'Add surgery & insertion device if missing ?';
 app.SurgeryCheckBox.Layout.Row = 2;
 app.SurgeryCheckBox.Layout.Column = [5 7];
 app.SurgeryCheckBox.Value = true;
-app.SurgeryCheckBox.FontSize = 14;
+app.SurgeryCheckBox.FontSize = 15;
 app.SurgeryCheckBox.Enable = 'on';
 
 
@@ -234,8 +234,8 @@ app.DefaultPreParamNameLabel.VerticalAlignment = 'bottom';
 app.DefaultPreParamNameLabel.FontWeight = 'bold';
 app.DefaultPreParamNameLabel.FontSize = 14;
 app.DefaultPreParamNameLabel.Layout.Row = 9;
-app.DefaultPreParamNameLabel.Layout.Column = 1;
-app.DefaultPreParamNameLabel.Text = 'Def. Preprocess Parameters Steps: ';
+app.DefaultPreParamNameLabel.Layout.Column = [1 3];
+app.DefaultPreParamNameLabel.Text = 'Default Preprocess Parameters Steps: ';
 
 app.DefaultPreParamTable = uitable(app.GridLayout2);
 app.DefaultPreParamTable.ColumnName     = app.COLUMNS_DEF_PREPARAMS_NAMES;
@@ -260,7 +260,7 @@ app.DefaultParamNameLabel.VerticalAlignment = 'bottom';
 app.DefaultParamNameLabel.FontWeight = 'bold';
 app.DefaultParamNameLabel.FontSize = 14;
 app.DefaultParamNameLabel.Layout.Row = 13;
-app.DefaultParamNameLabel.Layout.Column = 1;
+app.DefaultParamNameLabel.Layout.Column = [1 3];
 app.DefaultParamNameLabel.Text = 'Default Processing Params: ';
 
 app.DefaultParamTable = uitable(app.GridLayout2);
