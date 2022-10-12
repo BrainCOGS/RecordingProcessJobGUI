@@ -24,7 +24,6 @@ if app.SurgeryCheckBox.Value && isempty(surgery_info)
    addSurgeryData(app, key_part.subject_fullname, user_id, app.Configuration.RecordingModality);
 end
 
-
 key_part.session_date        = behavior_session.session_date{:};
 key_part.session_number      = behavior_session.session_number;
 

@@ -278,6 +278,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         OutputLogsPath  
         RootDirectories
         RootProcessedDirectories
+        DefaultImplantationDevice
    
         
         AllSurgeryStuff

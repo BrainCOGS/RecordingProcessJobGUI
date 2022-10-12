@@ -173,6 +173,9 @@ modality_root_dir = fetch1(lab.DjCustomVariables & key, 'value');
 [~, modality_root_dir] =  lab.utils.get_path_from_official_dir(modality_root_dir);
 app.RootProcessedDirectories.imaging = modality_root_dir;
 
+app.DefaultImplantationDevice = struct();
+app.DefaultImplantationDevice.electrophysiology = 'NeuroPixel_Probe_v1';
+app.DefaultImplantationDevice.imaging = 'no_device';
 
 end
 

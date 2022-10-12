@@ -21,9 +21,10 @@ surgery_location_struct.insertion_device_name = app.AllSurgeryStuff.deviceDrop.V
 surgery_location_struct.hemisphere = app.AllSurgeryStuff.hemisphereDrop.Value;
 surgery_location_struct.real_ml_coordinates = app.AllSurgeryStuff.mlPositionEdit.Value;
 surgery_location_struct.real_ap_coordinates = app.AllSurgeryStuff.apPositionEdit.Value;
-surgery_location_struct.real_dv_coordinates = app.AllSurgeryStuff.dvPositionEdit.Value;
+surgery_location_struct.real_depth_coordinates = app.AllSurgeryStuff.depthPositionEdit.Value;
 surgery_location_struct.phi_angle = app.AllSurgeryStuff.phiAngleEdit.Value;
 surgery_location_struct.theta_angle = app.AllSurgeryStuff.thetaAngleEdit.Value;
+surgery_location_struct.rho_angle = app.AllSurgeryStuff.rhoAngleEdit.Value;
 
 
 conn = dj.conn();

@@ -103,7 +103,7 @@ app.SurgeryCheckBox.Text = 'Add surgery & insertion device if missing ?';
 app.SurgeryCheckBox.Layout.Row = 2;
 app.SurgeryCheckBox.Layout.Column = [5 7];
 app.SurgeryCheckBox.Value = true;
-app.SurgeryCheckBox.FontSize = 15;
+app.SurgeryCheckBox.FontSize = 16;
 app.SurgeryCheckBox.Enable = 'on';
 
 

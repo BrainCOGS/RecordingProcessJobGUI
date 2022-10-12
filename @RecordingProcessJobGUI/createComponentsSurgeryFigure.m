@@ -33,6 +33,7 @@ app.AllSurgeryStuff.titleLabel.Text = '-- Add surgery data for subject --';
 
 % Create subjectLabel
 app.AllSurgeryStuff.subjectLabel = uilabel(app.AllSurgeryStuff.GridLayoutSurgery);
+app.AllSurgeryStuff.subjectLabel.FontWeight = 'bold';
 app.AllSurgeryStuff.subjectLabel.FontSize = 14;
 app.AllSurgeryStuff.subjectLabel.Layout.Row = 2;
 app.AllSurgeryStuff.subjectLabel.Layout.Column =  [1 2];
@@ -120,7 +121,11 @@ app.AllSurgeryStuff.coordinatesLabel.FontSize = 14;
 app.AllSurgeryStuff.coordinatesLabel.Layout.Row = 7;
 app.AllSurgeryStuff.coordinatesLabel.Layout.Column = [1 2];
 app.AllSurgeryStuff.coordinatesLabel.HorizontalAlignment = 'right';
-app.AllSurgeryStuff.coordinatesLabel.Text = 'Coordinates (ml - dv - ap): ';
+app.AllSurgeryStuff.coordinatesLabel.Interpreter = 'html';
+app.AllSurgeryStuff.coordinatesLabel.Text = 'Coordinates (ml - ap - depth): ??';
+app.AllSurgeryStuff.coordinatesLabel.Tooltip = ...
+    {'in mm from bregma:', 'depth = dv if all angles = 0'};
+
 
 app.AllSurgeryStuff.mlPositionEdit = uieditfield(app.AllSurgeryStuff.GridLayoutSurgery, 'numeric');
 app.AllSurgeryStuff.mlPositionEdit.FontSize = 14;
@@ -132,10 +137,10 @@ app.AllSurgeryStuff.apPositionEdit.FontSize = 14;
 app.AllSurgeryStuff.apPositionEdit.Layout.Row = 7;
 app.AllSurgeryStuff.apPositionEdit.Layout.Column = 4;
 
-app.AllSurgeryStuff.dvPositionEdit = uieditfield(app.AllSurgeryStuff.GridLayoutSurgery, 'numeric');
-app.AllSurgeryStuff.dvPositionEdit.FontSize = 14;
-app.AllSurgeryStuff.dvPositionEdit.Layout.Row = 7;
-app.AllSurgeryStuff.dvPositionEdit.Layout.Column = 5;
+app.AllSurgeryStuff.depthPositionEdit = uieditfield(app.AllSurgeryStuff.GridLayoutSurgery, 'numeric');
+app.AllSurgeryStuff.depthPositionEdit.FontSize = 14;
+app.AllSurgeryStuff.depthPositionEdit.Layout.Row = 7;
+app.AllSurgeryStuff.depthPositionEdit.Layout.Column = 5;
 
 % Create anglesLabel
 app.AllSurgeryStuff.anglesLabel = uilabel(app.AllSurgeryStuff.GridLayoutSurgery);
@@ -144,7 +149,11 @@ app.AllSurgeryStuff.anglesLabel.FontSize = 14;
 app.AllSurgeryStuff.anglesLabel.Layout.Row = 8;
 app.AllSurgeryStuff.anglesLabel.Layout.Column = [1 2];
 app.AllSurgeryStuff.anglesLabel.HorizontalAlignment = 'right';
-app.AllSurgeryStuff.anglesLabel.Text = 'Angles (theta - phi): ';
+app.AllSurgeryStuff.anglesLabel.Text = 'Angles (theta - phi - rho): ??';
+app.AllSurgeryStuff.anglesLabel.Tooltip = ...
+    {'theta:(deg) - elevation - rotation about the ml-axis - w.r.t the z+ axis',...
+     'phi: (deg) - azimuth - rotation about the dv-axis - w.r.t the x+ axis', ...
+     'rho: (deg) - device angle rotation on itself'};
 
 app.AllSurgeryStuff.thetaAngleEdit = uieditfield(app.AllSurgeryStuff.GridLayoutSurgery, 'numeric');
 app.AllSurgeryStuff.thetaAngleEdit.FontSize = 14;
@@ -155,6 +164,11 @@ app.AllSurgeryStuff.phiAngleEdit = uieditfield(app.AllSurgeryStuff.GridLayoutSur
 app.AllSurgeryStuff.phiAngleEdit.FontSize = 14;
 app.AllSurgeryStuff.phiAngleEdit.Layout.Row = 8;
 app.AllSurgeryStuff.phiAngleEdit.Layout.Column = 4;
+
+app.AllSurgeryStuff.rhoAngleEdit = uieditfield(app.AllSurgeryStuff.GridLayoutSurgery, 'numeric');
+app.AllSurgeryStuff.rhoAngleEdit.FontSize = 14;
+app.AllSurgeryStuff.rhoAngleEdit.Layout.Row = 8;
+app.AllSurgeryStuff.rhoAngleEdit.Layout.Column = 5;
 
 
 % Create AllSurgeryStuff.okButton
