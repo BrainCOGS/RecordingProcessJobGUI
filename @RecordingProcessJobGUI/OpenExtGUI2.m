@@ -10,6 +10,7 @@ if ~isempty(app.selectedJobRow)
     this_modality = app.DataTable{app.DataTable.job_id == job_id, 'recording_modality'}{:};
     
     if this_modality == "electrophysiology"
+        
         data_path = fullfile(app.RootProcessedDirectories.electrophysiology, this_job_path, 'ibl_data');
         
         system_call = [{app.py_ibl_env} {RecordingProcessJobGUI.ibl_atlas_script}];

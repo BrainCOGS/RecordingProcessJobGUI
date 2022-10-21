@@ -13,7 +13,7 @@ app.UIFigure.Name = 'U19 Automatic Processing Pipeline GUI';
 
 % Create GridLayout4
 app.GridLayout4 = uigridlayout(app.UIFigure);
-app.GridLayout4.ColumnWidth = {'1x', '4x', '4x', '1.5x', '1x'};
+app.GridLayout4.ColumnWidth = {'1x', '4x', '4x', '1.5x', '1.5x'};
 app.GridLayout4.RowHeight = {'4x', '2x', '5x', '100x'};
 app.GridLayout4.ColumnSpacing = 1.5;
 app.GridLayout4.RowSpacing = 2.25;
@@ -47,6 +47,7 @@ app.TabGroup.Layout.Column = [1 5];
 % Create BusyLabel
 app.BusyLabel = uilabel(app.GridLayout4);
 app.BusyLabel.BackgroundColor = [0.7608 1 0.7922];
+app.BusyLabel.FontWeight = 'bold';
 app.BusyLabel.HorizontalAlignment = 'center';
 app.BusyLabel.FontSize = 14;
 app.BusyLabel.Layout.Row = [1 2];
@@ -793,8 +794,8 @@ app.OpenExtGUIButton.FontWeight = 'bold';
 app.OpenExtGUIButton.Layout.Row = 9;
 app.OpenExtGUIButton.Layout.Column = 8;
 app.OpenExtGUIButton.Text = 'Open Phy';
-app.OpenExtGUIButton.Enable = 'off';
-%app.OpenExtGUIButton.ButtonPushedFcn = createCallbackFcn(app, @OpenLog, true);
+app.OpenExtGUIButton.Enable = 'on';
+app.OpenExtGUIButton.ButtonPushedFcn = createCallbackFcn(app, @OpenExtGUI, true);
 
 % Create OpenErrLogButton
 app.OpenExtGUIButton2 = uibutton(app.GridLayoutJobs, 'push');

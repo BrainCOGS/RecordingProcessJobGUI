@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="2367628641" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="4270176751" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon />
     <param.icons />
@@ -209,7 +209,6 @@
       <file>C:\Experiments\ViRMEn\database\positiveInputValidator.m</file>
       <file>C:\Experiments\ViRMEn\database\Responsibility.m</file>
       <file>C:\Experiments\ViRMEn\database\Sex.m</file>
-      <file>C:\Experiments\ViRMEn\database\SplitVec\SplitVec.m</file>
       <file>C:\Experiments\ViRMEn\database\validatedInputDialog.m</file>
       <file>C:\Experiments\ViRMEn\database\withinRangeConfirmation.m</file>
       <file>C:\Experiments\ViRMEn\database\YesNoMaybe.m</file>

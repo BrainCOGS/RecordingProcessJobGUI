@@ -1,8 +1,6 @@
 function param_struct = loadParamsFile(~, param_matfile)
 %LOAD_PARAMS_FILE load params matfile (from python script) and transform it to a single struct
 
-% Add doublo quotes for paths with spaces
-param_matfile = ['"' param_matfile '"'];
 params = load(param_matfile);
 params_fields = fieldnames(params);
 

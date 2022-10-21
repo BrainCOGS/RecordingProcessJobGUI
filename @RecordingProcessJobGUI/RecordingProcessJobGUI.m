@@ -286,7 +286,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
     
     properties (Constant = true)
     
-        Version      = '1.1';
+        Version      = '1.2';
         OKColor      = [0.7608        1     0.7922];
         ErrorColor   = [1         0.6588    0.6588];
         ActiveColor  = [0.5078    0.7078         1];
@@ -358,8 +358,11 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         preparams_list_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams_list.mat')
         params_mat          = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'params.mat')
         
+        %Python ephys GUIs (IBL-atlas and phy)
         ibl_apps_dir = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'iblapps-master')
         ibl_atlas_script = fullfile(RecordingProcessJobGUI.ibl_apps_dir, 'atlaselectrophysiology', 'ephys_atlas_gui.py')
+        phy_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_phy.BAT')
+        suite2p_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_suite2p.BAT')
                 
     end
         
