@@ -16,8 +16,8 @@ app.AllSurgeryStuff.surgeryFigure.Name = 'Add surgery data';
 
 % Create GridLayout4
 app.AllSurgeryStuff.GridLayoutSurgery = uigridlayout(app.AllSurgeryStuff.surgeryFigure);
-app.AllSurgeryStuff.GridLayoutSurgery.ColumnWidth = {'0.5x', '0.5x', '0.5x', '0.5x', '0.5x', '0.5x'};
-app.AllSurgeryStuff.GridLayoutSurgery.RowHeight = {'2x', '1x', '1x', '1x', '1x', '1x', '1x', '1x', '0.3x', '1x', '0.5x'};
+app.AllSurgeryStuff.GridLayoutSurgery.ColumnWidth = {'0.2x', '1x', '1x', '1x', '1x', '0.2x'};
+app.AllSurgeryStuff.GridLayoutSurgery.RowHeight = {'1x', '1x', '1x', '1x', '1x', '1x', '1x', '1x', '0.3x', '1x', '1x', '1x', '0.5x'};
 app.AllSurgeryStuff.GridLayoutSurgery.ColumnSpacing = 1.5;
 app.AllSurgeryStuff.GridLayoutSurgery.RowSpacing = 2.25;
 app.AllSurgeryStuff.GridLayoutSurgery.Padding = [1.5 2.25 1.5 2.25];
@@ -171,12 +171,39 @@ app.AllSurgeryStuff.rhoAngleEdit.Layout.Row = 8;
 app.AllSurgeryStuff.rhoAngleEdit.Layout.Column = 5;
 
 
+% Create AllSurgeryStuff.addDevice
+app.AllSurgeryStuff.addDevice = uibutton(app.AllSurgeryStuff.GridLayoutSurgery, 'push');
+app.AllSurgeryStuff.addDevice.FontSize = 14;
+app.AllSurgeryStuff.addDevice.Layout.Row = 10;
+app.AllSurgeryStuff.addDevice.Layout.Column = 5;
+app.AllSurgeryStuff.addDevice.Text = 'Add insertion device';
+app.AllSurgeryStuff.addDevice.ButtonPushedFcn = createCallbackFcn(app, @addInsertionDevice, true);
+
+app.AllSurgeryStuff.devicesStruct = struct();
+app.AllSurgeryStuff.numDevices = 0;
+
+% Create AllSurgeryStuff.deleteDeviceList
+app.AllSurgeryStuff.deleteDeviceList = uibutton(app.AllSurgeryStuff.GridLayoutSurgery, 'push');
+app.AllSurgeryStuff.deleteDeviceList.FontSize = 14;
+app.AllSurgeryStuff.deleteDeviceList.Layout.Row = 11;
+app.AllSurgeryStuff.deleteDeviceList.Layout.Column = 5;
+app.AllSurgeryStuff.deleteDeviceList.Text = 'Delete device list';
+app.AllSurgeryStuff.deleteDeviceList.ButtonPushedFcn = createCallbackFcn(app, @deleteInsertionDevice, true);
+
+% Create AllSurgeryStuff.okButton
+app.AllSurgeryStuff.deviceList = uilistbox(app.AllSurgeryStuff.GridLayoutSurgery);
+app.AllSurgeryStuff.deviceList.FontSize = 14;
+app.AllSurgeryStuff.deviceList.Layout.Row = [10 11];
+app.AllSurgeryStuff.deviceList.Layout.Column = [2 4];
+app.AllSurgeryStuff.deviceList.Items = {};
+
+
 % Create AllSurgeryStuff.okButton
 app.AllSurgeryStuff.okButton = uibutton(app.AllSurgeryStuff.GridLayoutSurgery, 'push');
 app.AllSurgeryStuff.okButton.BackgroundColor = app.GreenBColor;
 app.AllSurgeryStuff.okButton.FontWeight = 'bold';
 app.AllSurgeryStuff.okButton.FontSize = 16;
-app.AllSurgeryStuff.okButton.Layout.Row = 10;
+app.AllSurgeryStuff.okButton.Layout.Row = 12;
 app.AllSurgeryStuff.okButton.Layout.Column = [4 5];
 app.AllSurgeryStuff.okButton.Text = 'Register Surgery Data';
 app.AllSurgeryStuff.okButton.ButtonPushedFcn = createCallbackFcn(app, @registerSurgery, true);
@@ -185,7 +212,7 @@ app.AllSurgeryStuff.okButton.ButtonPushedFcn = createCallbackFcn(app, @registerS
 % Create AllSurgeryStuff.cancelButton
 app.AllSurgeryStuff.cancelButton = uibutton(app.AllSurgeryStuff.GridLayoutSurgery, 'push');
 app.AllSurgeryStuff.cancelButton.FontSize = 16;
-app.AllSurgeryStuff.cancelButton.Layout.Row = 10;
+app.AllSurgeryStuff.cancelButton.Layout.Row = 12;
 app.AllSurgeryStuff.cancelButton.Layout.Column = [2 3];
 app.AllSurgeryStuff.cancelButton.Text = 'Cancel';
 app.AllSurgeryStuff.cancelButton.ButtonPushedFcn = createCallbackFcn(app, @closeSurgeryFigure, true);

@@ -390,6 +390,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %Sub surgery figure
         addSurgeryData(app, subject_fullname, user_id, modality);
+        addInsertionDevice(app, event);
+        deleteInsertionDevice(app, event);
         closeSurgeryFigure(app, event);
         registerSurgery(app, event);
         
