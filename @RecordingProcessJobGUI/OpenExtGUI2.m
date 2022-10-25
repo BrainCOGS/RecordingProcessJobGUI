@@ -23,6 +23,7 @@ if ~isempty(app.selectedJobRow)
         system_call = char(strjoin(string(system_call)));
         progressdlg = uiprogressdlg(app.UIFigure, 'Message','Opening IBL Atlas GUI, no progress shown, be patinet');
         [out, cmdout] = system(system_call);
+        disp(cmdout);
         close(progressdlg);
         
         

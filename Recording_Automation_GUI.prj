@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="4023037725" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="2501935858" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon>${PROJECT_ROOT}\Recording_Automation_GUI_resources\icon.ico</param.icon>
     <param.icons>
@@ -152,11 +152,13 @@
       <file>${PROJECT_ROOT}\brain_cogs_on_white_small_brain_cogs_on_white.png</file>
     </fileset.package>
     <fileset.depfun>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\addInsertionDevice.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\addSurgeryData.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\app_data.mat</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\closeSurgeryFigure.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\copyRecording.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createComponentsSurgeryFigure.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\deleteInsertionDevice.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenExtGUI.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenExtGUI2.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenLog.m</file>

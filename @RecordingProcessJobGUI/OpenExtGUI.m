@@ -35,6 +35,7 @@ if ~isempty(app.selectedJobRow)
         progressdlg = uiprogressdlg(app.UIFigure, 'Message',['Opening ', tool ,', no progress shown, be patinet']);
         try
             [out, cmdout] = system(system_call);
+            disp(cmdout);
             cd(current_dir);
         catch err
             this_err = err;
