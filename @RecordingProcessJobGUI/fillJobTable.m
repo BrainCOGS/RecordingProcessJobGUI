@@ -35,8 +35,8 @@ app.DataTable.preprocess_param_steps_name = cellstr(app.DataTable.preprocess_par
 app.DataTable = sortrows(app.DataTable,{'session_date','recording_id'});
 
 %Which cells are going to be red or green colored because of status
-job_errors = find([app.DataTable.status_processing_id] == app.min_job_status);
-job_finished = find([app.DataTable.status_processing_id] == app.max_job_status);
+job_errors = find([app.DataTable.status_processing_id] <= app.min_job_status);
+job_finished = find([app.DataTable.status_processing_id] >= app.max_job_status);
 
 idx_status_job_id_column = find(ismember(app.COLUMNS_JOB_TABLE,'status_processing_id'),1);
 idx_cells_red = [job_errors repmat(idx_status_job_id_column,size(job_errors))];

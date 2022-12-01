@@ -20,7 +20,7 @@ app.SamePreParamListRecordingCheckBox.Enable = 'off';
 app.CreateRecordingOrJob    = false;
 
 fillUserParams(app, app.modality_job_id_copy);
-fillParams2Select(app, app.modality_job_id_copy);
+fillParams2Select(app, [], app.modality_job_id_copy);
 
 
 

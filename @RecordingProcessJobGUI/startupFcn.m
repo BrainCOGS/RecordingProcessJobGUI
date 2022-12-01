@@ -18,8 +18,8 @@ if hasInternet
         recording_process.Status;
     
     job_statuses = fetchn(recording_process.Status,'status_processing_id');
-    app.min_job_status = min(job_statuses);
-    app.max_job_status = max(job_statuses);
+    app.min_job_status = -1;
+    app.max_job_status = 7;
     
     
     app.RecordingTable = recording.Recording * ...

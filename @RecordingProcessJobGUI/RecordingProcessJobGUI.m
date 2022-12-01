@@ -397,7 +397,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %Tab2 Parameter Selection
         fillUserParams(app, event);
-        fillParams2Select(app, event);
+        fillParams2Select(app, event, modality);
         ParamSetSelected(app, event);
         ParamListSelected(app, event);
         PreparamStepSelected(app, event);

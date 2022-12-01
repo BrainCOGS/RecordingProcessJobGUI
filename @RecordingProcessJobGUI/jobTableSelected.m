@@ -17,7 +17,7 @@ if length(unique(event.Indices(:,1))) == 1
     idx_status_job_id = find(ismember(app.COLUMNS_JOB_TABLE,'status_processing_id'),1);
     status_job_id = app.JobTable.Data{event.Indices(1),idx_status_job_id};
     
-    if status_job_id == -1
+    if status_job_id <= -1
         app.RerunJobStartButton.Enable = 'on';
     end
     

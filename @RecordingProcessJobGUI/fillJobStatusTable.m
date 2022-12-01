@@ -10,9 +10,9 @@ columns = [app.COLUMNS_JOB_STATUS_TABLE, {'ORDER BY status_timestamp desc'}];
 job_status_history = fetch(app.job_id_history_table_class() & key,columns{:});
 
 %Which cells are going to be red or green colored because of status
-job_errors = find([job_status_history.status_processing_id_new] == app.min_job_status);
+job_errors = find([job_status_history.status_processing_id_new] <= app.min_job_status);
 job_errors = job_errors(:);
-job_finished = find([job_status_history.status_processing_id_new] == app.max_job_status);
+job_finished = find([job_status_history.status_processing_id_new] >= app.max_job_status);
 job_finished = job_finished(:);
 
 idx_status_job_id_column = find(ismember(app.COLUMNS_JOB_STATUS_TABLE,'status_processing_id_new'),1);

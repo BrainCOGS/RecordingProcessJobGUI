@@ -1,7 +1,7 @@
 
-function fillParams2Select(app, modality)
+function fillParams2Select(app, event_data, modality)
 
-if nargin < 2
+if nargin < 3
     modality = app.Configuration.RecordingModality;
 end
 
