@@ -753,7 +753,7 @@ app.JobHistoryLabel.FontSize = 16;
 app.JobHistoryLabel.FontWeight = 'bold';
 app.JobHistoryLabel.Layout.Row = 6;
 app.JobHistoryLabel.Layout.Column = [1 4];
-app.JobHistoryLabel.Text = 'Recording Status History:' ;
+app.JobHistoryLabel.Text = 'Job Status History:' ;
 
 % Create Recording Status History
 app.JobHistoryTable = uitable(app.GridLayoutJobs);

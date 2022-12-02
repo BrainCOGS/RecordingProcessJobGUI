@@ -286,7 +286,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
     
     properties (Constant = true)
     
-        Version      = '1.2';
+        Version      = '1.3';
         OKColor      = [0.7608        1     0.7922];
         ErrorColor   = [1         0.6588    0.6588];
         ActiveColor  = [0.5078    0.7078         1];
