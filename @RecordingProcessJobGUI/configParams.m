@@ -136,7 +136,7 @@ app.NewPreParamJsonFile     = '';
 %File extensions:
 app.AllFileExtensions = struct;
 app.AllFileExtensions.electrophysiology = {'^.*\g0'};
-app.AllFileExtensions.imaging = {'^.*\tiff', '^.*\tif', '^.*\avi'};
+app.AllFileExtensions.imaging = {'^.*\.tiff', '^.*\.tif', '^.*\.avi'};
 
 %DataPaths
 [~, app.ProcessedDataPath] = lab.utils.get_path_from_official_dir('braininit/Data/Processed');

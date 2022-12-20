@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="2501935858" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="566279104" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon>${PROJECT_ROOT}\Recording_Automation_GUI_resources\icon.ico</param.icon>
     <param.icons>
@@ -230,6 +230,7 @@
       <file>C:\Experiments\ViRMEn\experiments\utility\numobj.m</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\parsePath.m</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\rdir.m</file>
+      <file>C:\Experiments\ViRMEn\extras\GeneralParameters.m</file>
       <file>C:\Experiments\ViRMEn\extras\RigParameters.m</file>
       <file>C:\Experiments\ViRMEn\GUILayout\+uix\+mixin\Container.m</file>
       <file>C:\Experiments\ViRMEn\GUILayout\+uix\+mixin\Flex.m</file>
@@ -266,6 +267,9 @@
       <file>C:\Experiments\ViRMEn\notifications\checkActionItems.m</file>
       <file>C:\Experiments\ViRMEn\notifications\checkCageReturn.m</file>
       <file>C:\Experiments\ViRMEn\notifications\checkMouseWeighing.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\DylanMuir-SlackMatlab-b289f4d\private\urlread2.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\DylanMuir-SlackMatlab-b289f4d\SendSlackNotificationJson.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\error_behavior_backup_notification_slack.m</file>
       <file>C:\Experiments\ViRMEn\notifications\getCurrentlyActiveMouseLogs.m</file>
       <file>C:\Experiments\ViRMEn\notifications\manageNotificationTimers.m</file>
       <file>C:\Experiments\ViRMEn\notifications\notificationTimer.m</file>
