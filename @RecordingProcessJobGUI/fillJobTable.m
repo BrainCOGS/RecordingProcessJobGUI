@@ -6,6 +6,11 @@ end
 
 
 app.DataTable = fetchDataDJTable(app.RecordingProcessTable, key, {'*'}, "table", "ORDER BY session_date, recording_id");
+extra_jobs = fetchDataDJTable(app.RecordingProcessTable2, key, {'*'}, "table", "ORDER BY session_date, recording_id");
+
+if ~isempty(extra_jobs)
+    app.DataTable = [extra_jobs; app.DataTable];
+end
 
 % merge params with job table to show params for each job
 params_epys_table = proj(recording_process.ProcessingEphysParams, 'precluster_param_steps_id->preprocess_param_steps_id', 'paramset_idx');

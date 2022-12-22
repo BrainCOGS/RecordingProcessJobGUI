@@ -15,7 +15,11 @@ if app.CreateRecordingOrJob
         default_all_params_record.fragment_number = 0;
         
         [default_preparams, default_params] = getDefaultParamsMod(app);
-        default_all_params_record.preprocess_param_steps_id = default_preparams{1, app.preparam_steps_idx_field };
+        if isempty(default_preparams)
+            default_all_params_record.preprocess_param_steps_id = 0;
+        else
+            default_all_params_record.preprocess_param_steps_id = default_preparams{1, app.preparam_steps_idx_field };
+        end
         default_all_params_record.paramset_idx = default_params{1, app.params_idx_field};
     else
         %If all preparams the same for all probes|fovs

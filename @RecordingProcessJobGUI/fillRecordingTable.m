@@ -5,6 +5,11 @@ if nargin < 2
 end
 
 app.DataRecordingTable = fetchDataDJTable(app.RecordingTable, key, {'*'}, "table", "ORDER BY recording_id");
+extra_recordings = fetchDataDJTable(app.RecordingTable2, key, {'*'}, "table", "ORDER BY recording_id");
+
+if ~isempty(extra_recordings)
+    app.DataRecordingTable = [app.DataRecordingTable; extra_recordings];
+end
 
 %Which cells are going to be red or green colored because of status
 rec_errors = find([app.DataRecordingTable.status_recording_id] == app.min_rec_status);

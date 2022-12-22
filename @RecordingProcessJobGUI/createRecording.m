@@ -8,15 +8,35 @@ updateBusyLabel(app, false);
 default_params_record = createDefaultParamsRecord(app);
 
 %Filter behavior session
-behavior_session = app.BehaviorSessions( ...
-    matches(app.BehaviorSessions.session_name, app.BehaviorSessionDropDown.Value), :);
+if app.IstherebehaviorSessionCheckBox.Value
+    behavior_session = app.BehaviorSessions( ...
+        matches(app.BehaviorSessions.session_name, app.BehaviorSessionDropDown.Value), :);
+    %Generate key for part table
+    key_part.subject_fullname    = behavior_session.subject_fullname{:};
+    user_id = behavior_session.user_id{:};
+    key_part.session_date        = behavior_session.session_date{:};
+    key_part.session_number      = behavior_session.session_number;
+    session_date = [key_part.session_date(1:4) key_part.session_date(6:7) key_part.session_date(9:10)];
 
-%Generate key for part table
-key_part.subject_fullname    = behavior_session.subject_fullname{:};
+% If there is not associated behavior
+else
+    key_part.subject_fullname = app.RecordingSubjectDropDown.Value;
+    user_id = strsplit(key_part.subject_fullname,'_');
+    user_id = user_id{1};
+    rec_date                  = datestr(app.RecordingDateDatePicker.Value,'yyyy-mm-dd');
+    rec_time                  = app.RecordingDateTimePicker.Value;
+    hour_rec = hours(rec_time);
+    minutes_rec = minutes(rand()*60) ;
+    rec_time = datestr(hour_rec+minutes_rec,' HH:MM:SS');
 
+    key_part.recording_datetime = [rec_date rec_time];
+    
+    %For unified path recording
+    rec_date2                 = datestr(app.RecordingDateDatePicker.Value,'yyyymmdd');
+    rec_time2 = datestr(hour_rec+minutes_rec,'_HHMMSS');
+    session_date = [rec_date2 rec_time2];
+end
 
-%user_id = strsplit(key_part.subject_fullname,'_');
-user_id = behavior_session.user_id{:};
 
 % Add surgery if needed
 surgery_info = fetch(action.Surgery & key_part);
@@ -24,10 +44,6 @@ if app.SurgeryCheckBox.Value && isempty(surgery_info)
    addSurgeryData(app, key_part.subject_fullname, user_id, app.Configuration.RecordingModality);
 end
 
-key_part.session_date        = behavior_session.session_date{:};
-key_part.session_number      = behavior_session.session_number;
-
-session_date = [key_part.session_date(1:4) key_part.session_date(6:7) key_part.session_date(9:10)];
 
 % Generate key for recording table
 key.recording_modality  = app.Configuration.RecordingModality;
@@ -37,7 +53,12 @@ this_local_directory         = fullfile(app.Configuration.RecordingRootDirectory
 last_folder             = strsplit(this_local_directory,filesep);
 last_folder             = last_folder{end};
 %key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, [session_date '_g' num2str(key_part.session_number)], last_folder);
-key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, [session_date '_g' num2str(key_part.session_number)], last_folder);
+%Slight difference if there is behavior or not how is saved directory
+if app.IstherebehaviorSessionCheckBox.Value
+    key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, [session_date '_g' num2str(key_part.session_number)], last_folder);
+else
+    key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, last_folder);
+end
 if ispc
     key.local_directory     = strrep(this_local_directory,'\','/');
     this_recording_directory = strrep(key.recording_directory,'/','\');
@@ -76,7 +97,11 @@ if status ~= -1
         key_part.recording_id = recording_id.recording_id;
         [default_params_record.('recording_id')] = deal(recording_id.recording_id);
         %process_key.recording_id = key_part.recording_id;
-        insert(recording.RecordingBehaviorSession, key_part);
+        if app.IstherebehaviorSessionCheckBox.Value
+            insert(recording.RecordingBehaviorSession, key_part);
+        else
+            insert(recording.RecordingRecordingSession, key_part);
+        end
         insert(recording.DefaultParams, default_params_record);
         conn.commitTransaction
         

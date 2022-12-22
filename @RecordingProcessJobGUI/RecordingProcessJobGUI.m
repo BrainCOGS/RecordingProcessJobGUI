@@ -24,8 +24,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         IstherebehaviorSessionCheckBox  matlab.ui.control.CheckBox
         BehaviorSessionDropDownLabel    matlab.ui.control.Label
         BehaviorSessionDropDown         matlab.ui.control.DropDown
-        RecordingUserDropDownLabel      matlab.ui.control.Label
-        RecordingUserDropDown           matlab.ui.control.DropDown
+        RecordingDateTimePickerLabel    matlab.ui.control.Label
+        RecordingDateTimePicker         matlab.ui.control.Spinner
         RecordingSubjectDropDownLabel   matlab.ui.control.Label
         RecordingSubjectDropDown        matlab.ui.control.DropDown
         RecordingDateDatePickerLabel    matlab.ui.control.Label
@@ -201,7 +201,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %Recording Table & JobId table
         RecordingTable
+        RecordingTable2
         RecordingProcessTable
+        RecordingProcessTable2
         
         %Min and max status
         min_job_status
@@ -282,6 +284,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
    
         
         AllSurgeryStuff
+        
+        %Boolean when not behavior session is activated
+        first_time_not_behavior
     end
     
     properties (Constant = true)

@@ -115,7 +115,7 @@ app.IstherebehaviorSessionCheckBox.Layout.Row = 5;
 app.IstherebehaviorSessionCheckBox.Layout.Column = [1 4];
 app.IstherebehaviorSessionCheckBox.Value = true;
 app.IstherebehaviorSessionCheckBox.ValueChangedFcn = createCallbackFcn(app, @checkBoxSessionRecording, true);
-app.IstherebehaviorSessionCheckBox.Enable = 'off';
+app.IstherebehaviorSessionCheckBox.Enable = 'on';
 
 
 % Create BehaviorSessionDropDownLabel
@@ -133,31 +133,31 @@ app.BehaviorSessionDropDown.Layout.Column = [2 4];
 app.BehaviorSessionDropDown.Items = {};
 
 % Create RecordingUserDropDownLabel
-app.RecordingUserDropDownLabel = uilabel(app.GridLayout2);
-app.RecordingUserDropDownLabel.HorizontalAlignment = 'right';
-app.RecordingUserDropDownLabel.Layout.Row = 4;
-app.RecordingUserDropDownLabel.Layout.Column = 5;
-app.RecordingUserDropDownLabel.Text = 'Recording User';
-app.RecordingUserDropDownLabel.Enable = 'off';
+%app.RecordingUserDropDownLabel = uilabel(app.GridLayout2);
+%app.RecordingUserDropDownLabel.HorizontalAlignment = 'right';
+%app.RecordingUserDropDownLabel.Layout.Row = 4;
+%app.RecordingUserDropDownLabel.Layout.Column = 5;
+%app.RecordingUserDropDownLabel.Text = 'Recording User';
+%app.RecordingUserDropDownLabel.Enable = 'off';
 
 % Create RecordingUserDropDown
-app.RecordingUserDropDown = uidropdown(app.GridLayout2);
-app.RecordingUserDropDown.Layout.Row = 4;
-app.RecordingUserDropDown.Layout.Column = [6 7];
-app.RecordingUserDropDown.Enable = 'off';
-app.RecordingUserDropDown.Items = {};
+%app.RecordingUserDropDown = uidropdown(app.GridLayout2);
+%app.RecordingUserDropDown.Layout.Row = 4;
+%app.RecordingUserDropDown.Layout.Column = [6 7];
+%app.RecordingUserDropDown.Enable = 'off';
+%app.RecordingUserDropDown.Items = {};
 
 % Create RecordingSubjectDropDownLabel
 app.RecordingSubjectDropDownLabel = uilabel(app.GridLayout2);
 app.RecordingSubjectDropDownLabel.HorizontalAlignment = 'right';
-app.RecordingSubjectDropDownLabel.Layout.Row = 5;
+app.RecordingSubjectDropDownLabel.Layout.Row = 4;
 app.RecordingSubjectDropDownLabel.Layout.Column = 5;
 app.RecordingSubjectDropDownLabel.Text = 'Recording Subject';
 app.RecordingSubjectDropDownLabel.Enable = 'off';
 
 % Create RecordingSubjectDropDown_2
 app.RecordingSubjectDropDown = uidropdown(app.GridLayout2);
-app.RecordingSubjectDropDown.Layout.Row = 5;
+app.RecordingSubjectDropDown.Layout.Row = 4;
 app.RecordingSubjectDropDown.Layout.Column = [6 7];
 app.RecordingSubjectDropDown.Enable = 'off';
 app.RecordingSubjectDropDown.Items = {};
@@ -165,16 +165,31 @@ app.RecordingSubjectDropDown.Items = {};
 % Create RecordingDateDatePickerLabel
 app.RecordingDateDatePickerLabel = uilabel(app.GridLayout2);
 app.RecordingDateDatePickerLabel.HorizontalAlignment = 'right';
-app.RecordingDateDatePickerLabel.Layout.Row = 6;
+app.RecordingDateDatePickerLabel.Layout.Row = 5;
 app.RecordingDateDatePickerLabel.Layout.Column = 5;
 app.RecordingDateDatePickerLabel.Text = ' Recording Date';
 app.RecordingDateDatePickerLabel.Enable = 'off';
 
 % Create RecordingDateDatePicker
 app.RecordingDateDatePicker = uidatepicker(app.GridLayout2);
-app.RecordingDateDatePicker.Layout.Row = 6;
+app.RecordingDateDatePicker.Layout.Row = 5;
 app.RecordingDateDatePicker.Layout.Column = [6 7];
 app.RecordingDateDatePicker.Enable = 'off';
+
+% Create RecordingDateDatePickerLabel
+app.RecordingDateTimePickerLabel = uilabel(app.GridLayout2);
+app.RecordingDateTimePickerLabel.HorizontalAlignment = 'right';
+app.RecordingDateTimePickerLabel.Layout.Row = 6;
+app.RecordingDateTimePickerLabel.Layout.Column = 5;
+app.RecordingDateTimePickerLabel.Text = ' Recording Hour (0-24)';
+app.RecordingDateTimePickerLabel.Enable = 'off';
+
+% Create RecordingDateDatePicker
+app.RecordingDateTimePicker = uispinner(app.GridLayout2);
+app.RecordingDateTimePicker.Layout.Row = 6;
+app.RecordingDateTimePicker.Layout.Column = [6 7];
+app.RecordingDateTimePicker.Enable = 'off';
+
 
 % Create Label
 app.Label = uilabel(app.GridLayout2);
