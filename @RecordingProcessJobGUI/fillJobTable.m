@@ -9,7 +9,11 @@ app.DataTable = fetchDataDJTable(app.RecordingProcessTable, key, {'*'}, "table",
 extra_jobs = fetchDataDJTable(app.RecordingProcessTable2, key, {'*'}, "table", "ORDER BY session_date, recording_id");
 
 if ~isempty(extra_jobs)
-    app.DataTable = [extra_jobs; app.DataTable];
+    if isempty(app.DataTable)
+        app.DataTable = extra_jobs;
+    else
+        app.DataTable = [app.DataTable; extra_jobs];
+    end
 end
 
 % merge params with job table to show params for each job
