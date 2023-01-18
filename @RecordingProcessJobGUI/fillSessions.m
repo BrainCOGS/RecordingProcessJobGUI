@@ -6,9 +6,9 @@ if nargin < 2
 end
 
 if isempty(key)
-    t = (acquisition.SessionStarted * subject.Subject);
+    t = (acquisition.Session * subject.Subject);
 else
-    t = (acquisition.SessionStarted * subject.Subject) & key;
+    t = (acquisition.Session * subject.Subject) & key;
 end
 
 %sessions = struct2table(fetch(t.proj('CONCAT(subject_fullname, "         " ,session_date, "         " ,session_number)-> session_name'), ...

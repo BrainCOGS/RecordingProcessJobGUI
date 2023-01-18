@@ -3,11 +3,12 @@ import sys
 import json
 import os
 
-from element_interface.utils import dict_to_uuid
 
 this_dir = os.path.dirname(__file__)
 os.chdir(this_dir)
 import datajoint as dj
+from element_interface.utils import dict_to_uuid
+
 
 dj.conn()
 

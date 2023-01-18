@@ -1,7 +1,6 @@
 {
-	"System" : "",
-	"RecordingModality" : "",
-	"RecordingRootDirectory" : "",
-	"BehaviorRig" : ""
+	"System" : "188-Recording",
+	"RecordingModality" : "imaging",
+	"RecordingRootDirectory" : "C:\\Users\\admin\\Documents\\NPX_Data",
+	"BehaviorRig" : "188-Rig1"
 }
-

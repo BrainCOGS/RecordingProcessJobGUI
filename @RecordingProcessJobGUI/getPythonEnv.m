@@ -17,11 +17,10 @@ try
         app.py_env = strtrim(conda_envs(idx_py_env(1)+length(RecordingProcessJobGUI.py_env_name): ...
             idx_py_env(2)+length(RecordingProcessJobGUI.py_env_name)));
         
-        %Surround with double quotes for filepaths with spaces
-        app.py_env = ['"' app.py_env '"'];
-
         if ispc
             app.py_env = fullfile( app.py_env, 'python');
+            %Surround with double quotes for filepaths with spaces
+            %app.py_env = ['"' app.py_env '"'];
         else
             app.py_env = fullfile( app.py_env, 'bin', 'python');
         end

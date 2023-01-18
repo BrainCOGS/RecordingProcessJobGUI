@@ -96,6 +96,10 @@ if status ~= -1
         recording_id = fetch(recording.Recording, 'ORDER BY recording_id desc LIMIT 1');
         key_part.recording_id = recording_id.recording_id;
         [default_params_record.('recording_id')] = deal(recording_id.recording_id);
+        %If there is no preprocessing steps set to 0 (for imaging right now)
+        if isempty(default_params_record.preprocess_param_steps_id)
+            default_params_record.preprocess_param_steps_id = 0;
+        end
         %process_key.recording_id = key_part.recording_id;
         if app.IstherebehaviorSessionCheckBox.Value
             insert(recording.RecordingBehaviorSession, key_part);
@@ -137,6 +141,14 @@ if status ~= -1
         %error(err.message);
     end
     
+else
+        uiconfirm(app.UIFigure,['Recording was not created ' err.message], ...
+        '', ...
+        'Options',{'OK'}, ...
+        'Icon','error');
+    event.Source.Enable = 'on';
+    updateBusyLabel(app, true);
 end
+
 
 
