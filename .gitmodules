@@ -1,0 +1,3 @@
+[submodule "PythonScripts/iblapps-master"]
+	path = PythonScripts/iblapps-master
+	url = git@github.com:braincogs/iblapps.git
