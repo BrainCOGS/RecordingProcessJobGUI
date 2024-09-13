@@ -2,7 +2,7 @@
 function RerunJob(app, event)
 
 % Update job_id status to enable it for rerun
-idx_job_id_column = find(ismember(app.COLUMNS_TABLE,'job_id'),1);
+idx_job_id_column = find(ismember(app.COLUMNS_JOB_TABLE,'job_id'),1);
 job_id = app.JobTable.Data{app.selectedJobRow,idx_job_id_column};
 query.job_id = job_id;
 
