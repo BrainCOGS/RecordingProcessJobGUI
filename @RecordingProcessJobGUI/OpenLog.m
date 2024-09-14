@@ -17,7 +17,7 @@ if ~isempty(app.selectedJobRow)
     if ispc
         system(['notepad ' fullpath]);
     elseif ismac
-        system(['TextEdit ' fullpath]);
+        system(['open ' fullpath]);
     end
     
 end
