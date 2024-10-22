@@ -5,7 +5,7 @@ GUI to register recordings in the automatic pipeline
 
 ### Installation on a Windows
 
-See the instructions [here](https://braincogs.github.io/software/configure_systems.html#configure-new-recording-system)
+See the instructions [here](https://braincogs.github.io/software/configure_systems.html#configure-new-recording-system). Ensure that all the information under the "System Configuration" tab is entered correctly otherwise your behavior data may not show up.
 
 ### Installation on Mac/Linux
 
