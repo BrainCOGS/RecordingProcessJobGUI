@@ -131,6 +131,7 @@ app.BehaviorSessionDropDown = uidropdown(app.GridLayout2);
 app.BehaviorSessionDropDown.Layout.Row = 6;
 app.BehaviorSessionDropDown.Layout.Column = [2 4];
 app.BehaviorSessionDropDown.Items = {};
+app.BehaviorSessionDropDown.Editable = "on";
 
 % Create RecordingUserDropDownLabel
 %app.RecordingUserDropDownLabel = uilabel(app.GridLayout2);
