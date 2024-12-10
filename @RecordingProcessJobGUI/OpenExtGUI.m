@@ -5,21 +5,21 @@ current_dir = pwd;
 success_process = true;
 this_err = [];
 if ~isempty(app.selectedJobRow)
-    
+
     idx_job_id_column = find(ismember(app.COLUMNS_JOB_TABLE,'job_id'),1);
     job_id = app.JobTable.Data{app.selectedJobRow(1),idx_job_id_column};
-    
+
     this_job_path = app.DataTable{app.DataTable.job_id == job_id, 'recording_process_post_path'}{:};
     this_modality = app.DataTable{app.DataTable.job_id == job_id, 'recording_modality'}{:};
-    
-    
+
+
     data_path = fullfile(app.RootProcessedDirectories.(this_modality), this_job_path);
     dir_info = dir(data_path);
     dir_info = {dir_info.name};
-    
-    output_dir_idx = contains(dir_info, '_output');
+
+    output_dir_idx =  contains(dir_info, 'kil') & contains(dir_info, '_output');
     output_dir = dir_info(output_dir_idx);
-    
+
     if ~isempty(output_dir)
         output_dir = output_dir{1};
         data_path = fullfile(data_path, output_dir);
@@ -52,17 +52,17 @@ if ~isempty(app.selectedJobRow)
         this_err.message = 'Cannot find sorting directory';
         success_process = false;
     end
-    
+
     if ~success_process
         uiconfirm(app.UIFigure,['Error while opening Phy ' this_err.message], ...
             '', ...
             'Options',{'OK'}, ...
             'Icon','error');
     end
-    
-    
-    
-    
+
+
+
+
 end
 
 
