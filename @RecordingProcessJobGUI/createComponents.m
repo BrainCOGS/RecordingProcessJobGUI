@@ -880,7 +880,7 @@ app.ModalityUserLabel.Layout.Row = 1;
 app.ModalityUserLabel.Layout.Column = [1 2];
 app.ModalityUserLabel.Text = '0. Select Modality & User: ';
 
-% Create Modality selection 
+% Create Modality selection
 app.ParamModalityLabel = uilabel(app.GridLayoutCP);
 app.ParamModalityLabel.HorizontalAlignment = 'right';
 app.ParamModalityLabel.FontWeight = 'bold';
