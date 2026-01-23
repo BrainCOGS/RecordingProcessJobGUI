@@ -30,7 +30,7 @@ else
     rec_time = datestr(hour_rec+minutes_rec,' HH:MM:SS');
 
     key_part.recording_datetime = [rec_date rec_time];
-
+    
     %For unified path recording
     rec_date2                 = datestr(app.RecordingDateDatePicker.Value,'yyyymmdd');
     rec_time2 = datestr(hour_rec+minutes_rec,'_HHMMSS');
@@ -86,7 +86,7 @@ catch err
 end
 %error(err.message);
 if status ~= -1
-
+    
     %insert values
     conn = dj.conn();
     conn.startTransaction();
@@ -108,28 +108,28 @@ if status ~= -1
         end
         insert(recording.DefaultParams, default_params_record);
         conn.commitTransaction
-
+        
         fillRecordingTable(app);
         fillRecordingSubjectRT(app);
         fillRecordingUserRT(app);
         app.TabGroup.SelectedTab = app.RecordingTableTab;
-
+        
         updateBusyLabel(app, true);
-
+        
         uiconfirm(app.UIFigure,['Recording was registered successfully with id: ' num2str(recording_id.recording_id)] , ...
             'Job Creation Success', ...
             'Options',{'OK'}, ...
             'Icon','success');
-
+        
         app.PreParamSelectionTable = [];
         app.ParamSelectionTable = [];
-
+        
         app.ListBoxFragmentRecordingPreParams.Items = {'0', '1', '2', '3', '4'};
         app.ListBoxFragmentRecording2Params.Items = {'0', '1', '2', '3', '4'};
-
+        
         app.CreateProcessingJobButton2.Enable = 'off';
-
-
+        
+        
     catch err
         conn.cancelTransaction
         uiconfirm(app.UIFigure,['Recording was not created' err.message], ...
@@ -140,7 +140,7 @@ if status ~= -1
         updateBusyLabel(app, true);
         %error(err.message);
     end
-
+    
 else
         uiconfirm(app.UIFigure,['Recording was not created ' err.message], ...
         '', ...

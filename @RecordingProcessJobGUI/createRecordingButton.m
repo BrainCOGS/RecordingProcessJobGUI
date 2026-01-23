@@ -15,7 +15,7 @@ recorded_previously = fetch(app.RecordingTable & query);
 behavior_session = app.BehaviorSessions( ...
     matches(app.BehaviorSessions.session_name, app.BehaviorSessionDropDown.Value), :);
 
-%Query if behavior already in DB
+%QUery if behavior already in DB
 query2.subject_fullname    = behavior_session.subject_fullname{:};
 query2.session_date        = behavior_session.session_date{:};
 query2.session_number      = behavior_session.session_number;
@@ -35,25 +35,25 @@ if selection == "OK" && ~isempty(session_previously)
 end
 
 if selection == "OK"
-
+    
     if app.DefaultParametersCheckBox.Value
         createRecording(app, event);
     else
         %Set everything to create a recording on param selection tab
-
+        
         app.TabGroup.SelectedTab = app.SelectRecordingParametersTab;
         app.CreateProcessingJobButton2.Enable = 'on';
         app.CreateProcessingJobButton2.ButtonPushedFcn = createCallbackFcn(app, @checkParamSelection, true);
         app.CreateProcessingJobButton2.Text = 'Register Recording';
-
+        
         app.SameParamsRecordingCheckBox.Enable = 'on';
         app.SamePreParamListRecordingCheckBox.Enable = 'on';
-
+        
         app.CreateRecordingOrJob    = true;
-
+        
         fillUserParams(app);
         fillParams2Select(app);
-
+        
     end
 end
 

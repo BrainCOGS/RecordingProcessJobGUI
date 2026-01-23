@@ -1,9 +1,9 @@
 classdef RecordingProcessJobGUI < matlab.apps.AppBase
-
-
+    
+   
     % Properties that correspond to app components
     properties (Access = public)
-
+        
         %Outside any tab
         UIFigure                        matlab.ui.Figure
         GridLayout4                     matlab.ui.container.GridLayout
@@ -42,7 +42,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         DefaultParamNameLabel           matlab.ui.control.Label
         DefaultParamTable               matlab.ui.control.Table
         CreateProcessingJobButton       matlab.ui.control.Button
-
+        
         %Tab 2 Select Parameters
         SelectRecordingParametersTab    matlab.ui.container.Tab
         GridLayout3                     matlab.ui.container.GridLayout
@@ -91,7 +91,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         RecordingHistoryLabel           matlab.ui.control.Label
         RecordingHistortyTable          matlab.ui.control.Table
 
-        % Tab4 Job tables
+        % Tab4 Job tables 
         ManageProcessingJobsTab         matlab.ui.container.Tab
         GridLayoutJobs                  matlab.ui.container.GridLayout
         FilterprocessingjobLabel        matlab.ui.control.Label
@@ -114,7 +114,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         OpenErrLogButton                matlab.ui.control.Button
         OpenExtGUIButton                matlab.ui.control.Button
         OpenExtGUIButton2               matlab.ui.control.Button
-
+        
         %Tab5 Create Params
         CreateParamsTab                 matlab.ui.container.Tab
         GridLayoutCP                    matlab.ui.container.GridLayout
@@ -135,14 +135,14 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         NewParamSetDescLabel            matlab.ui.control.Label
         NewParamSetDescEdit             matlab.ui.control.EditField
         UploadParamSetFile              matlab.ui.control.Button
-        RegisterParamSetButton          matlab.ui.control.Button
+        RegisterParamSetButton          matlab.ui.control.Button 
         SepLabel1                       matlab.ui.control.Label
         CreatePreParamSetLabel          matlab.ui.control.Label
         NewPreParamMethodCheckBox       matlab.ui.control.CheckBox
         CreatePreParamSetMethodsDropLabel matlab.ui.control.Label
         CreatePreParamSetMethodsDrop    matlab.ui.control.DropDown
         NewPreParamMethodLabel          matlab.ui.control.Label
-        NewPreParamMethodEdit           matlab.ui.control.EditField
+        NewPreParamMethodEdit           matlab.ui.control.EditField 
         NewPreParamSetDescLabel         matlab.ui.control.Label
         NewPreParamSetDescEdit          matlab.ui.control.EditField
         UploadPreParamSetFile           matlab.ui.control.Button
@@ -175,7 +175,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         AssociatedBehaviorRigDropDown   matlab.ui.control.DropDown
         AssociatedBehaviorRigListBox    matlab.ui.control.ListBox
         DeleteAssociatedRigButton       matlab.ui.control.Button
-        AddAssociatedRigButton          matlab.ui.control.Button
+        AddAssociatedRigButton          matlab.ui.control.Button   
         ConfigurationOptionsLabel       matlab.ui.control.Label
         ConfigureSystemButton           matlab.ui.control.Button
         SystemLabel                     matlab.ui.control.Label
@@ -191,26 +191,26 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         DataRecordingTable
         FilterRecordingJob
         FilterRecordingRT
-
+        
         %Related configuration variables
         Configuration
         RootFolder
         ConfFileFullName
         FileExtensions
         AllFileExtensions
-
+        
         %Recording Table & JobId table
         RecordingTable
         RecordingTable2
         RecordingProcessTable
         RecordingProcessTable2
-
+        
         %Min and max status
         min_job_status
         max_job_status
         min_rec_status
         max_rec_status
-
+        
         %All params and related tables
         PreProcessParamList
         PreProcessParams
@@ -218,29 +218,29 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         MehodsTable
         PreMethodsTable
         RecordingModalityTable
-
+        
         %Behavior sessions info to correspond to a recording
         BehaviorSessions
-
-
+        
+                
         %Param Selection table (when different for each probe)
         PreParamSelectionTable
         ParamSelectionTable
-
-
+        
+        
         %JsonFile paths to upload params (TAB5 Create Params)
         NewParamJsonFile
         NewPreParamJsonFile
-
+        
         %General (Tab2 select params)
         CreateRecordingOrJob       % true if create whole recording 0 if creating job only
-
+        
         %Last selection on Job or Recording Table
         selectedRecordingRow
         selectedJobRow
         jobid_to_copy
         modality_job_id_copy
-
+        
         %Python environment flags and variables
         envs_dir
         envs_struct
@@ -253,18 +253,18 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         preparam_steps_step_table_names
         param_methods_table_names
         preparam_methods_table_names
-
+        
         %Config, common table names %%%
         params_idx_field
         params_desc_field
-
+        
         preparam_steps_idx_field
         preprocess_steps_name_field
         preprocess_steps_desc_field
-
+        
         preparam_methods_method_field
         preparam_methods_desc_field
-
+        
         param_methods_method_field
         param_methods_desc_field
         %%%%%%%
@@ -273,24 +273,24 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         recording_history_table_class
         job_id_history_table_class
         job_part_parms_table
-
+        
         %Paths
         ProcessedDataPath
         ErrorLogsPath
-        OutputLogsPath
+        OutputLogsPath  
         RootDirectories
         RootProcessedDirectories
         DefaultImplantationDevice
-
-
+   
+        
         AllSurgeryStuff
-
+        
         %Boolean when not behavior session is activated
         first_time_not_behavior
     end
-
+    
     properties (Constant = true)
-
+    
         Version      = '1.5';
         OKColor      = [0.7608        1     0.7922];
         ErrorColor   = [1         0.6588    0.6588];
@@ -301,21 +301,21 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         YellowBColor = [0.9294    0.9294       0.5];
         InfoStyle    = "<p style='color: rgb(53, 104, 233); text-align: right; font-size:13px;'>";
         ConfFileName = 'system_conf_job_gui.json';
-
+        
         COLUMNS_JOB_TABLE      = {             'job_id', 'recording_id', 'fragment_number', 'subject_fullname', 'session_date', 'session_number', 'status_processing_id', 'status_processing_definition', 'recording_modality',  'processing_method', 'paramset_desc', 'preprocess_param_steps_name'};
         COLUMNS_JOB_NAMES      = {             'job_id', 'recording_id',     '(probe|fov)',          'subject',        'date',       'sess_num',           'status_job',                  'status_desc',            'modality',   'process_method',   'process_set_desc', 'preprocess_set_desc'};
         COLUMNS_JOB_EDITABLE   = false(size(RecordingProcessJobGUI.COLUMNS_JOB_TABLE));
         COLUMNS_JOB_SORTABLE   = true(size(RecordingProcessJobGUI.COLUMNS_JOB_TABLE));
         COLUMNS_JOB_FORMAT     = {             'numeric',        'char',        'numeric',            'char',          'char',         'numeric',            'numeric',                          'char',                 'char',                       'char', 'char', 'char'};
         COLUMNS_JOB_WIDTH      = {                    60,           100,                90,               180,             90,               90,                   90,                             220,                    130,                          'auto', 'auto', 'auto'};
-
+                
         COLUMNS_TABLE_RT   = {'recording_id', 'subject_fullname', 'session_date', 'session_number', 'status_recording_id',  'status_recording_definition',   'recording_modality', 'recording_directory'};
         COLUMNS_NAMES_RT   = {'recording_id',           'subject',        'date',       'sess_num',          'status_rec',                 'status_desc',            'modality',            'directory'};
         COLUMNS_EDITABLE_RT= false(size(RecordingProcessJobGUI.COLUMNS_TABLE_RT));
         COLUMNS_SORTABLE_RT= true(size(RecordingProcessJobGUI.COLUMNS_TABLE_RT));
         COLUMNS_FORMAT_RT  = {     'numeric',             'char',         'char',        'numeric',              'numeric',                        'char',               'char',                  'char'};
         COLUMNS_WIDTH_RT   = {           100,                200,             85,               90,                    110,                           200,                  130,                  'auto'};
-
+        
         COLUMNS_RECORDING_STATUS_TABLE  = {'recording_log_id', 'recording_id', 'status_recording_id_old', 'status_recording_id_new', 'recording_status_timestamp', 'recording_error_message', 'recording_error_exception'};
         COLUMNS_RECORDING_STATUS_NAMES  = {          'log_id', 'recording_id',             'old_status' ,              'new_status',                  'timestamp',           'error_message',           'error_exception'};
         COLUMNS_RECORDING_STATUS_EDITABLE = true(size(RecordingProcessJobGUI.COLUMNS_RECORDING_STATUS_NAMES));
@@ -330,26 +330,26 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         COLUMNS_JOB_STATUS_FORMAT = {'numeric','numeric',                 'numeric',                   'numeric',             'char',          'char'};
         COLUMNS_JOB_STATUS_WIDTH  = {      60,       65,                         90,                          95,                120,          'auto'};
 
-
+ 
         COLUMNS_DEF_PREPARAMS_TABLE    = {'preprocess_param_steps_name', 'preprocess_param_steps_desc', 'step_number', 'preprocess_method',    'paramset_desc', 'user_params', 'date_params'};
         COLUMNS_DEF_PREPARAMS_NAMES    = {      'Preprocess Param name',       'Preprocess Param desc', 'step number', 'preprocess_method', 'step_description',        'User',        'Date'};
         COLUMNS_DEF_PREPARAMS_FORMAT   = {                       'char',                        'char',        'char',              'char',             'char',        'char',        'char'};
         COLUMNS_DEF_PREPARAMS_SORTABLE = false(size(RecordingProcessJobGUI.COLUMNS_DEF_PREPARAMS_TABLE));
         COLUMNS_DEF_PREPARAMS_EDITABLE = false(size(RecordingProcessJobGUI.COLUMNS_DEF_PREPARAMS_TABLE));
-
+        
         COLUMNS_DEF_PARAMS_TABLE    = {        'paramset_desc', 'processing_method',  'user_params', 'date_params'};
         COLUMNS_DEF_PARAMS_NAMES    = {'Processing Param name',            'Method',         'User',        'Date'};
         COLUMNS_DEF_PARAMS_FORMAT   = {                 'char',               'char',        'char',        'char'};
         COLUMNS_DEF_PARAMS_SORTABLE = false(size(RecordingProcessJobGUI.COLUMNS_DEF_PARAMS_TABLE));
         COLUMNS_DEF_PARAMS_EDITABLE = false(size(RecordingProcessJobGUI.COLUMNS_DEF_PARAMS_TABLE));
-
+        
         %Style vars
         RED_COLOR          = [1 0.8 0.8];
         GREEN_COLOR        = [0.8 1 0.8];
         RED_STYLE          = uistyle('BackgroundColor', RecordingProcessJobGUI.RED_COLOR);
         GREEN_STYLE        = uistyle('BackgroundColor', RecordingProcessJobGUI.GREEN_COLOR);
-
-
+        
+        
         %Python environment variables
         gui_path = fileparts(mfilename('fullpath'));
         py_env_name    = 'AutoPipeGUIEnv';
@@ -365,29 +365,29 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         preparams_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams.mat')
         preparams_list_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams_list.mat')
         params_mat          = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'params.mat')
-
+        
         %Python ephys GUIs (IBL-atlas and phy)
         ibl_apps_dir = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'iblapps-master')
         ibl_atlas_script = fullfile(RecordingProcessJobGUI.ibl_apps_dir, 'atlaselectrophysiology', 'ephys_atlas_gui.py')
         phy_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_phy.BAT')
         suite2p_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_suite2p.BAT')
-
+                
     end
-
+        
     % Component initialization
     methods (Access = private)
-
-        %Startup and param name configuration
+        
+        %Startup and param name configuration 
         startupFcn(app, event);
         createComponents(app);
         createComponentsSurgeryFigure(app);
         configParams(app);
-
+        
         %Parameter fetching related functions (from python or Matlab)
         getPythonEnv(app);
-        [PreProcessParams, ProcessParams, PreProcessParamList] = getParamsFromMatlab(app);
+        [PreProcessParams, ProcessParams, PreProcessParamList] = getParamsFromMatlab(app); 
         [default_preparams, default_params] = getDefaultParamsMod(app);
-
+        
         %Tab1 Recording creation
         DefaultParamsCheckBoxToggle(app, event);
         checkBoxSessionRecording(app, event);
@@ -395,15 +395,14 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         createRecordingButton(app, event);
         createRecording(app, event);
         status = copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
-        % SearchAnimalFiltersdropdownbelowEditFieldValueChanged(app);
-
+        
         %Sub surgery figure
         addSurgeryData(app, subject_fullname, user_id, modality);
         addInsertionDevice(app, event);
         deleteInsertionDevice(app, event);
         closeSurgeryFigure(app, event);
         registerSurgery(app, event);
-
+        
         %Tab2 Parameter Selection
         fillUserParams(app, event);
         fillParams2Select(app, event, modality);
@@ -415,7 +414,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         RegisterPreparamFragmentClicked(app, event);
         RegisterParamsFragmentClicked(app, event);
         checkParamSelection(app, event);
-
+        
         %Tab3
         recordingTableSelected(app,event);
 
@@ -427,7 +426,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         CreateNewJob(app, event);
         OpenLog(app, event);
         OpenExtGUI2(app, event);
-
+        
         %Tab5 Create Params
         checkBoxPreParamMethod(app, event);
         checkBoxParamMethod(app, event);
@@ -437,7 +436,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         MoveStepOprderClicked(app,event);
         AddPreParamStepNewList(app,event);
         RegisterPreParamList(app, event);
-
+        
         %Tab 6 configuration
         selectRecordingRootDirectory(app, event);
         configureSystem(app, event);
@@ -446,12 +445,12 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         postConfigurationActions(app);
         addRig2System(app,event);
         dropRig2System(app,event);
-
+                
         %Utility
         split_param_table = splitDescriptionColumnParams(app, param_table);
         preparams_final = loadParamsFile(app, param_matfile);
-
-
+        
+        
         %Fetch data from DB and fill corresponding GUI objects
         fillRecordingUser(app);
         fillRecordingSubject(app, key);
@@ -463,42 +462,42 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         fillPreParamsSets(app, event);
         fillRecordingModality(app);
         fillParams(app);
-
+                
         %Outside any tab (grafical)
         updateBusyLabel(app, status);
-
+                
     end
-
+    
     % App creation and deletion
     methods (Access = public)
-
+        
         % Construct app
         function app = RecordingProcessJobGUI
-
-
+            
+            
             configParams(app);
-
+        
             % Create UIFigure and components
             createComponents(app)
-
+            
             % Execute the startup function
             runStartupFcn(app, @startupFcn);
-
+            
             %fillSubjects(app);
-
+            
             % Register the app with App Designer
             registerApp(app, app.UIFigure)
+            
 
-
-
+            
             if nargout == 0
                 clear app
             end
         end
-
+        
         % Code that executes before app deletion
         function delete(app)
-
+            
             % Delete UIFigure when app is deleted
             delete(app.UIFigure)
         end
