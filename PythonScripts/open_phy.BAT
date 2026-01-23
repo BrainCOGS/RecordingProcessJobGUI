@@ -3,8 +3,8 @@
 
 SETLOCAL
 
-echo %1
-call %1
+call conda activate %1
 call phy template-gui params.py
+conda deactivate
 
 ENDLOCAL

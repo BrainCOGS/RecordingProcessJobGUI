@@ -64,7 +64,7 @@ if app.py_enabled
     
     %Create call to python script to upload parameters (ex. call:)
     % python upload_params.py electrophysiology processing /path_to/param.json "param_description" kilosort 
-    system_call = [{app.envs_struct.py_env} {RecordingProcessJobGUI.py_upload_params}];
+    system_call = [{app.py_env} {RecordingProcessJobGUI.py_upload_params}];
     system_call{end+1} = app.ParamModalityDrop.Value;
     system_call{end+1} = type_param;
     system_call{end+1} = jsonfilevar;

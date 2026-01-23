@@ -13,7 +13,7 @@ if ~isempty(app.selectedJobRow)
         
         data_path = fullfile(app.RootProcessedDirectories.electrophysiology, this_job_path, 'ibl_data');
         
-        system_call = [{app.envs_struct.ibl_env} {RecordingProcessJobGUI.ibl_atlas_script}];
+        system_call = [{app.py_ibl_env} {RecordingProcessJobGUI.ibl_atlas_script}];
         system_call{end+1} = '-o';
         system_call{end+1} = 'True';
         system_call{end+1} = '-d';

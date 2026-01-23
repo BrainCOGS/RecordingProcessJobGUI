@@ -25,10 +25,10 @@ if ~isempty(app.selectedJobRow)
         data_path = fullfile(data_path, output_dir);
         cd(data_path);
         if this_modality == "electrophysiology"
-            system_call = [{app.phy_script} {app.envs_struct.phy_env_act} {data_path}];
+            system_call = [{app.phy_script} {app.py_iblenv_name} {data_path}];
             tool = 'Phy';
         elseif this_modality == "imaging"
-            system_call = [{app.suite2p_script} {app.envs_struct.suite2p_act}];
+            system_call = [{app.suite2p_script} {app.py_iblenv_name}];
             tool = 'suite2p';
         end
         system_call = char(strjoin(string(system_call)));

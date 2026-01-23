@@ -3,7 +3,7 @@ function fillParams(app)
 
 %%%%%%%%%%%%%%%%%Fetch parameters from python script (not readable in MATLAB)
 if app.py_enabled
-    out = system([app.envs_struct.py_env ' ' RecordingProcessJobGUI.py_read_params]);
+    out = system([app.py_env ' ' RecordingProcessJobGUI.py_read_params]);
     if out == 0
 
         %%%%%%%%%%%%%%%%%%%%Fetch and integrate params matfiles

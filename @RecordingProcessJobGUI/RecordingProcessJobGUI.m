@@ -242,8 +242,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         modality_job_id_copy
         
         %Python environment flags and variables
-        envs_dir
-        envs_struct
+        py_env
+        py_ibl_env
         py_enabled
 
         %Config table configuration
@@ -352,11 +352,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %Python environment variables
         gui_path = fileparts(mfilename('fullpath'));
-        py_env_name    = 'AutoPipeGUIEnv';
-        phy_env_name    = 'PhyEnv';
-        ibl_env_name = 'IBLEnv';
-        suite2p_env_name    = 'Suite2pEnv';
-        
+        py_env_name    = 'EnvAutoPipeGUI';
+        py_iblenv_name = 'iblenv';
         %Python scripts
         py_scripts_dir = fullfile(fileparts(RecordingProcessJobGUI.gui_path), 'PythonScripts')
         py_read_params = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'read_params.py')
