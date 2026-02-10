@@ -3,8 +3,8 @@
 
 SETLOCAL
 
-call conda activate %1
+echo %1
+call %1
 suite2p
-conda deactivate
 
 ENDLOCAL

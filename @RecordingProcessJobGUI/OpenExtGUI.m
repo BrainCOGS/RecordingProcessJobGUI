@@ -17,7 +17,7 @@ if ~isempty(app.selectedJobRow)
     dir_info = dir(data_path);
     dir_info = {dir_info.name};
 
-    output_dir_idx =  contains(dir_info, 'kil') & contains(dir_info, '_output');
+    output_dir_idx =  contains(dir_info, '_output');
     output_dir = dir_info(output_dir_idx);
 
     if ~isempty(output_dir)
@@ -28,7 +28,7 @@ if ~isempty(app.selectedJobRow)
             system_call = [{app.phy_script} {app.envs_struct.phy_env_act} {data_path}];
             tool = 'Phy';
         elseif this_modality == "imaging"
-            system_call = [{app.suite2p_script} {app.envs_struct.suite2p_act}];
+            system_call = [{app.suite2p_script} {app.envs_struct.suite2p_env_act}];
             tool = 'suite2p';
         end
         system_call = char(strjoin(string(system_call)));

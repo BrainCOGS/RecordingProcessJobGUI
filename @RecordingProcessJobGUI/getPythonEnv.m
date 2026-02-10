@@ -15,17 +15,17 @@ try
         sufix_python_env_act = fullfile('.venv', 'bin', 'activate');
     end
 
-        app.envs_struct.py_env = fullfile(app.envs_dir, app.py_env_name, sufix_python_env);
-        app.envs_struct.py_env_act = fullfile(app.envs_dir, app.py_env_name, sufix_python_env_act);
+        app.envs_struct.py_env = ['"' fullfile(app.envs_dir, app.py_env_name, sufix_python_env) '"'];
+        app.envs_struct.py_env_act = ['"' fullfile(app.envs_dir, app.py_env_name, sufix_python_env_act) '"'];
 
-        app.envs_struct.phy_env = fullfile(app.envs_dir, app.phy_env_name, sufix_python_env);
-        app.envs_struct.phy_env_act = fullfile(app.envs_dir, app.phy_env_name, sufix_python_env_act);
+        app.envs_struct.phy_env = ['"' fullfile(app.envs_dir, app.phy_env_name, sufix_python_env) '"'];
+        app.envs_struct.phy_env_act = ['"' fullfile(app.envs_dir, app.phy_env_name, sufix_python_env_act) '"'];
 
-        app.envs_struct.suite2p_env = fullfile(app.envs_dir, app.suite2p_env_name, sufix_python_env);
-        app.envs_struct.suite2p_env_act = fullfile(app.envs_dir, app.suite2p_env_name, sufix_python_env_act);
+        app.envs_struct.suite2p_env = ['"' fullfile(app.envs_dir, app.suite2p_env_name, sufix_python_env) '"'];
+        app.envs_struct.suite2p_env_act = ['"' fullfile(app.envs_dir, app.suite2p_env_name, sufix_python_env_act) '"'];
 
-        app.envs_struct.ibl_env = fullfile(app.envs_dir, app.ibl_env_name, sufix_python_env);
-        app.envs_struct.ibl_env_act = fullfile(app.envs_dir, app.ibl_env_name, sufix_python_env_act);
+        app.envs_struct.ibl_env = ['"' fullfile(app.envs_dir, app.ibl_env_name, sufix_python_env)  '"'];
+        app.envs_struct.ibl_env_act = ['"' fullfile(app.envs_dir, app.ibl_env_name, sufix_python_env_act)  '"'];
         
         
         %Surround with double quotes for filepaths with spaces
