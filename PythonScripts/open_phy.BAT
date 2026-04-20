@@ -4,7 +4,7 @@
 SETLOCAL
 
 call conda activate %1
-call phy template-gui params.py
+call phy template-gui win_params.py
 conda deactivate
 
 ENDLOCAL
