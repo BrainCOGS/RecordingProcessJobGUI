@@ -392,6 +392,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         createRecordingButton(app, event);
         createRecording(app, event);
         status = copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
+        dir_session_match = checkLocaldirSessionMatch(app,local_directory, subject_fullname, session_date);
         
         %Sub surgery figure
         addSurgeryData(app, subject_fullname, user_id, modality);

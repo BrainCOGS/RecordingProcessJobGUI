@@ -22,8 +22,19 @@ query2.session_number      = behavior_session.session_number;
 
 session_previously = fetch(recording.RecordingBehaviorSession & query2);
 
-selection = 'OK';
-if ~isempty(recorded_previously)
+%Check if probable match betwen local dir and session data
+dir_session_match = checkLocaldirSessionMatch(app, local_directory, query2.subject_fullname, query2.session_date);
+
+
+selection = "OK";
+if ~dir_session_match
+  selection = uiconfirm(app.UIFigure,{'Subject fullname and/or session date does not appear to match between local dir and session data',...
+      [newline, 'local_dir: ', local_directory, newline], ...
+      ['session_data: ', query2.subject_fullname, ' ', query2.session_date newline], ...
+      'Do you want to proceed?'},'Confirm recording',...
+        'Icon','warning');
+end
+if selection == "OK" && ~isempty(recorded_previously)
     selection = uiconfirm(app.UIFigure,{'Recording file (recording directory & system) already in DB', ...
         'Do you want to proceed  ?'},'Confirm recording',...
         'Icon','warning');
@@ -56,5 +67,8 @@ if selection == "OK"
         
     end
 end
+
+updateBusyLabel(app, true);
+
 
 end
