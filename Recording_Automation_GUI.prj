@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="3313107377" file="C:\Experiments\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="659845868" file="C:\Experiments\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon>${PROJECT_ROOT}\Recording_Automation_GUI_resources\icon.ico</param.icon>
     <param.icons>
@@ -143,7 +143,7 @@
       <file>${PROJECT_ROOT}\dirwalk</file>
       <file>${PROJECT_ROOT}\GHToolbox</file>
       <file>${PROJECT_ROOT}\modDataJoint</file>
-      <file>${PROJECT_ROOT}\mym_mexw64</file>
+      <file>${PROJECT_ROOT}\mym-mariadbconn</file>
       <file>${PROJECT_ROOT}\PythonScripts</file>
       <file>${PROJECT_ROOT}\system_conf_job_gui.json</file>
       <file>C:\Experiments\U19-pipeline-matlab</file>
@@ -155,6 +155,7 @@
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\addInsertionDevice.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\addSurgeryData.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\app_data.mat</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkLocaldirSessionMatch.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\closeSurgeryFigure.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\copyRecording.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createComponentsSurgeryFigure.m</file>
@@ -185,44 +186,14 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2024b</root>
+      <root>C:\Program Files\MATLAB\R2023b</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
-        <toolbox name="embeddedcoder" />
-        <toolbox name="gpucoder" />
-        <toolbox name="fixedpoint" />
-        <toolbox name="matlabhdlcoder" />
-        <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
-      </toolbox>
-      <toolbox>
-        <embeddedcoder>
-          <enabled>true</enabled>
-        </embeddedcoder>
-      </toolbox>
-      <toolbox>
-        <gpucoder>
-          <enabled>true</enabled>
-        </gpucoder>
-      </toolbox>
-      <toolbox>
-        <fixedpoint>
-          <enabled>true</enabled>
-        </fixedpoint>
-      </toolbox>
-      <toolbox>
-        <matlabhdlcoder>
-          <enabled>true</enabled>
-        </matlabhdlcoder>
-      </toolbox>
-      <toolbox>
-        <neuralnetwork>
-          <enabled>true</enabled>
-        </neuralnetwork>
       </toolbox>
     </matlab>
     <platform>
