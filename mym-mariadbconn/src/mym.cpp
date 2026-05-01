@@ -534,6 +534,10 @@ void mexFunction(int nlhs, mxArray*plhs[], int nrhs, const mxArray*prhs[]) {
         mysql_optionsv(conn, MYSQL_OPT_SSL_ENFORCE, &yes);
         //mysql_options(conn, MYSQL_OPT_SSL_VERIFY_SERVER_CERT, &no);
         mysql_options(conn, MYSQL_OPT_SSL_VERIFY_SERVER_CERT, &no);
+
+
+        mysql_options(conn, MYSQL_PLUGIN_DIR, "C:\\Experiments\\mym-mariadbconn\\mysql-connector\\lib_mexw64\\plugin"); 
+
        // mexPrintf("MYSQL_OPT_SSL_VERIFY_SERVER_CERT %d", MYSQL_OPT_SSL_VERIFY_SERVER_CERT);
 
 
