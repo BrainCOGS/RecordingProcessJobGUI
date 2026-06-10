@@ -49,7 +49,11 @@ end
 key.recording_modality  = app.Configuration.RecordingModality;
 key.location            = app.Configuration.System;
 
-this_local_directory         = fullfile(app.Configuration.RecordingRootDirectory, app.RecordingDirectoryDropDown.Value);
+
+this_local_directory = app.RecordingDirectoryTable{...
+    matches(app.RecordingDirectoryTable.rec_dir_dropdown, app.RecordingDirectoryDropDown.Value), 'full_recording_directory'};
+this_local_directory = this_local_directory{:};
+%this_local_directory         = fullfile(app.Configuration.RecordingRootDirectory, app.RecordingDirectoryDropDown.Value);
 last_folder             = strsplit(this_local_directory,filesep);
 last_folder             = last_folder{end};
 %key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, [session_date '_g' num2str(key_part.session_number)], last_folder);

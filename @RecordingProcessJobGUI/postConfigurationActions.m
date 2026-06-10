@@ -41,9 +41,22 @@ rec_dirs = rec_dirs(idx_good);
 end
 
 if ~isempty(rec_dirs)
-    rec_dirs = strrep(rec_dirs, app.Configuration.RecordingRootDirectory, '');
-    rec_dirs = rec_dirs(~cellfun('isempty',rec_dirs));
-    app.RecordingDirectoryDropDown.Items = rec_dirs;
+
+    app.RecordingDirectoryTable = cell2table(rec_dirs,'VariableNames',{'full_recording_directory'});
+    app.RecordingDirectoryTable.times_dir = cellfun(@get_mod_time_directory, rec_dirs,'UniformOutput',0);
+    app.RecordingDirectoryTable.recording_dir =  strrep(rec_dirs, app.Configuration.RecordingRootDirectory, '');
+
+    app.RecordingDirectoryTable = ...
+        app.RecordingDirectoryTable(~cellfun('isempty',app.RecordingDirectoryTable.recording_dir),:);
+
+    space_cell = repmat({'           '},height(app.RecordingDirectoryTable),1);
+
+    app.RecordingDirectoryTable.rec_dir_dropdown = strcat(app.RecordingDirectoryTable.recording_dir,space_cell, ...
+        app.RecordingDirectoryTable.times_dir);
+
+    %rec_dirs = strrep(rec_dirs, app.Configuration.RecordingRootDirectory, '');
+    %rec_dirs = rec_dirs(~cellfun('isempty',rec_dirs));
+    app.RecordingDirectoryDropDown.Items = app.RecordingDirectoryTable.rec_dir_dropdown;
     app.CreateProcessingJobButton.Enable = 'on';
 else
     app.RecordingDirectoryDropDown.Items = {'No recordings found'};

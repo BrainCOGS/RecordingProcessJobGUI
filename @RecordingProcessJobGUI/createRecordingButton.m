@@ -4,7 +4,11 @@ function createRecordingButton(app, event)
 updateBusyLabel(app, false);
 
 %Check if local directory already in DB
-local_directory       = fullfile(app.Configuration.RecordingRootDirectory, app.RecordingDirectoryDropDown.Value);
+
+local_directory = app.RecordingDirectoryTable{...
+    matches(app.RecordingDirectoryTable.rec_dir_dropdown, app.RecordingDirectoryDropDown.Value), 'full_recording_directory'};
+local_directory = local_directory{:};
+%local_directory       = fullfile(app.Configuration.RecordingRootDirectory, app.RecordingDirectoryDropDown.Value);
 local_directory       = strrep(local_directory,'\','/');
 query.local_directory = local_directory;
 query.location        = app.Configuration.System;

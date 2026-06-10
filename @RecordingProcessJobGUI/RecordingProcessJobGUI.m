@@ -221,6 +221,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %Behavior sessions info to correspond to a recording
         BehaviorSessions
+
+        %Recording directory Table for info of rec directory
+        RecordingDirectoryTable
         
                 
         %Param Selection table (when different for each probe)
@@ -291,7 +294,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
     
     properties (Constant = true)
     
-        Version      = '1.6';
+        Version      = '1.7';
         OKColor      = [0.7608        1     0.7922];
         ErrorColor   = [1         0.6588    0.6588];
         ActiveColor  = [0.5078    0.7078         1];
@@ -393,7 +396,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         createRecording(app, event);
         status = copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
         dir_session_match = checkLocaldirSessionMatch(app,local_directory, subject_fullname, session_date);
-        
+        findLikelyBehaviorSessionFromRecDir(app,event);
+        restoreColorSessionDropDown(app,event);
+
         %Sub surgery figure
         addSurgeryData(app, subject_fullname, user_id, modality);
         addInsertionDevice(app, event);

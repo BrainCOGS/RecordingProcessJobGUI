@@ -97,6 +97,8 @@ app.RecordingDirectoryDropDown = uidropdown(app.GridLayout2);
 app.RecordingDirectoryDropDown.Layout.Row = 2;
 app.RecordingDirectoryDropDown.Layout.Column = [2 4];
 app.RecordingDirectoryDropDown.Items = {};
+app.RecordingDirectoryDropDown.ValueChangedFcn = createCallbackFcn(app, @findLikelyBehaviorSessionFromRecDir, true);
+
 
 % Create SurgeryCheckBox
 app.SurgeryCheckBox = uicheckbox(app.GridLayout2);
@@ -132,6 +134,7 @@ app.BehaviorSessionDropDown.Layout.Row = 6;
 app.BehaviorSessionDropDown.Layout.Column = [2 4];
 app.BehaviorSessionDropDown.Items = {};
 app.BehaviorSessionDropDown.Editable = "on";
+app.BehaviorSessionDropDown.ValueChangedFcn = createCallbackFcn(app, @restoreColorSessionDropDown, true);
 
 % Create RecordingUserDropDownLabel
 %app.RecordingUserDropDownLabel = uilabel(app.GridLayout2);
