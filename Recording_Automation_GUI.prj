@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="3301777660" file="C:\Experiments\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="2166767410" file="C:\Experiments\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon>${PROJECT_ROOT}\Recording_Automation_GUI_resources\icon.ico</param.icon>
     <param.icons>
@@ -8,7 +8,7 @@
       <file>${PROJECT_ROOT}\Recording_Automation_GUI_resources\icon_24.png</file>
       <file>${PROJECT_ROOT}\Recording_Automation_GUI_resources\icon_16.png</file>
     </param.icons>
-    <param.version>1.6</param.version>
+    <param.version>1.7</param.version>
     <param.authnamewatermark>Alvaro Luna &amp; Christian Tabedzki</param.authnamewatermark>
     <param.email>alvaros@princeton.edu ct5868@princeton.edu</param.email>
     <param.company>Princeton</param.company>
@@ -160,15 +160,19 @@
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\copyRecording.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createComponentsSurgeryFigure.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\deleteInsertionDevice.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\findLikelyBehaviorSessionFromRecDir.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenExtGUI.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenExtGUI2.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenLog.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\registerSurgery.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\restoreColorSessionDropDown.m</file>
       <file>${PROJECT_ROOT}\connect_tech.p</file>
       <file>${PROJECT_ROOT}\convertTable2Categorical.m</file>
       <file>${PROJECT_ROOT}\copy_gui_vars.m</file>
       <file>${PROJECT_ROOT}\fetch_table_except.m</file>
       <file>${PROJECT_ROOT}\fetchDataDJTable.m</file>
+      <file>${PROJECT_ROOT}\find_datestr_recording_directory.m</file>
+      <file>${PROJECT_ROOT}\get_mod_time_directory.m</file>
       <file>${PROJECT_ROOT}\jsonencodepretty.m</file>
       <file>${PROJECT_ROOT}\load_gui_vars.m</file>
       <file>${PROJECT_ROOT}\loadJSONfile.m</file>

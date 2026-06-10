@@ -2,6 +2,8 @@ function findLikelyBehaviorSessionFromRecDir(app,event)
 
 %Auto select behavior session from dropdown (if possible)
 
+
+try
 %Get recording directory info
 idx_recdir_table = find(ismember(app.RecordingDirectoryTable.rec_dir_dropdown, app.RecordingDirectoryDropDown.Value),1,'first');
 
@@ -16,7 +18,7 @@ if contains(parent_dir,'_g0')
     parent_dir = fileparts(parent_dir);
 end
 
-grandpa_dir = fileparts(parent_dir);
+grandpa_dir = [fileparts(parent_dir) '\'];
 likely_subject_name = strrep(parent_dir,grandpa_dir,'');
 likely_subject_name = lower(strrep(likely_subject_name,'\',''));
 
@@ -74,7 +76,8 @@ else
 
     %If no session after, cannot preselect
     if isempty(idx_time)
-        app.BehaviorSessionDropDown.BackgroundColor = app.ErrorColor;
+        app.BehaviorSessionDropDown.Value = subject_sessions.session_name{1};
+        app.BehaviorSessionDropDown.BackgroundColor = app.YellowBColor;
         return
     end
 
@@ -82,7 +85,8 @@ else
 
     %If behavior session created 15 min after cannot preselect
     if minutes(sel_time) > 15
-        app.BehaviorSessionDropDown.BackgroundColor = app.ErrorColor;
+        app.BehaviorSessionDropDown.Value = subject_sessions.session_name{1};
+        app.BehaviorSessionDropDown.BackgroundColor = app.YellowBColor;
         return;
     end
 
@@ -90,6 +94,10 @@ else
     app.BehaviorSessionDropDown.Value = subject_sessions.session_name{1};
     app.BehaviorSessionDropDown.BackgroundColor = app.OKColor;
 
+end
+
+catch
+    app.BehaviorSessionDropDown.BackgroundColor = app.ErrorColor;
 end
 
 
