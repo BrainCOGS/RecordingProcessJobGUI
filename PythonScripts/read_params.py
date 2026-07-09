@@ -5,6 +5,24 @@ from scipy.io import savemat
 this_dir = os.path.dirname(__file__)
 os.chdir(this_dir)
 
+
+def matlab_safe(obj):
+    """Replace None with [] so scipy.io.savemat can serialize the structure.
+
+    savemat has no encoding for None and raises TypeError on it. Nullable
+    columns and nulls nested inside `params` blobs (e.g. the suite2p imaging
+    paramset) otherwise break the whole .mat file. MATLAB reads [] as empty.
+    """
+    if obj is None:
+        return []
+    if isinstance(obj, dict):
+        return {k: matlab_safe(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [matlab_safe(v) for v in obj]
+    if isinstance(obj, tuple):
+        return tuple(matlab_safe(v) for v in obj)
+    return obj
+
 import datajoint as dj
 dj.conn()
 
@@ -30,13 +48,13 @@ for table in params_tables:
 params_dict_dict = {}
 num_params = 0
 for idx, param_modality_list in enumerate(params_dict_list):
-    for dict in param_modality_list:
-        dict['recording_modality'] = modalities[idx]
-        dict['param_set_hash'] = str(dict['param_set_hash'])
-        if 'clustering_method' in dict:
-            dict['processing_method'] = dict.pop('clustering_method')
-    
-        params_dict_dict['param_'+str(num_params)] = dict
+    for param_dict in param_modality_list:
+        param_dict['recording_modality'] = modalities[idx]
+        param_dict['param_set_hash'] = str(param_dict['param_set_hash'])
+        if 'clustering_method' in param_dict:
+            param_dict['processing_method'] = param_dict.pop('clustering_method')
+
+        params_dict_dict['param_'+str(num_params)] = param_dict
         num_params +=1
 
 #################################################Fetch all preparamsStepList from all modalities
@@ -48,19 +66,19 @@ for table in preparams_steps_tables:
 preparams_steps_dict_dict = {}
 num_preparams_steps = 0
 for idx, preparam_modality_list in enumerate(preparams_steps):
-    for dict in preparam_modality_list:
-        dict['param_set_hash'] = str(dict['param_set_hash'])
-        dict['recording_modality'] = modalities[idx]
-        if 'precluster_param_steps_id' in dict:
-            dict['preprocess_param_steps_id'] = dict.pop('precluster_param_steps_id')
-        if 'precluster_method' in dict:
-            dict['preprocess_method'] = dict.pop('precluster_method')
-        if 'precluster_param_steps_name' in dict:
-            dict['preprocess_param_steps_name'] = dict.pop('precluster_param_steps_name')
-        if 'precluster_param_steps_desc' in dict:
-            dict['preprocess_param_steps_desc'] = dict.pop('precluster_param_steps_desc')
+    for param_dict in preparam_modality_list:
+        param_dict['param_set_hash'] = str(param_dict['param_set_hash'])
+        param_dict['recording_modality'] = modalities[idx]
+        if 'precluster_param_steps_id' in param_dict:
+            param_dict['preprocess_param_steps_id'] = param_dict.pop('precluster_param_steps_id')
+        if 'precluster_method' in param_dict:
+            param_dict['preprocess_method'] = param_dict.pop('precluster_method')
+        if 'precluster_param_steps_name' in param_dict:
+            param_dict['preprocess_param_steps_name'] = param_dict.pop('precluster_param_steps_name')
+        if 'precluster_param_steps_desc' in param_dict:
+            param_dict['preprocess_param_steps_desc'] = param_dict.pop('precluster_param_steps_desc')
 
-        preparams_steps_dict_dict['param_'+str(num_preparams_steps)] = dict
+        preparams_steps_dict_dict['param_'+str(num_preparams_steps)] = param_dict
         num_preparams_steps +=1
 
 #################################################Fetch all preparams from all modalities
@@ -73,13 +91,13 @@ for table in preparams_tables:
 preparams_dict_dict = {}
 num_preparams = 0
 for idx, preparam_modality_list in enumerate(preparams_dict_list):
-    for dict in preparam_modality_list:
-        dict['recording_modality'] = modalities[idx]
-        dict['param_set_hash'] = str(dict['param_set_hash'])
-        if 'precluster_method' in dict:
-            dict['preprocess_method'] = dict.pop('precluster_method')
-    
-        preparams_dict_dict['param_'+str(num_preparams)] = dict
+    for param_dict in preparam_modality_list:
+        param_dict['recording_modality'] = modalities[idx]
+        param_dict['param_set_hash'] = str(param_dict['param_set_hash'])
+        if 'precluster_method' in param_dict:
+            param_dict['preprocess_method'] = param_dict.pop('precluster_method')
+
+        preparams_dict_dict['param_'+str(num_preparams)] = param_dict
         num_preparams +=1
 
 '''
@@ -119,9 +137,9 @@ for idx, premethod_list in enumerate(all_methods_data):
 dj.conn().close()
 
 
-savemat('params.mat', params_dict_dict)
-savemat('preparams.mat', preparams_dict_dict)
-savemat('preparams_list.mat', preparams_steps_dict_dict)
+savemat('params.mat', matlab_safe(params_dict_dict))
+savemat('preparams.mat', matlab_safe(preparams_dict_dict))
+savemat('preparams_list.mat', matlab_safe(preparams_steps_dict_dict))
 
 #savemat('methods.mat', methods_dict)
 #savemat('premethods.mat', premethods_dict)
