@@ -1,0 +1,6 @@
+{
+    "n_chan_bin": 385,
+    "nblocks": 0,
+    "do_correction": false,
+    "clustering_method": "kilosort4"
+}
