@@ -1,4 +1,34 @@
 function fillJobStatusTable(app, key)
+%FILLJOBSTATUSTABLE Show a job's status history in the Job Status History table
+%
+%   Fetches the status history matching the restriction KEY (in practice
+%   struct('job_id', <id>), passed by jobTableSelected) from
+%   app.job_id_history_table_class (recording_process.LogStatus), newest entry
+%   first, and writes it to app.JobHistoryTable on the "Manage Processing Jobs"
+%   tab. The table is blanked first so a job with no history shows empty rather
+%   than the previous job's log. Only the columns named in
+%   app.COLUMNS_JOB_STATUS_TABLE are fetched, so the struct field order matches
+%   the widget's column order (app.COLUMNS_JOB_STATUS_NAMES) and the result can be
+%   dumped straight in via struct2cell.
+%
+%   Status colouring: the status_processing_id_new cell of each history row is
+%   painted red when the new status is <= app.min_job_status (-1, errored) and
+%   green when it is >= app.max_job_status (7, finished). Previous styling is
+%   cleared first with removeStyle.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%       key (struct)                 - Optional DataJoint restriction on the log
+%                                      table, normally .job_id. Defaults to [],
+%                                      which fetches the history of every job.
+%
+%   Outputs:
+%       None - Updates app.JobHistoryTable.Data and its red/green styles
+%
+%   Dependencies:
+%       - recording_process.LogStatus (via app.job_id_history_table_class)
+%
+%   See also: jobTableSelected, fillJobTable, recordingTableSelected, setStyleCellsTable
 
 if nargin < 2
     key = [];

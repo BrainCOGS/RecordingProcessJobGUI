@@ -1,6 +1,67 @@
 
 function createRecording(app, event)
-% Get all info to insert recording.Recording table
+%CREATERECORDING Copy a recording to cup and insert it into recording.Recording
+%
+%   The centerpiece of the "Add Recording" flow. Assembles the recording.Recording
+%   key from the Tab 1 form, ROBOCOPYs the local data directory to cup, and then
+%   inserts Recording + its session part table + DefaultParams inside a single
+%   DataJoint transaction. Called by createRecordingButton (default-params path)
+%   or by checkParamSelection (hand-picked-params path).
+%
+%   Behavior vs no-behavior branch (app.IstherebehaviorSessionCheckBox):
+%     - Checked: the part-table key is taken from the row of app.BehaviorSessions
+%       matching app.BehaviorSessionDropDown.Value, giving subject_fullname,
+%       session_date and session_number; user_id comes from the session. The row
+%       is inserted into recording.RecordingBehaviorSession. session_date is
+%       compacted to 'yyyymmdd' for the cup path.
+%     - Unchecked: subject comes from app.RecordingSubjectDropDown, user_id is the
+%       prefix of subject_fullname before the first '_', and the datetime is built
+%       from app.RecordingDateDatePicker (date) plus app.RecordingDateTimePicker
+%       (a uispinner holding an integer hour 0-24). A RANDOM number of minutes
+%       (rand()*60) is added to that hour to produce recording_datetime, so the
+%       key is unique per registration. The row goes into
+%       recording.RecordingRecordingSession instead.
+%
+%   recording_directory (the cup-relative path) differs between the two:
+%     - with behavior:    /<user_id>/<subject_fullname>/<yyyymmdd>_g<session_number>/<last_folder>
+%     - without behavior: /<user_id>/<subject_fullname>/<yyyymmdd_HHMMSS>/<last_folder>
+%   where <last_folder> is the leaf of the selected local directory. local_directory
+%   is stored with forward slashes; the Windows-separator form is what is handed to
+%   copyRecording.
+%
+%   status_recording_id is set to 2 directly: because this method already copies the
+%   data to cup itself, statuses 0 (new) and 1 (copying) are skipped.
+%
+%   If app.SurgeryCheckBox is set and action.Surgery has no entry for the subject,
+%   addSurgeryData is called first. On success the recording id is reported, the
+%   Recording Table tab is refreshed and selected, and the param selection state
+%   (app.PreParamSelectionTable / app.ParamSelectionTable and the fragment list
+%   boxes) is reset. On any error inside the transaction it is cancelled, so a
+%   failed insert never leaves a half-registered recording -- but the files copied
+%   to cup are NOT rolled back.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The GUI application object
+%       event                        - ButtonPushed event of the calling button;
+%                                      only event.Source.Enable is used, to
+%                                      re-enable the button on failure
+%
+%   Outputs:
+%       None - Inserts recording.Recording, one of
+%              recording.RecordingBehaviorSession / RecordingRecordingSession,
+%              and recording.DefaultParams; copies the data directory to cup
+%
+%   Dependencies:
+%       - DataJoint tables: recording.Recording, recording.RecordingBehaviorSession,
+%         recording.RecordingRecordingSession, recording.DefaultParams,
+%         action.Surgery; dj.conn transaction
+%       - createDefaultParamsRecord, copyRecording, addSurgeryData, spec_fullfile,
+%         fillRecordingTable, fillRecordingSubjectRT, fillRecordingUserRT,
+%         updateBusyLabel
+%       - ROBOCOPY (via copyRecording)
+%
+%   See also: createRecordingButton, createDefaultParamsRecord, copyRecording,
+%             checkParamSelection
 
 updateBusyLabel(app, false);
 
@@ -146,7 +207,8 @@ if status ~= -1
     end
     
 else
-        uiconfirm(app.UIFigure,['Recording was not created ' err.message], ...
+    %copyRecording returned -1 without throwing, so there is no err to report
+    uiconfirm(app.UIFigure,'Recording was not created, copying the recording directory to cup failed', ...
         '', ...
         'Options',{'OK'}, ...
         'Icon','error');

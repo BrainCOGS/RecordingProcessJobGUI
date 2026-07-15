@@ -1,5 +1,76 @@
 function configParams(app)
-%CONFIGPARAMS table & field definitions for the GUI
+%CONFIGPARAMS Register every DataJoint table and field name the GUI uses
+%
+%   The central name registry for the whole app. It is the very first thing the
+%   RecordingProcessJobGUI constructor calls - before createComponents and
+%   startupFcn - because it also opens the database connection: it sets the
+%   DB_PREFIX environment variable to 'u19_' (which tells the vendored DataJoint
+%   schemas which MySQL databases to bind to) and then calls connect_tech() to log
+%   in. Nothing DataJoint-related works until this has run.
+%
+%   The rest of the file exists so that no other method has to hard-code an
+%   element-table class or a column name. Electrophysiology and imaging use
+%   different DataJoint element tables with different column names for the same
+%   concept, so nearly every registry entry is a struct keyed by modality:
+%
+%       app.<x>_table_names.<modality>.table_class    - the DataJoint table object
+%       app.<x>_table_names.<modality>.<field>_field  - that modality's column name
+%
+%   Callers index it with the live modality string, e.g.
+%   app.param_table_names.(app.Configuration.RecordingModality).table_class, and
+%   then renamevars the modality-specific column onto the "common" name held in the
+%   flat properties alongside each struct (app.params_idx_field,
+%   app.param_methods_method_field, app.preparam_steps_idx_field, ...). That
+%   rename-to-common trick is what lets getParamsFromMatlab, getMethods and the
+%   Create Parameters tab treat both modalities with one code path. Note the common
+%   names are simply the imaging names - imaging entries look redundant because the
+%   imaging column names were chosen as the canonical ones; ephys is the one that
+%   gets renamed.
+%
+%   The registries, in order:
+%     - param_table_names          - processing paramsets (ClusteringParamSet /
+%                                    ProcessingParamSet)
+%     - preparam_table_names       - pre-processing paramsets (PreClusterParamSet /
+%                                    PreProcessParamSet)
+%     - preparam_steps_table_names - the named ordered step lists
+%                                    (PreClusterParamSteps / PreprocessParamSteps)
+%     - preparam_steps_step_table_names - the individual steps of a list, each
+%                                    pointing at a step_number and a paramset_idx
+%     - param_methods_table_names / preparam_methods_table_names - the method
+%                                    vocabularies (kilosort, suite2p, ...)
+%     - job_part_parms_table       - per-job params part tables
+%                                    (recording_process.ProcessingEphysParams /
+%                                    ProcessingImagingParams)
+%     - recording_history_table_class / job_id_history_table_class - the status log
+%                                    tables shown in the history panes
+%
+%   It also seeds the empty selection tables (app.ParamSelectionTable,
+%   app.PreParamSelectionTable - both keyed by fragment_number), the per-modality
+%   raw-file glob patterns in app.AllFileExtensions, and the cup paths. The root
+%   directories are not hard-coded: they are read out of lab.DjCustomVariables
+%   ('ephys_root_data_dir' / 'imaging_root_data_dir', index 0 = raw ->
+%   app.RootDirectories, index 1 = processed -> app.RootProcessedDirectories) and
+%   translated to this machine's mount by lab.utils.get_path_from_official_dir.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%
+%   Outputs:
+%       None - Sets the DB_PREFIX env var, connects to the database, and populates
+%              the table/field registry properties on app
+%
+%   Dependencies:
+%       - connect_tech (opens the DataJoint connection)
+%       - DataJoint tables: pipeline_ephys_element.* (ClusteringParamSet,
+%         PreClusterParamSet, PreClusterParamSteps, PreClusterParamStepsStep,
+%         ClusteringMethod, PreClusterMethod), pipeline_imaging_element.*
+%         (ProcessingParamSet, PreProcessParamSet, PreprocessParamSteps,
+%         PreprocessParamStepsStep, ProcessingMethod, PreprocessMethod),
+%         recording_process.ProcessingEphysParams / ProcessingImagingParams,
+%         recording.LogStatus, recording_process.LogStatus, lab.DjCustomVariables
+%       - lab.utils.get_path_from_official_dir
+%
+%   See also: RecordingProcessJobGUI, startupFcn, getParamsFromMatlab, getMethods
 
 setenv('DB_PREFIX', 'u19_');
 connect_tech();

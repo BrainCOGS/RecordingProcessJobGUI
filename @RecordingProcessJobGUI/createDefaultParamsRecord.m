@@ -1,5 +1,55 @@
 function default_all_params_record = createDefaultParamsRecord(app)
-%CREATEDEFAULTPARAMSRECORD
+%CREATEDEFAULTPARAMSRECORD Build the recording.DefaultParams rows for a new recording
+%
+%   Assembles the struct (or struct array) that createRecording inserts into
+%   recording.DefaultParams, recording the paramset and pre-process step list each
+%   fragment (probe for electrophysiology, FOV for imaging) should be processed
+%   with. Only runs when app.CreateRecordingOrJob is true, i.e. when a whole
+%   recording is being registered rather than a single job; otherwise it returns an
+%   empty struct. recording_id is NOT set here -- createRecording deals it in after
+%   the Recording insert.
+%
+%   The candidate params are first restricted to the configured modality
+%   (app.Configuration.RecordingModality) out of app.PreProcessParamList and
+%   app.ProcessParams. Field names are modality-dependent and are read from
+%   app.preparam_steps_idx_field, app.params_idx_field and
+%   app.preprocess_steps_name_field.
+%
+%   Two paths:
+%     - app.DefaultParametersCheckBox checked: one row with fragment_number = 0 and
+%       both default_same_preparams_all and default_same_params_all = 1. The ids
+%       come from getDefaultParamsMod, which reads the modality's
+%       default_preprocess_param_steps_id / default_paramset_idx. If the modality
+%       has no pre-processing list (currently the case for imaging),
+%       preprocess_param_steps_id falls back to 0.
+%     - unchecked: pre-params and params are built independently. If
+%       app.SamePreParamListRecordingCheckBox (resp.
+%       app.SameParamsRecordingCheckBox) is set, a single fragment_number = 0 row is
+%       made from the value of app.PreprocessingParamsDropDown (resp.
+%       app.ProcessingParamsDropDown) with default_same_*_all = 1; otherwise the
+%       per-fragment table the user built on the Select Parameters tab
+%       (app.PreParamSelectionTable / app.ParamSelectionTable) is used with
+%       default_same_*_all = 0. If one side is a single row and the other is
+%       per-fragment, the single row is replicated to match and given
+%       fragment_number 0..N-1. The two tables are then joined on fragment_number,
+%       sorted, and converted to a struct array.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The GUI application object
+%
+%   Outputs:
+%       default_all_params_record (struct) - One element per fragment, with fields
+%                                            fragment_number,
+%                                            preprocess_param_steps_id,
+%                                            paramset_idx,
+%                                            default_same_preparams_all,
+%                                            default_same_params_all
+%
+%   Dependencies:
+%       - getDefaultParamsMod
+%       - recording.DefaultParams (the table these rows are inserted into)
+%
+%   See also: createRecording, getDefaultParamsMod, checkParamSelection
 
 default_all_params_record = struct;
 

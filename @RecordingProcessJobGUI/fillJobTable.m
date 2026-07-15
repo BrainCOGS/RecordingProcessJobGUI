@@ -1,4 +1,53 @@
 function fillJobTable(app, key)
+%FILLJOBTABLE Populate the job table (Tab 4) with jobs and the params they use
+%
+%   Fetches every processing job matching the restriction KEY and writes it to
+%   app.JobTable, the main table of the "Manage Processing Jobs" tab. As in
+%   fillRecordingTable, two joins are queried and concatenated because a job's
+%   recording may reach its session in one of two ways (see startupFcn):
+%   app.RecordingProcessTable joins through recording.RecordingBehaviorSession,
+%   app.RecordingProcessTable2 through recording.RecordingRecordingSession with
+%   session_number forced to -1.
+%
+%   The job rows carry only paramset indices, so this function also builds a
+%   human-readable params column set and left-joins it on job_id:
+%     - ephys params come from recording_process.ProcessingEphysParams, whose
+%       precluster_param_steps_id is projected to preprocess_param_steps_id so
+%       the two modalities share one schema; recording_modality is stamped on;
+%     - imaging params come from recording_process.ProcessingImagingParams.
+%   The union is then left-joined against app.ProcessParams (on recording_modality
+%   + paramset_idx) to pick up processing_method / paramset_desc, and against
+%   app.PreProcessParamList (on recording_modality + preprocess_param_steps_id)
+%   to pick up preprocess_param_steps_name. Those three names plus job_id are
+%   merged into app.DataTable, which is cached with all columns and sorted by
+%   session_date then recording_id. Only app.COLUMNS_JOB_TABLE is displayed, under
+%   the headers app.COLUMNS_JOB_NAMES with app.COLUMNS_JOB_FORMAT /
+%   app.COLUMNS_JOB_WIDTH.
+%
+%   Status colouring: the status_processing_id cell of a row is painted red when
+%   the status is <= app.min_job_status (-1, i.e. errored) and green when it is
+%   >= app.max_job_status (7, i.e. finished). Previous styling is cleared first
+%   with removeStyle.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%       key (struct)                 - Optional DataJoint restriction applied to
+%                                      both job joins (e.g. .user_id,
+%                                      .subject_fullname, .session_date, as built
+%                                      by filterTable into app.FilterRecordingJob).
+%                                      Defaults to [] = no restriction.
+%
+%   Outputs:
+%       None - Sets app.DataTable and app.JobTable.Data, and re-applies the
+%              red/green cell styles
+%
+%   Dependencies:
+%       - fetchDataDJTable
+%       - recording_process.Processing, recording_process.Status,
+%         recording_process.ProcessingEphysParams,
+%         recording_process.ProcessingImagingParams
+%
+%   See also: fillRecordingTable, jobTableSelected, fillJobStatusTable, filterTable
 
 if nargin < 2
     key = [];

@@ -1,5 +1,43 @@
 
 function ParamListSelected(app, event)
+%PARAMLISTSELECTED Expand the selected pre-processing step list into its steps
+%
+%   ValueChanged callback for app.PreprocessingParamsDropDown. A pre-processing
+%   "paramset" is not a single set of values but an ordered list of steps, so
+%   selecting one here has to expand it.
+%
+%   app.PreProcessParamList holds one row per (step list, step): all rows sharing
+%   the selected app.preprocess_steps_name_field value are the steps of that list,
+%   already ordered by fillParams (sortrows on the steps id and step_number). The
+%   first such row carries the list-level metadata - description
+%   (app.preprocess_steps_desc_field) and author/date - which go into
+%   app.PreParamsDescriptionLabel2 and app.UserDatePreParamsLabel2.
+%
+%   Each step is rendered as "<method>: <paramset_desc>"
+%   (app.preparam_methods_method_field and app.params_desc_field) into
+%   app.PreprocessingParamsStepsList, the first step is selected, and
+%   PreparamStepSelected is invoked so the JSON pane shows that step's params.
+%
+%   If the dropdown is empty (the selected user has no pre-processing lists) the
+%   steps list and labels are cleared, and ParamSetSelected is called instead so
+%   the shared JSON pane at least shows the processing paramset rather than going
+%   stale.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%       event                        - ValueChanged event, or the
+%                                      app.PreprocessingParamsDropDown handle.
+%                                      Only event.Value (the step-list name) is
+%                                      used
+%
+%   Outputs:
+%       None - Updates app.PreprocessingParamsStepsList,
+%              app.PreParamsDescriptionLabel2 and app.UserDatePreParamsLabel2
+%
+%   Dependencies:
+%       - app.PreProcessParamList (filled by fillParams)
+%
+%   See also: PreparamStepSelected, ParamSetSelected, fillParams2Select
 
 if isempty(event.Value)
     app.PreprocessingParamsStepsList.Items = {};

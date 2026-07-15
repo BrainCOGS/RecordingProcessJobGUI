@@ -1,5 +1,51 @@
 
 function CreateNewJob(app, event)
+%CREATENEWJOB Clone the selected job as a new job with the parameters chosen in Tab 2
+%
+%   ButtonPushed callback that RunJobDiffParams attaches to
+%   app.CreateProcessingJobButton2 ('Register Job') on the "Select Parameters"
+%   tab. It inserts a brand-new recording_process.Processing job over the same
+%   recording and fragment as app.jobid_to_copy, but with the paramset currently
+%   selected in app.ProcessingParamsDropDown / app.PreprocessingParamsDropDown.
+%
+%   The source job is fetched for recording_id, fragment_number and
+%   recording_process_pre_path; job_id is stripped so the DB auto-assigns a new
+%   one, and status_processing_id is set to 0 so the automatic pipeline picks the
+%   job up. Everything then runs in one DataJoint transaction:
+%     - insert the Processing row;
+%     - re-read the highest job_id to learn the new job's id, and update its
+%       recording_process_post_path to <pre_path>/job_id_<new id> (built with
+%       spec_fullfile so the separator is '/' regardless of platform);
+%     - for electrophysiology only, insert the params record into
+%       app.job_part_parms_table.electrophysiology.table_class
+%       (recording_process.ProcessingEphysParams), resolving the dropdown
+%       selections back to indices through the modality-filtered
+%       app.PreProcessParamList and app.ProcessParams. There is no imaging branch:
+%       an imaging clone gets a Processing row but no ProcessingImagingParams row.
+%   On success the job table and its filter dropdowns are refreshed and the GUI
+%   returns to the "Manage Processing Jobs" tab. On failure the transaction is
+%   cancelled, so a job can never be left without its params record.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object. Reads
+%                                      app.jobid_to_copy and
+%                                      app.modality_job_id_copy, both set by
+%                                      RunJobDiffParams
+%       event                        - ButtonPushed event; event.Source is
+%                                      re-enabled on error
+%
+%   Outputs:
+%       None - Inserts a recording_process.Processing row (plus a
+%              recording_process.ProcessingEphysParams row for ephys) and
+%              refreshes app.JobTable
+%
+%   Dependencies:
+%       - recording_process.Processing, recording_process.ProcessingEphysParams
+%       - fillJobTable, fillRecordingSubject, fillRecordingUser
+%       - spec_fullfile, updateBusyLabel
+%       - dj.conn (transaction handling)
+%
+%   See also: RunJobDiffParams, RerunJob, fillParams2Select, fillJobTable
 
 % Get all info to insert recording_process.Processing table
 

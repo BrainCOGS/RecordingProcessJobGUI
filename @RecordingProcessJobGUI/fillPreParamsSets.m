@@ -1,5 +1,43 @@
 
 function fillPreParamsSets(app, event)
+%FILLPREPARAMSSETS Fill the Create Parameters tab dropdowns for one modality
+%
+%   ValueChangedFcn for app.ParamModalityDrop (Create Parameters tab, GridLayoutCP), also
+%   called directly with no event by postConfigurationActions, writeParametersDB and
+%   RegisterPreParamList to refresh the tab after the configuration or the database
+%   changes.
+%
+%   Modality-aware, and this is the only branch in the function: called as a callback it
+%   takes the modality the user just picked in the dropdown (event.Value); called with
+%   one argument it falls back to the configured app.Configuration.RecordingModality
+%   ('electrophysiology' or 'imaging'). Everything below filters on
+%   recording_modality == modality.
+%
+%   Reads no database directly - it slices the tables fillParams already cached on the
+%   app - and fills three dropdowns:
+%       app.PreParamsStepsDrop           - existing pre-process steps to add to a step
+%                                          list, from app.PreProcessParams rendered as
+%                                          '<preprocess_method>: <paramset_desc>'
+%       app.CreatePreParamSetMethodsDrop - distinct preprocess_method values available
+%                                          for this modality (app.PreProcessParams)
+%       app.CreateParamSetMethodsDrop    - distinct processing_method values available
+%                                          for this modality (app.ProcessParams)
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The main application object
+%       event                        - Optional ValueChanged event from
+%                                      app.ParamModalityDrop; only event.Value is used,
+%                                      as the modality name. Omit to use
+%                                      app.Configuration.RecordingModality
+%
+%   Outputs:
+%       None - Sets app.PreParamsStepsDrop.Items, app.CreatePreParamSetMethodsDrop.Items
+%              and app.CreateParamSetMethodsDrop.Items
+%
+%   Dependencies:
+%       - app.PreProcessParams / app.ProcessParams (populated by fillParams)
+%
+%   See also: fillParams, fillDefaultParams, RegisterPreParamList, postConfigurationActions
 
 if nargin < 2
     modality = app.Configuration.RecordingModality;

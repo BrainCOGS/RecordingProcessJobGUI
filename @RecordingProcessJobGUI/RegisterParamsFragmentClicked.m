@@ -1,5 +1,39 @@
 function RegisterParamsFragmentClicked(app, event)
-%REGISTERPREPARAMFRAGMENTCLICKED 
+%REGISTERPARAMSFRAGMENTCLICKED Assign the selected processing paramset to one fragment
+%
+%   ButtonPushed callback for app.RegisterParamsFragment, active only when
+%   app.SameParamsRecordingCheckBox is unchecked. The processing-paramset mirror of
+%   RegisterPreparamFragmentClicked, driving the lower pair of listboxes:
+%       app.ListBoxFragmentRecording2       - the fragments to assign, items
+%                                             '(Probe|Fov)_0' .. '(Probe|Fov)_4'
+%       app.ListBoxFragmentRecording2Params - what is assigned to each, items start
+%                                             as '0'..'4' and are rewritten to
+%                                             '<n>-<paramset_desc>' once registered
+%   Row i of the left box is fragment i and row i of the right box is that
+%   fragment's assigned paramset; the two are kept in step here.
+%
+%   The fragment number comes from the trailing character of the selected left-hand
+%   item, and the paramset_idx (app.params_idx_field) is looked up in
+%   app.ProcessParams from the paramset_desc chosen in app.ProcessingParamsDropDown.
+%   The (fragment_number, paramset_idx) pair is appended to app.ParamSelectionTable,
+%   or the existing row for that fragment is overwritten, so a fragment can be
+%   re-registered freely. createDefaultParamsRecord later joins this table with
+%   app.PreParamSelectionTable to build the recording.DefaultParams rows.
+%
+%   Both listboxes then advance to the next fragment (wrapping to the first) and
+%   SelectedListBoxFragmentRec2 retitles the button accordingly.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%       event                        - ButtonPushed event; unused
+%
+%   Outputs:
+%       None - Appends to / updates app.ParamSelectionTable, relabels
+%              app.ListBoxFragmentRecording2Params and advances the selection of
+%              both fragment listboxes
+%
+%   See also: RegisterPreparamFragmentClicked, SelectedListBoxFragmentRec2,
+%             SameParamCheckClicked, checkParamSelection
 
 
 no_fragment = str2double(app.ListBoxFragmentRecording2.Value(end));

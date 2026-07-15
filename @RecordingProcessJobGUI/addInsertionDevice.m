@@ -1,6 +1,39 @@
 
 function addInsertionDevice(app, event)
-% Write surgery and surgery location
+%ADDINSERTIONDEVICE Append the current device/coordinate form to the device list
+%
+%   ButtonPushed callback for the "Add insertion device" button of the surgery
+%   sub-figure. One surgery can implant several devices, so the dialog does not
+%   write anything on its own: each press snapshots the current state of the
+%   device / hemisphere / coordinate / angle controls into one element of
+%   app.AllSurgeryStuff.devicesStruct and bumps app.AllSurgeryStuff.numDevices.
+%   registerSurgery later inserts that whole struct array in one go, so a device
+%   only counts if it was added here first - values merely typed into the form and
+%   never added are silently dropped.
+%
+%   The struct element records device_idx (zero-based: numDevices-1),
+%   insertion_device_name, hemisphere, real_ml_coordinates, real_ap_coordinates,
+%   real_depth_coordinates (mm from bregma) and phi_angle / theta_angle /
+%   rho_angle (degrees). These are exactly the action.SurgeryLocation fields;
+%   subject_fullname and surgery_start_time are filled in later by registerSurgery.
+%
+%   It also pushes a human-readable row onto app.AllSurgeryStuff.deviceList of the
+%   form 'device idx: <n>  _  <device name>  _  <ml>-<ap>-<depth>' (coordinates to
+%   one decimal), which is the only feedback the user gets that the add worked.
+%   Note the form controls are not cleared, so adding a second device means editing
+%   the fields that differ and pressing the button again.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The GUI application object
+%       event                        - ButtonPushed event; unused
+%
+%   Outputs:
+%       None - Appends to app.AllSurgeryStuff.devicesStruct, increments
+%              app.AllSurgeryStuff.numDevices and adds an item to
+%              app.AllSurgeryStuff.deviceList
+%
+%   See also: createComponentsSurgeryFigure, deleteInsertionDevice,
+%             registerSurgery, addSurgeryData
 
 app.AllSurgeryStuff.numDevices = app.AllSurgeryStuff.numDevices + 1;
 device_idx = app.AllSurgeryStuff.numDevices;

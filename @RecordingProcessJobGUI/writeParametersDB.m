@@ -1,5 +1,61 @@
 
 function writeParametersDB(app, event)
+%WRITEPARAMETERSDB Register a new processing or pre-processing paramset in the DB
+%
+%   Shared ButtonPushed callback for app.RegisterParamSetButton ("Register Proc.
+%   Param Set") and app.RegisterPreParamSetButton ("Register Preproc. Param Set")
+%   on the Create Parameters tab. event.Source is compared against
+%   app.RegisterParamSetButton to pick, in one go, every processing-vs-preprocessing
+%   control it needs: the new-method checkbox/edit, the existing-method dropdown,
+%   the description edit, the staged json path set by UploadParamJsonFile
+%   (app.NewParamJsonFile / app.NewPreParamJsonFile), the type_param string
+%   ('processing' / 'preprocessing') and the methods table.
+%
+%   Refuses to run (uiconfirm warning, early return) unless a method name, a
+%   paramset description and an uploaded json file are all present.
+%
+%   Two different write paths are involved, which is worth being clear about:
+%     - The *method* row, when the "define new method" checkbox is ticked, is
+%       inserted from MATLAB via DataJoint, with 'IGNORE' so re-registering an
+%       existing method is harmless. The table and its field names come from
+%       app.param_methods_table_names.(modality) (ClusteringMethod for ephys,
+%       ProcessingMethod for imaging) or app.preparam_methods_table_names.(modality)
+%       (PreClusterMethod for ephys, PreprocessMethod for imaging), keyed off
+%       app.ParamModalityDrop.Value. The method description is inserted empty ('').
+%     - The *paramset* itself is NOT inserted from MATLAB. It is delegated to the
+%       python script upload_params.py, shelled out through app.py_env, e.g.
+%           python upload_params.py electrophysiology processing /path/param.json "desc" kilosort
+%       upload_params.py maps (modality, type) onto the real paramset table
+%       (PreClusterParamSet / ClusteringParamSet for ephys, PreProcessParamSet /
+%       ProcessingParamSet for imaging), assigns paramset_idx as last_id+1,
+%       computes param_set_hash and refuses to re-insert a hash-identical paramset
+%       under a different idx.
+%
+%   The stored paramset description is prefixed with the selected user and today's
+%   date ('"' user '_' yyyy-mm-dd '_' desc '"'), the convention
+%   splitDescriptionColumnParams later unpicks; the surrounding double quotes keep
+%   it one shell argument. On a zero exit code it reports success and refreshes the
+%   cached params via fillParams / fillPreParamsSets; otherwise it shows cmdout in
+%   an error dialog and re-enables the source button.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The GUI application object
+%       event                        - Button ButtonPushed event; event.Source
+%                                      selects processing vs pre-processing
+%
+%   Outputs:
+%       None - Inserts the paramset (via upload_params.py) and optionally a new
+%              method row, then refreshes the params caches
+%
+%   Dependencies:
+%       - PythonScripts/upload_params.py (RecordingProcessJobGUI.py_upload_params),
+%         run in the app.py_env conda environment
+%       - DataJoint method tables: pipeline_ephys_element.ClusteringMethod /
+%         PreClusterMethod, pipeline_imaging_element.ProcessingMethod /
+%         PreprocessMethod
+%       - fillParams, fillPreParamsSets, updateBusyLabel, configParams
+%
+%   See also: UploadParamJsonFile, RegisterPreParamList, checkBoxParamMethod, checkBoxPreParamMethod
 
 if event.Source == app.RegisterParamSetButton
     methodCheckBox = app.NewParamMethodCheckBox;

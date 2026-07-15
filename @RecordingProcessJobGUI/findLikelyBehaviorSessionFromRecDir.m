@@ -1,4 +1,59 @@
 function findLikelyBehaviorSessionFromRecDir(app,event)
+%FINDLIKELYBEHAVIORSESSIONFROMRECDIR Guess the behavior session that matches a recording dir
+%
+%   ValueChanged callback for app.RecordingDirectoryDropDown. Convenience only: it
+%   pre-selects the most likely entry of app.BehaviorSessionDropDown and colours the
+%   dropdown to say how much to trust the guess. The user can always override, and
+%   nothing here validates the final choice -- checkLocaldirSessionMatch does that at
+%   registration time. restoreColorSessionDropDown clears the colour as soon as the
+%   user picks a session by hand.
+%
+%   Colour code (all constants on the class):
+%       app.OKColor (green)      - confident: a unique subject+date+time match
+%       app.YellowBColor (yellow)- a subject+date match exists but the times do not
+%                                  line up; the first candidate is selected anyway
+%       app.ErrorColor (red)     - could not guess; the dropdown is left as-is
+%
+%   The heuristic, in order:
+%     1. Subject. Take the selected row's full_recording_directory from
+%        app.RecordingDirectoryTable and walk up to its parent. If that parent
+%        contains '_g0' (the SpikeGLX <date>_g0/imec0 layout) walk up once more. The
+%        leaf name of that folder, lowercased with separators stripped, is the
+%        likely subject name. It must be a substring (case-sensitive `contains`) of
+%        exactly ONE unique subject_fullname in app.BehaviorSessions -- zero or
+%        several matches means red.
+%     2. Date. find_datestr_recording_directory scans the path for the first
+%        date-like token; NaT means red. Candidates are then the rows of
+%        app.BehaviorSessions for that subject whose session_date equals it.
+%     3. No candidate -> red. Exactly one candidate -> select it, green.
+%     4. Several candidates -> disambiguate by time. Each candidate's
+%        session_start_time ('HH:mm') is compared against the recording directory's
+%        modification time (the times_dir column, filled by get_mod_time_directory,
+%        also 'HH:mm'). The intent is to take the first behavior session starting at
+%        or after the directory time, and to accept it only if it starts within 15
+%        minutes; that session is selected green. If no session starts after the
+%        directory time, or the gap exceeds 15 minutes, the first candidate row is
+%        selected yellow instead.
+%   Any error at all is swallowed and turns the dropdown red.
+%
+%   Note the time comparison only uses the clock time of the two; the date has
+%   already been matched in step 2. Despite the inline comment, num_trials is not
+%   part of the heuristic.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The GUI application object
+%       event                        - DropDown ValueChanged event (unused)
+%
+%   Outputs:
+%       None - Sets app.BehaviorSessionDropDown Value and BackgroundColor
+%
+%   Dependencies:
+%       - find_datestr_recording_directory, get_mod_time_directory (via the
+%         times_dir column of app.RecordingDirectoryTable)
+%       - app.BehaviorSessions, filled by fillSessions
+%
+%   See also: restoreColorSessionDropDown, checkLocaldirSessionMatch, fillSessions,
+%             postConfigurationActions
 
 %Auto select behavior session from dropdown (if possible)
 

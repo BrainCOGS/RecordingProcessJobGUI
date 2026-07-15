@@ -1,4 +1,51 @@
 function postConfigurationActions(app)
+%POSTCONFIGURATIONACTIONS Bring the GUI into its working state once configuration is valid
+%
+%   Everything that can only be done once app.Configuration is known to be complete.
+%   Called from startupFcn when checkConfiguration returns true, and from
+%   configureSystem right after a new configuration is saved. This is what turns the
+%   "Configuration needed" GUI into a usable one, so it must be safe to run twice.
+%
+%   What it sets up, in order:
+%     - Clears the red "Configuration needed" banner: app.ConfigurationNeededLabel
+%       becomes 'Version: <app.Version>' with no background colour.
+%     - Renders the live configuration into app.ConfigurationLabel as HTML (System /
+%       Behavior Rig / Modality on one line, recording root directory on the next),
+%       so the user can always see which rig and modality the GUI thinks it is on.
+%     - Jumps to the first tab (Add Recording), the tab the user actually works in.
+%     - Resolves app.FileExtensions from app.AllFileExtensions for this modality -
+%       the regexps that identify a raw recording ('^.*\g0' for electrophysiology;
+%       .tiff/.tif/.avi for imaging). These are set by configParams.
+%     - Walks app.Configuration.RecordingRootDirectory with dirwalk/visitor2 to find
+%       every directory holding raw files of this modality, then drops directories
+%       that are contained in another hit - for ephys each probe sits in its own
+%       subdirectory, and the parent (the actual recording) is what should be
+%       listed, not one entry per probe.
+%     - Builds app.RecordingDirectoryTable with columns full_recording_directory,
+%       times_dir (last-modified time from get_mod_time_directory), recording_dir
+%       (path relative to the root) and rec_dir_dropdown (relative path + time, what
+%       the user picks from), and feeds it to app.RecordingDirectoryDropDown. With
+%       no hits the dropdown reads 'No recordings found' and
+%       app.CreateProcessingJobButton is disabled.
+%     - Fills the behavior sessions for the configured behavior rig(s) - each rig
+%       name becomes a session_location key - plus the pre-param step lists and the
+%       default params for this modality.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%
+%   Outputs:
+%       None - Sets app.FileExtensions and app.RecordingDirectoryTable, updates
+%              app.ConfigurationNeededLabel, app.ConfigurationLabel,
+%              app.RecordingDirectoryDropDown, app.CreateProcessingJobButton and the
+%              selected tab, and populates the session / params dropdowns
+%
+%   Dependencies:
+%       - dirwalk, visitor2, get_mod_time_directory
+%       - fillSessions, fillPreParamsSets, fillDefaultParams
+%       - configParams (must have run: provides app.AllFileExtensions)
+%
+%   See also: checkConfiguration, configureSystem, FillEverything, startupFcn
 
 app.ConfigurationNeededLabel.Text = {['Version: ', app.Version]};
 app.ConfigurationNeededLabel.BackgroundColor = 'none';

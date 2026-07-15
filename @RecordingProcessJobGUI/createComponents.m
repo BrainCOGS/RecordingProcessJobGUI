@@ -1,4 +1,66 @@
 function createComponents(app)
+%CREATECOMPONENTS Build the entire GUI and wire every callback
+%
+%   App Designer layout code for the whole application. Called once by the
+%   RecordingProcessJobGUI constructor, after configParams and before startupFcn.
+%   It creates app.UIFigure (sized to 90% of the screen), the header band (logo,
+%   title, app.ConfigurationLabel HTML strip, app.BusyLabel, and
+%   app.ConfigurationNeededLabel), then app.TabGroup and its six tabs, and finally
+%   centres and shows the figure. Every widget is assigned to an app property
+%   declared in RecordingProcessJobGUI.m; every callback is attached here with
+%   createCallbackFcn(app, @<method>, true), so this file is the index of which
+%   method fires from which control.
+%
+%   The tabs, in creation order:
+%     1. app.AddRecordingProcessingJobTab   "Add Recording" - recording directory
+%        dropdown, behavior-session pickers, surgery checkbox, and the create
+%        button. Callbacks: findLikelyBehaviorSessionFromRecDir,
+%        checkBoxSessionRecording, restoreColorSessionDropDown,
+%        DefaultParamsCheckBoxToggle, createRecordingButton.
+%     2. app.SelectRecordingParametersTab   "Select Parameters" - two mirrored
+%        halves, pre-processing step lists on one side and processing paramsets on
+%        the other, each with a fragment listbox, a "same for all fragments" check,
+%        and a register button. Callbacks: fillParams2Select,
+%        SelectedListBoxFragmentRec(2), ParamListSelected, PreparamStepSelected,
+%        ParamSetSelected, SamePreParamCheckClicked, SameParamCheckClicked,
+%        RegisterPreparamFragmentClicked, RegisterParamsFragmentClicked,
+%        checkParamSelection.
+%     3. app.RecordingTableTab              "Recording Table" - filter dropdowns
+%        feeding filterTable, the recordings table, and its status history
+%        (recordingTableSelected).
+%     4. app.ManageProcessingJobsTab        "Manage Processing Jobs" - filters plus
+%        the job table (jobTableSelected), the rerun buttons (RerunJob,
+%        RunJobDiffParams) and the external-tool buttons (OpenPhyFile, OpenExtGUI,
+%        OpenExtGUI2, OpenLog for error and output logs).
+%     5. app.CreateParamsTab                "Create Parameters" - authoring panes
+%        for a new paramset and a new pre-process step list, driven by
+%        app.ParamModalityDrop. Callbacks: fillPreParamsSets, checkBoxParamMethod,
+%        checkBoxPreParamMethod, UploadParamJsonFile, writeParametersDB,
+%        CreatePreparamStepSelected, AddPreParamStepNewList, MoveStepOrderClicked,
+%        DeleteStepClicked, RegisterPreParamList.
+%     6. app.SystemSetUpTab                 "System Configuration" - System name,
+%        BehaviorRig list (addRig2System / dropRig2System), RecordingModality and
+%        RecordingRootDirectory. Every control starts Enable = 'off';
+%        startConfiguration unlocks them and configureSystem writes
+%        system_conf_job_gui.json.
+%
+%   This file only lays widgets out and sets their initial (mostly empty) Items;
+%   all content comes later from startupFcn and the fill* methods.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%
+%   Outputs:
+%       None - Creates app.UIFigure, app.TabGroup, the six tabs and every child
+%              widget property, then makes the figure visible
+%
+%   Dependencies:
+%       - Image files on the path: brain_cogs_on_white_small_brain_cogs_on_white.png,
+%         OneDrive_Folder_Icon.svg.png
+%       - Every callback method referenced by createCallbackFcn (see above)
+%
+%   See also: RecordingProcessJobGUI, createComponentsSurgeryFigure, startupFcn,
+%             configParams
 
 % Create UIFigure and hide until all components are created
 app.UIFigure = uifigure('Visible', 'off');

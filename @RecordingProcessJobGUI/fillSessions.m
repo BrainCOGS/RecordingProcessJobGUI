@@ -1,5 +1,42 @@
 
 function fillSessions(app, key)
+%FILLSESSIONS Fill the behavior session dropdown for the rigs this GUI serves
+%
+%   Populates app.BehaviorSessionDropDown (Add Recording tab, GridLayout2) with the
+%   behavior sessions a finished recording can be linked to, and caches the backing table
+%   in app.BehaviorSessions so later steps (session selection, recording insert) can
+%   recover the real primary key from the displayed string.
+%
+%   Queries acquisition.Session * subject.Subject restricted by key AND a hardcoded
+%   180-day window (session_date > today - 180 days), ordered by session_date then
+%   session_number, both descending, so the newest session is first. Each row is
+%   rendered into a human-readable session_name column by concatenating, separated by
+%   11-space gutters:
+%       subject_fullname | session_date | session_number | HH:MM | n_tr=<num_trials> |
+%       perf=<session_performance rounded to integer>
+%   The HH:MM field is characters 12:16 of session_start_time. The fetched columns kept
+%   in app.BehaviorSessions are the primary key (subject_fullname, session_date,
+%   session_number) plus user_id, session_start_time, num_trials, session_performance
+%   and the derived *_char / session_name columns.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The main application object
+%       key (struct | char | [])     - Optional DataJoint restriction on
+%                                      acquisition.Session * subject.Subject. startupFcn
+%                                      and postConfigurationActions call it with
+%                                      cell2struct(app.Configuration.BehaviorRig',
+%                                      'session_location'), i.e. a struct array with one
+%                                      session_location field per configured behavior
+%                                      rig, which ORs the rigs together. Defaults to []
+%                                      (every rig, still within the 180-day window).
+%
+%   Outputs:
+%       None - Sets app.BehaviorSessions (table) and app.BehaviorSessionDropDown.Items
+%
+%   Dependencies:
+%       - DataJoint: acquisition.Session, subject.Subject
+%
+%   See also: fillSubjects, postConfigurationActions, startupFcn, checkBoxSessionRecording
 
 
 date_key = ['session_date > "' char(datetime('today', 'Format', 'yyyy-MM-dd') - days(180)) '"'];
