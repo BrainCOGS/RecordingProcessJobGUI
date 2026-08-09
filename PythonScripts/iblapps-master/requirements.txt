@@ -1,5 +1,0 @@
-easyqc
-ibllib
-pyqtgraph
-simpleITK
-PyQt5==5.12.3
