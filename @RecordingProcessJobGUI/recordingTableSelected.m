@@ -1,6 +1,32 @@
 function recordingTableSelected(app, event)
-%JOBTABLESELECTED Summary of this function goes here
-%   Detailed explanation goes here
+%RECORDINGTABLESELECTED Show the status history of the recording selected in Tab 3
+%
+%   CellSelectionCallback for app.RecordingTableRT ("Recording Table" tab).
+%   Reads the recording_id out of the first column of the clicked row and fetches
+%   that recording's whole status history from app.recording_history_table_class
+%   (recording.LogStatus), newest entry first, then writes it to
+%   app.RecordingHistortyTable. Only the columns named in
+%   app.COLUMNS_RECORDING_STATUS_TABLE are fetched, so the struct field order
+%   matches the widget's column order (app.COLUMNS_RECORDING_STATUS_NAMES) and the
+%   result can be dumped straight in via struct2cell.
+%
+%   Status colouring: the status_recording_id_new cell of each history row is
+%   painted red when the new status equals app.min_rec_status (error) and green
+%   when it equals app.max_rec_status (fully processed). Previous styling is
+%   cleared first with removeStyle.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%       event                        - CellSelection event; event.Indices(1) is
+%                                      the clicked row of app.RecordingTableRT
+%
+%   Outputs:
+%       None - Updates app.RecordingHistortyTable.Data and its red/green styles
+%
+%   Dependencies:
+%       - recording.LogStatus (via app.recording_history_table_class)
+%
+%   See also: fillRecordingTable, jobTableSelected, fillJobStatusTable, setStyleCellsTable
 
 recording_id = app.RecordingTableRT.Data{event.Indices(1),1};
 query.recording_id = recording_id;

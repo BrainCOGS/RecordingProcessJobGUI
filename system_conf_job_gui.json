@@ -1,6 +1,6 @@
 {
-	"System" : "188-Recording",
-	"RecordingModality" : "imaging",
-	"RecordingRootDirectory" : "C:\\Users\\admin\\Documents\\NPX_Data",
-	"BehaviorRig" : "188-Rig1"
+	"System" : "185A-Recording",
+	"RecordingModality" : "electrophysiology",
+	"RecordingRootDirectory" : "D:\\NPX_DATA",
+	"BehaviorRig" : "185A-Rig1"
 }

@@ -1,5 +1,59 @@
 
 function RegisterPreParamList(app, event)
+%REGISTERPREPARAMLIST Write the assembled ordered pre-processing step list to the DB
+%
+%   ButtonPushed callback for app.RegisterPreParamListButton ("Register pre param
+%   list") on the Create Parameters tab. Turns the listbox
+%   app.NewPreParamsListStepsList (built up by AddPreParamStepNewList /
+%   MoveStepOrderClicked / DeleteStepClicked) into a named, ordered
+%   preprocess_param_steps list and inserts it into the DB. Unlike
+%   writeParametersDB this writes through MATLAB DataJoint directly - no python.
+%
+%   Refuses to run (uiconfirm warning, early return) unless a list name, a list
+%   description and at least one step are present.
+%
+%   Two per-modality tables are written, both resolved from
+%   app.ParamModalityDrop.Value:
+%     - app.preparam_steps_table_names.(modality).table_class - the list header:
+%       PreClusterParamSteps (electrophysiology) / PreprocessParamSteps (imaging).
+%       One record with the name, the description and a new index taken as
+%       last_id+1 from a "ORDER BY <idx> desc LIMIT 1" fetch1.
+%     - app.preparam_steps_step_table_names.(modality).table_class - one row per
+%       step: PreClusterParamStepsStep (electrophysiology) /
+%       PreprocessParamStepsStep (imaging), keyed by that same steps id, with
+%       step_number assigned from the listbox position (1..N) and paramset_idx
+%       looked up in app.PreProcessParams by the "<preprocess_method> :
+%       <paramset_desc>" text of each entry.
+%   The exact field names on each side (preprocess_steps_idx_field,
+%   preprocess_steps_name_field, preprocess_steps_desc_field, step_field,
+%   paramset_idx_field) also come from those structs, because ephys uses
+%   precluster_* names and imaging uses preprocess_* ones - see configParams.
+%
+%   Both inserts run inside a single dj.conn transaction: on success it commits,
+%   reports success, clears the listbox and refreshes the cached params via
+%   fillParams / fillPreParamsSets; on any error it calls cancelTransaction so the
+%   list header cannot be left in the DB without its steps.
+%
+%   As with the paramsets, the stored list description is prefixed with the
+%   selected user and today's date (app.UserPreparamListDrop.Value '_' yyyy-mm-dd
+%   '_' ...), the convention splitDescriptionColumnParams later unpicks.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The GUI application object
+%       event                        - Button ButtonPushed event; event.Source is
+%                                      re-enabled on failure
+%
+%   Outputs:
+%       None - Inserts one record into the modality's preprocess-steps table and N
+%              records into its steps-step table, then clears
+%              app.NewPreParamsListStepsList and refreshes the params caches
+%
+%   Dependencies:
+%       - DataJoint: pipeline_ephys_element.PreClusterParamSteps(.Step),
+%         pipeline_imaging_element.PreprocessParamSteps(.Step), dj.conn
+%       - fillParams, fillPreParamsSets, updateBusyLabel, configParams
+%
+%   See also: AddPreParamStepNewList, MoveStepOrderClicked, DeleteStepClicked, writeParametersDB
 
 if isempty(app.PreparamListNewNameEdit.Value)
     uiconfirm(app.UIFigure,'Add Pre Param List name',  'Param-list insertion',  'Icon','warning');

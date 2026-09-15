@@ -1,0 +1,12 @@
+mym.o
+build
+docker-compose.yml
+*.env
+notebook
+.vscode
+win.*
+.DS_Store
+macos*
+*.prj
+matlab.prf
+*.mltbx

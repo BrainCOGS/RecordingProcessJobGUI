@@ -1,17 +1,52 @@
 function getPythonEnv(app)
-%getPythonEnv Resolve how the app's python helper scripts are invoked.
+%GETPYTHONENV Resolve how the GUI shells out to python
 %
-%   app.py_env is a *command prefix*, not an interpreter path. It runs the
-%   helper scripts through uv, which resolves/syncs the environment declared in
-%   the repo's pyproject.toml on demand:
+%   Called first thing in startupFcn. The app never imports python into MATLAB; it
+%   shells out with system(), so all it needs is two strings it can interpolate
+%   into a command line:
+%     - app.py_env     - a *command prefix*, not an interpreter path. It runs the
+%                        helper scripts through uv, which resolves/syncs the
+%                        environment declared in the repo's pyproject.toml on
+%                        demand:
 %
-%       "<uv>" run --project "<repo_root>" python
+%                            "<uv>" run --project "<repo_root>" python
 %
-%   Consumers (fillParams, writeParametersDB) just interpolate it into a
-%   system() call, so a multi-word prefix works the same as a bare path.
+%                        Used to run read_params.py and upload_params.py, which
+%                        round-trip paramsets through .mat files because the
+%                        paramset blobs are pickled and unreadable from MATLAB.
+%                        Consumers (fillParams, writeParametersDB) just
+%                        interpolate it into a system() call, so a multi-word
+%                        prefix works the same as a bare path.
+%     - app.py_ibl_env - the interpreter of the iblenv conda env
+%                        (RecordingProcessJobGUI.py_iblenv_name), which this repo
+%                        does not own. Used for the IBL ephys atlas GUI and phy.
+%                        Wrapped in double quotes so paths with spaces survive
+%                        the system() call.
 %
-%   app.py_ibl_env still points at the external IBL conda env, which this repo
-%   does not own.
+%   uv is located with findUv (PATH first, then the standard per-user install
+%   dirs, since MATLAB's system() inherits a minimal PATH) and, failing that,
+%   bootstrapped with installUv via Astral's official installer. If uv still
+%   cannot be found, app.py_enabled is set false. That flag is what makes
+%   fillParams fall back to getParamsFromMatlab and what disables the phy / atlas
+%   GUI buttons, so a rig without a working python setup still runs.
+%
+%   The iblenv interpreter is looked up by getCondaEnvPython, which matches the
+%   env name against the Name column of `conda env list` and returns [] on any
+%   failure (conda not installed, env missing) without affecting app.py_enabled.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%
+%   Outputs:
+%       None - Sets app.py_env, app.py_ibl_env and app.py_enabled
+%
+%   Dependencies:
+%       - uv (https://docs.astral.sh/uv/), installed on demand if absent
+%       - pyproject.toml at the repo root declaring the helper-script env
+%       - conda on the system PATH (`conda env list`) for py_ibl_env only
+%       - Constant RecordingProcessJobGUI.py_iblenv_name ('iblenv')
+%
+%   See also: startupFcn, fillParams, getParamsFromMatlab
 
 repo_root = fileparts(RecordingProcessJobGUI.gui_path);
 

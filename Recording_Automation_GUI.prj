@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="603953243" file="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingAutomationGUI\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="2166767410" file="C:\Experiments\RecordingProcessJobGUI\Recording_Automation_GUI.prj" location="C:\Experiments\RecordingProcessJobGUI" name="Recording_Automation_GUI" preferred-package-location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>Recording_Automation_GUI</param.appname>
     <param.icon>${PROJECT_ROOT}\Recording_Automation_GUI_resources\icon.ico</param.icon>
     <param.icons>
@@ -8,9 +8,9 @@
       <file>${PROJECT_ROOT}\Recording_Automation_GUI_resources\icon_24.png</file>
       <file>${PROJECT_ROOT}\Recording_Automation_GUI_resources\icon_16.png</file>
     </param.icons>
-    <param.version>1.4</param.version>
-    <param.authnamewatermark>Alvaro Luna</param.authnamewatermark>
-    <param.email>alvaros@princeton.edu</param.email>
+    <param.version>1.7</param.version>
+    <param.authnamewatermark>Alvaro Luna &amp; Christian Tabedzki</param.authnamewatermark>
+    <param.email>alvaros@princeton.edu ct5868@princeton.edu</param.email>
     <param.company>Princeton</param.company>
     <param.summary>GUI to register recordings in the automatic pipeline</param.summary>
     <param.description />
@@ -143,7 +143,7 @@
       <file>${PROJECT_ROOT}\dirwalk</file>
       <file>${PROJECT_ROOT}\GHToolbox</file>
       <file>${PROJECT_ROOT}\modDataJoint</file>
-      <file>${PROJECT_ROOT}\mym_mexw64</file>
+      <file>${PROJECT_ROOT}\mym-mariadbconn</file>
       <file>${PROJECT_ROOT}\PythonScripts</file>
       <file>${PROJECT_ROOT}\system_conf_job_gui.json</file>
       <file>C:\Experiments\U19-pipeline-matlab</file>
@@ -155,19 +155,24 @@
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\addInsertionDevice.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\addSurgeryData.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\app_data.mat</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\checkLocaldirSessionMatch.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\closeSurgeryFigure.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\copyRecording.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\createComponentsSurgeryFigure.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\deleteInsertionDevice.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\findLikelyBehaviorSessionFromRecDir.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenExtGUI.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenExtGUI2.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\OpenLog.m</file>
       <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\registerSurgery.m</file>
+      <file>${PROJECT_ROOT}\@RecordingProcessJobGUI\restoreColorSessionDropDown.m</file>
       <file>${PROJECT_ROOT}\connect_tech.p</file>
       <file>${PROJECT_ROOT}\convertTable2Categorical.m</file>
       <file>${PROJECT_ROOT}\copy_gui_vars.m</file>
       <file>${PROJECT_ROOT}\fetch_table_except.m</file>
       <file>${PROJECT_ROOT}\fetchDataDJTable.m</file>
+      <file>${PROJECT_ROOT}\find_datestr_recording_directory.m</file>
+      <file>${PROJECT_ROOT}\get_mod_time_directory.m</file>
       <file>${PROJECT_ROOT}\jsonencodepretty.m</file>
       <file>${PROJECT_ROOT}\load_gui_vars.m</file>
       <file>${PROJECT_ROOT}\loadJSONfile.m</file>
@@ -220,45 +225,20 @@
       <file>C:\Experiments\ViRMEn\database\withinRangeConfirmation.m</file>
       <file>C:\Experiments\ViRMEn\database\YesNoMaybe.m</file>
       <file>C:\Experiments\ViRMEn\experiments\classes\MovementSensor.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\protocols\GetProtocolData\getLevelInfoProtocols.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\protocols\GetProtocolData\getSublevelsParamRange.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\protocols\GetProtocolData\updateProtocolLevelTable.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\protocols\GetProtocolData\updateTrainingProfileProtocol.m</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\angleMPiPi.m</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\arraysize.m</file>
-      <file>C:\Experiments\ViRMEn\experiments\utility\cprintf.m</file>
+      <file>C:\Experiments\ViRMEn\experiments\utility\cprintf.p</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\displayException.m</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\executeCallback.m</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\findParent.m</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\numobj.m</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\parsePath.m</file>
       <file>C:\Experiments\ViRMEn\experiments\utility\rdir.m</file>
-      <file>C:\Experiments\ViRMEn\extras\GeneralParameters.m</file>
       <file>C:\Experiments\ViRMEn\extras\RigParameters.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\+mixin\Container.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\+mixin\Flex.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\+mixin\Panel.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Box.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\ButtonBox.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\calcPixelSizes.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\ChildEvent.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\ChildObserver.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Container.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Divider.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Empty.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\FigureData.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\FigureObserver.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Grid.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\HBox.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\HBoxFlex.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\HButtonBox.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\loadIcon.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Node.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\Panel.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\PointerManager.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\ScrollingPanel.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\SelectionData.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\setPosition.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\TabPanel.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\tracking.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\VBox.m</file>
-      <file>C:\Experiments\ViRMEn\GUILayout\+uix\VBoxFlex.m</file>
       <file>C:\Experiments\ViRMEn\movements\moveArduino.m</file>
       <file>C:\Experiments\ViRMEn\movements\moveArduinoLinearVelocityMEX.m</file>
       <file>C:\Experiments\ViRMEn\movements\moveArduinoLiteralMEX.m</file>
@@ -269,6 +249,7 @@
       <file>C:\Experiments\ViRMEn\notifications\DylanMuir-SlackMatlab-b289f4d\private\urlread2.m</file>
       <file>C:\Experiments\ViRMEn\notifications\DylanMuir-SlackMatlab-b289f4d\SendSlackNotificationJson.m</file>
       <file>C:\Experiments\ViRMEn\notifications\error_behavior_backup_notification_slack.m</file>
+      <file>C:\Experiments\ViRMEn\notifications\error_video_backup_notification_slack.m</file>
       <file>C:\Experiments\ViRMEn\notifications\getCurrentlyActiveMouseLogs.m</file>
       <file>C:\Experiments\ViRMEn\notifications\manageNotificationTimers.m</file>
       <file>C:\Experiments\ViRMEn\notifications\notificationTimer.m</file>
@@ -280,8 +261,38 @@
       <file>C:\Experiments\ViRMEn\notifications\send_msg\send_msg.m</file>
       <file>C:\Experiments\ViRMEn\notifications\send_notification.m</file>
       <file>C:\Experiments\ViRMEn\notifications\send_weeklyEmailSummary.m</file>
-      <file>C:\Experiments\ViRMEn\sensors\serialCommunications\arduinoReader.mexw64</file>
+      <file>C:\Experiments\ViRMEn\notifications\weighing_slack_notification.m</file>
       <file>${MATLAB_ROOT}\toolbox\local\userpath.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\+mixin\Container.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\+mixin\Flex.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\+mixin\Panel.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\Box.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\ButtonBox.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\calcPixelSizes.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\ChildEvent.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\ChildObserver.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\Container.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\Divider.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\Empty.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\FigureData.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\FigureObserver.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\getPosition.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\Grid.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\HBox.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\HBoxFlex.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\HButtonBox.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\loadIcon.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\Node.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\Panel.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\PointerManager.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\ScrollingPanel.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\SelectionData.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\set.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\setPosition.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\TabPanel.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\tracking.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\VBox.m</file>
+      <file>C:\Users\tankadmin\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\GUI Layout Toolbox\layout\+uix\VBoxFlex.m</file>
     </fileset.depfun>
     <build-deliverables>
       <file location="\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing" name="Recording_Automation_GUI.exe" optional="false">\\cup.pni.princeton.edu\braininit\Shared\AutomationGUI_Installation\for_testing\Recording_Automation_GUI.exe</file>
@@ -290,44 +301,14 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2021a</root>
+      <root>C:\Program Files\MATLAB\R2023b</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
-        <toolbox name="embeddedcoder" />
-        <toolbox name="gpucoder" />
-        <toolbox name="fixedpoint" />
-        <toolbox name="matlabhdlcoder" />
-        <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
-      </toolbox>
-      <toolbox>
-        <embeddedcoder>
-          <enabled>true</enabled>
-        </embeddedcoder>
-      </toolbox>
-      <toolbox>
-        <gpucoder>
-          <enabled>true</enabled>
-        </gpucoder>
-      </toolbox>
-      <toolbox>
-        <fixedpoint>
-          <enabled>true</enabled>
-        </fixedpoint>
-      </toolbox>
-      <toolbox>
-        <matlabhdlcoder>
-          <enabled>true</enabled>
-        </matlabhdlcoder>
-      </toolbox>
-      <toolbox>
-        <neuralnetwork>
-          <enabled>true</enabled>
-        </neuralnetwork>
       </toolbox>
     </matlab>
     <platform>

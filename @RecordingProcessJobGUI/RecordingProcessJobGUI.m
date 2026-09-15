@@ -1,6 +1,82 @@
 classdef RecordingProcessJobGUI < matlab.apps.AppBase
-    
-   
+%RECORDINGPROCESSJOBGUI Register recordings and manage their processing jobs
+%
+%   App Designer application that runs on each recording rig. It is the entry
+%   point into the automatic processing pipeline: it registers a finished
+%   recording into the database (recording.Recording), copies the raw data from
+%   the rig's local disk to cup, attaches pre-processing and processing
+%   parameters to each fragment of that recording, and creates and monitors the
+%   resulting processing jobs (recording_process.Processing).
+%
+%   Construction:
+%       app = RecordingProcessJobGUI
+%
+%   The constructor runs configParams (table/field registry and data paths),
+%   createComponents (builds the UI), then startupFcn (builds the DataJoint
+%   relations, validates the configuration, and fills the GUI).
+%
+%   Configuration:
+%       Each rig is described by system_conf_job_gui.json at the repo root
+%       (ConfFileName), with fields System, RecordingModality,
+%       RecordingRootDirectory and BehaviorRig. checkConfiguration loads it into
+%       app.Configuration; if any field is empty the GUI starts in an
+%       unconfigured state and only the System Configuration tab is useful.
+%
+%   Tabs:
+%       Add Recording          - Pick a recording directory and (optionally) its
+%                                behavior session, copy the data to cup and
+%                                insert the recording. See createRecording.
+%       Select Parameters      - Assign a pre-processing step list and a
+%                                processing paramset to each fragment (probe for
+%                                electrophysiology, FOV for imaging).
+%       Recording Table        - Browse registered recordings and their status
+%                                history.
+%       Manage Processing Jobs - Browse jobs, rerun them, rerun with different
+%                                parameters, open logs and external GUIs.
+%       Create Parameters      - Author new paramsets and pre-processing step
+%                                lists and write them to the database. See
+%                                writeParametersDB.
+%       System Configuration   - Set this rig's System, RecordingModality,
+%                                RecordingRootDirectory and BehaviorRig.
+%
+%   Modalities:
+%       Every parameter-related property is a struct keyed by recording modality
+%       ('electrophysiology' or 'imaging'), because the two modalities use
+%       different DataJoint element tables and different field names. See
+%       configParams, where that registry is defined.
+%
+%   Recordings, fragments and jobs:
+%       A recording.Recording is the raw data, registered once. A
+%       recording_process.Processing job is one unit of processing over one
+%       fragment of that recording. A recording normally links to a behavior
+%       session through recording.RecordingBehaviorSession; a recording taken
+%       without behavior links through recording.RecordingRecordingSession with
+%       session_number = -1.
+%
+%   Python:
+%       Two conda environments are located at startup by getPythonEnv:
+%       EnvAutoPipeGUI (app.py_env) runs PythonScripts/read_params.py and
+%       upload_params.py, which exchange parameters with MATLAB through
+%       params.mat / preparams.mat / preparams_list.mat; iblenv (app.py_ibl_env)
+%       runs the IBL ephys atlas GUI and phy. app.py_enabled is false when the
+%       environments are not found, and the GUI runs without those features.
+%
+%   Class folder:
+%       @RecordingProcessJobGUI is a MATLAB class folder: this file holds the
+%       classdef (properties, constants and the method signature list) and every
+%       other .m file in the folder is one method, each with its own help block.
+%       See README.md in this folder for the file-by-file map.
+%
+%   Dependencies:
+%       - DataJoint (modDataJoint/) over MySQL/MariaDB (mym-mariadbconn/)
+%       - U19 pipeline schemas: recording, recording_process, subject, lab,
+%         action, pipeline_ephys_element, pipeline_imaging_element
+%       - dirwalk/ for recording-directory discovery
+%       - ROBOCOPY (Windows) for copying recordings to cup
+%
+%   See also: startupFcn, configParams, createComponents, createRecording,
+%             checkConfiguration, matlab.apps.AppBase
+
     % Properties that correspond to app components
     properties (Access = public)
         
@@ -221,6 +297,9 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %Behavior sessions info to correspond to a recording
         BehaviorSessions
+
+        %Recording directory Table for info of rec directory
+        RecordingDirectoryTable
         
                 
         %Param Selection table (when different for each probe)
@@ -291,7 +370,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
     
     properties (Constant = true)
     
-        Version      = '1.5';
+        Version      = '1.7';
         OKColor      = [0.7608        1     0.7922];
         ErrorColor   = [1         0.6588    0.6588];
         ActiveColor  = [0.5078    0.7078         1];
@@ -392,7 +471,10 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         createRecordingButton(app, event);
         createRecording(app, event);
         status = copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
-        
+        dir_session_match = checkLocaldirSessionMatch(app,local_directory, subject_fullname, session_date);
+        findLikelyBehaviorSessionFromRecDir(app,event);
+        restoreColorSessionDropDown(app,event);
+
         %Sub surgery figure
         addSurgeryData(app, subject_fullname, user_id, modality);
         addInsertionDevice(app, event);

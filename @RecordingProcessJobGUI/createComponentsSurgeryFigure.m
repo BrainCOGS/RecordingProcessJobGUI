@@ -1,4 +1,43 @@
 function createComponentsSurgeryFigure(app)
+%CREATECOMPONENTSSURGERYFIGURE Build the modal "Add surgery data" dialog
+%
+%   Lays out the secondary figure used when a recording is registered for a subject
+%   that has no action.Surgery record yet (the Add Recording tab's
+%   app.SurgeryCheckBox opts into this). Everything it creates lives under the
+%   app.AllSurgeryStuff struct rather than under top-level app properties, so this
+%   one struct is the whole dialog's state and can be rebuilt from scratch on each
+%   use.
+%
+%   The figure is created with WindowStyle 'modal' at 60% of screen size, centred,
+%   and made visible at the end of this function - so it appears as soon as it is
+%   built. addSurgeryData calls this, fills the subject/user/device controls from
+%   the DB, and then blocks on uiwait until registerSurgery or closeSurgeryFigure
+%   deletes the figure.
+%
+%   The fields collected: subject_fullname (read-only), surgery user
+%   (app.AllSurgeryStuff.userDrop, filled from lab.User), surgery date, the
+%   inserted device (deviceDrop, filled from lab.InsertionDevice and defaulted per
+%   modality from app.DefaultImplantationDevice), hemisphere, stereotax
+%   coordinates ml/ap/depth in mm from bregma, and the angles theta/phi/rho in
+%   degrees. Because one surgery can insert several devices, "Add insertion device"
+%   pushes the current coordinate/angle set onto app.AllSurgeryStuff.devicesStruct
+%   (counted by .numDevices) and lists it in .deviceList; "Delete device list"
+%   clears them. "Register Surgery Data" then writes them all.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The application object
+%
+%   Outputs:
+%       None - Creates app.AllSurgeryStuff (surgeryFigure, GridLayoutSurgery, all
+%              the labels/edits/dropdowns, devicesStruct, numDevices) and shows the
+%              modal figure
+%
+%   Dependencies:
+%       - Callback methods: addInsertionDevice, deleteInsertionDevice,
+%         registerSurgery, closeSurgeryFigure
+%
+%   See also: addSurgeryData, registerSurgery, addInsertionDevice,
+%             closeSurgeryFigure, createComponents
 
 % Create UIFigure and hide until all components are created
 

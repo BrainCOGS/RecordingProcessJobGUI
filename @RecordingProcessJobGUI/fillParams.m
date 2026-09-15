@@ -1,5 +1,50 @@
 
 function fillParams(app)
+%FILLPARAMS Load every paramset and pre-process step list into the app's cached tables
+%
+%   Fills no widget itself. It is the loader that every params-related widget depends on:
+%   it populates app.ProcessParams, app.PreProcessParams and app.PreProcessParamList (plus
+%   app.MehodsTable / app.PreMethodsTable) once, so fillPreParamsSets, fillDefaultParams
+%   and fillParams2Select can slice those tables per modality without hitting the database
+%   again. Called from startupFcn and re-called by writeParametersDB /
+%   RegisterPreParamList after new params are written.
+%
+%   Branches on app.py_enabled, not on modality - both paths load both modalities:
+%     - Python path (app.py_enabled true): the paramsets are stored as blobs MATLAB
+%       cannot unpack, so it shells out to read_params.py under app.py_env
+%       (RecordingProcessJobGUI.py_read_params) and reads back the three .mat files it
+%       drops in PythonScripts/: preparams_list.mat, params.mat and preparams.mat, via
+%       app.loadParamsFile. A nonzero exit status raises 'Could not read parameters'.
+%     - MATLAB fallback (app.py_enabled false): app.getParamsFromMatlab() reads the
+%       DataJoint element tables directly via fetch_table_except, dropping the 'params'
+%       blob column and renaming the modality-specific method / step-index columns to the
+%       app's common names.
+%
+%   Post-processing applied to both paths: app.getMethods() builds the method tables;
+%   splitDescriptionColumnParams splits each '*_desc' column into its
+%   '<user>_<date>_<description>' parts, adding the user_params and date_params columns
+%   that fillDefaultParams later displays; PreProcessParamList is sorted by
+%   recording_modality, app.preparam_steps_idx_field ('preprocess_param_steps_id') and
+%   step_number so each step list reads in execution order; convertTable2Categorical then
+%   turns the text columns categorical, which is what the dropdowns and the
+%   'recording_modality == modality' comparisons downstream rely on.
+%
+%   Inputs:
+%       app (RecordingProcessJobGUI) - The main application object
+%
+%   Outputs:
+%       None - Sets app.ProcessParams, app.PreProcessParams, app.PreProcessParamList,
+%              app.MehodsTable and app.PreMethodsTable
+%
+%   Dependencies:
+%       - PythonScripts/read_params.py (run in the app.py_env conda env), and the
+%         params.mat / preparams.mat / preparams_list.mat files it writes
+%       - getParamsFromMatlab, getMethods, loadParamsFile, splitDescriptionColumnParams
+%       - convertTable2Categorical, fetch_table_except
+%       - DataJoint: pipeline_ephys_element.* / pipeline_imaging_element.* paramset and
+%         pre-process step tables (reached through app.param_table_names and friends)
+%
+%   See also: fillPreParamsSets, fillDefaultParams, fillParams2Select, startupFcn
 
 %%%%%%%%%%%%%%%%%Fetch parameters from python script (not readable in MATLAB)
 if app.py_enabled
