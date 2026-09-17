@@ -9,3 +9,8 @@
 Recording_Automation_GUI/
 
 *app_data.mat
+
+# Python bytecode and pytest caches
+__pycache__/
+*.pyc
+.pytest_cache/
