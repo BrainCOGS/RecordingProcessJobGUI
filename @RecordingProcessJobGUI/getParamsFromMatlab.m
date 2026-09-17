@@ -1,8 +1,8 @@
 function [PreprocessParams, ProcessParams, PreProcessParamList] = getParamsFromMatlab(app)
 %GETPARAMSFROMMATLAB Fetch all paramsets straight from the DB, without python
 %
-%   The fallback path of fillParams, used when app.py_enabled is false (no conda /
-%   no EnvAutoPipeGUI env). The normal path runs read_params.py because the
+%   The fallback path of fillParams, used when app.py_enabled is false (uv could
+%   not be found or installed). The normal path runs read_params.py because the
 %   paramset 'params' column is a python-pickled blob that MATLAB cannot decode;
 %   this function sidesteps that by never reading it - fetch_table_except issues a
 %   plain SELECT of every column of the table *except* 'params'. So the paramsets
