@@ -17,13 +17,16 @@ function OpenExtGUI(app, event)
 %   (kilosort) and '_output'. If no such directory exists the function reports
 %   'Cannot find sorting directory' and gives up.
 %
-%   Both tools are launched by shelling out to a .BAT wrapper that activates the
-%   iblenv conda environment (app.py_iblenv_name):
-%     - electrophysiology -> app.phy_script (PythonScripts/open_phy.BAT), passed
-%       the env name and the data path;
-%     - imaging           -> app.suite2p_script (PythonScripts/open_suite2p.BAT),
-%       passed only the env name, so it relies on the cd into the output
-%       directory that this function performs first.
+%   Both tools are launched by shelling out to uv (app.py_uv), which runs a
+%   standalone python launcher declaring its own dependencies inline (PEP 723):
+%     - electrophysiology -> app.phy_script (PythonScripts/open_phy.py)
+%     - imaging           -> app.suite2p_script (PythonScripts/open_suite2p.py)
+%   Both are passed the sorting output directory, and uv resolves each into its
+%   own cached environment on first use. This replaces the old .BAT wrappers,
+%   which were cmd.exe-only (on macOS zsh rejected them outright) and assumed phy
+%   and suite2p lived in a conda env; neither tool needs conda now. If uv could
+%   not be found or installed (~app.py_enabled) this reports that instead.
+%
 %   MATLAB blocks until the external GUI exits; a uiprogressdlg is shown meanwhile
 %   because neither tool reports progress back. The working directory is restored
 %   to where it started before returning.
@@ -37,8 +40,8 @@ function OpenExtGUI(app, event)
 %              shows an error dialog
 %
 %   Dependencies:
-%       - open_phy.BAT / open_suite2p.BAT (via app.phy_script / app.suite2p_script)
-%       - iblenv conda environment (app.py_iblenv_name)
+%       - open_phy.py / open_suite2p.py (via app.phy_script / app.suite2p_script)
+%       - uv (app.py_uv, located by getPythonEnv)
 %
 %   See also: OpenExtGUI2, jobTableSelected, OpenLog, getPythonEnv
 
@@ -61,31 +64,38 @@ if ~isempty(app.selectedJobRow)
     output_dir_idx =  contains(dir_info, 'kil') & contains(dir_info, '_output');
     output_dir = dir_info(output_dir_idx);
 
-    if ~isempty(output_dir)
+    if ~app.py_enabled
+        this_err.message = ['uv is not available, so ' char(this_modality) ...
+            ' GUIs cannot be launched. Install uv from https://docs.astral.sh/uv/ ' ...
+            'and restart the app.'];
+        success_process = false;
+    elseif ~isempty(output_dir)
         output_dir = output_dir{1};
         data_path = fullfile(data_path, output_dir);
         cd(data_path);
         if this_modality == "electrophysiology"
-            system_call = [{app.phy_script} {app.py_iblenv_name} {data_path}];
+            launcher = app.phy_script;
             tool = 'Phy';
         elseif this_modality == "imaging"
-            system_call = [{app.suite2p_script} {app.py_iblenv_name}];
+            launcher = app.suite2p_script;
             tool = 'suite2p';
         end
-        system_call = char(strjoin(string(system_call)));
+        % uv run --no-project: the launcher declares its own dependencies inline
+        % (PEP 723), so it resolves into its own cached environment rather than
+        % the repo's. Paths are quoted to survive spaces.
+        system_call = [app.py_uv ' run --no-project "' launcher '" "' data_path '"'];
         progressdlg = uiprogressdlg(app.UIFigure, 'Message',['Opening ', tool ,', no progress shown, be patinet']);
         try
             [out, cmdout] = system(system_call);
             disp(cmdout);
             cd(current_dir);
+            if out ~= 0
+                success_process = false;
+                this_err.message = cmdout;
+            end
         catch err
             this_err = err;
             success_process = false;
-            cd(current_dir);
-        end
-        if out ~= 0
-            success_process = false;
-            this_err.message = cmdout;
             cd(current_dir);
         end
         close(progressdlg);

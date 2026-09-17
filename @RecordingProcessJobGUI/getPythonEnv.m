@@ -2,7 +2,7 @@ function getPythonEnv(app)
 %GETPYTHONENV Resolve how the GUI shells out to python
 %
 %   Called first thing in startupFcn. The app never imports python into MATLAB; it
-%   shells out with system(), so all it needs is two strings it can interpolate
+%   shells out with system(), so all it needs is a few strings it can interpolate
 %   into a command line:
 %     - app.py_env     - a *command prefix*, not an interpreter path. It runs the
 %                        helper scripts through uv, which resolves/syncs the
@@ -17,11 +17,19 @@ function getPythonEnv(app)
 %                        Consumers (fillParams, writeParametersDB) just
 %                        interpolate it into a system() call, so a multi-word
 %                        prefix works the same as a bare path.
+%     - app.py_uv      - the quoted uv executable on its own, for standalone
+%                        scripts that declare their own dependencies inline (PEP
+%                        723) rather than sharing the repo environment:
+%
+%                            "<uv>" run --no-project <script> <args>
+%
+%                        Used for open_phy.py and open_suite2p.py, whose Qt stacks
+%                        cannot coexist with the helper-script environment.
 %     - app.py_ibl_env - the interpreter of the iblenv conda env
 %                        (RecordingProcessJobGUI.py_iblenv_name), which this repo
-%                        does not own. Used for the IBL ephys atlas GUI and phy.
-%                        Wrapped in double quotes so paths with spaces survive
-%                        the system() call.
+%                        does not own. Used for the IBL ephys atlas GUI only; phy
+%                        no longer needs conda. Wrapped in double quotes so paths
+%                        with spaces survive the system() call.
 %
 %   uv is located with findUv (PATH first, then the standard per-user install
 %   dirs, since MATLAB's system() inherits a minimal PATH) and, failing that,
@@ -38,7 +46,7 @@ function getPythonEnv(app)
 %       app (RecordingProcessJobGUI) - The application object
 %
 %   Outputs:
-%       None - Sets app.py_env, app.py_ibl_env and app.py_enabled
+%       None - Sets app.py_env, app.py_uv, app.py_ibl_env and app.py_enabled
 %
 %   Dependencies:
 %       - uv (https://docs.astral.sh/uv/), installed on demand if absent
@@ -57,12 +65,14 @@ end
 
 if isempty(uv_exe)
     app.py_env     = [];
+    app.py_uv      = [];
     app.py_enabled = false;
     warning('RecordingProcessJobGUI:noUv', ...
         ['Could not find or install uv.\n' ...
          'Install it manually from https://docs.astral.sh/uv/ and restart the app.']);
 else
     app.py_env     = ['"' uv_exe '" run --project "' repo_root '" python'];
+    app.py_uv      = ['"' uv_exe '"'];
     app.py_enabled = true;
 end
 
@@ -85,7 +95,20 @@ else
     which_cmd = 'command -v uv';
 end
 
-% 1. Already on PATH?
+% 1. Already on PATH? MATLAB's system() inherits a minimal PATH, so on unix ask
+%    a login shell, which sources the user's profile and sees the real PATH.
+if ~ispc
+    [status, out] = system(['$SHELL -l -c ''' which_cmd ''' 2>/dev/null']);
+    if status == 0
+        lines = strsplit(strtrim(out), newline);
+        candidate = strtrim(lines{end});
+        if ~isempty(candidate) && isfile(candidate)
+            uv_exe = candidate;
+            return
+        end
+    end
+end
+
 [status, out] = system(which_cmd);
 if status == 0
     lines = strsplit(strtrim(out), newline);
@@ -105,10 +128,16 @@ if ispc
         fullfile(home, 'AppData', 'Local', 'Programs', 'uv', exe_name), ...
         fullfile(home, 'AppData', 'Roaming', 'uv', 'bin', exe_name)};
 else
+    % macOS and linux. Astral's installer prefers ~/.local/bin; the rest cover
+    % homebrew (both arm64 and intel prefixes), linuxbrew, distro packages and
+    % old cargo installs.
     candidates = { ...
         fullfile(home, '.local', 'bin', exe_name), ...
         fullfile('/opt', 'homebrew', 'bin', exe_name), ...
         fullfile('/usr', 'local', 'bin', exe_name), ...
+        fullfile('/home', 'linuxbrew', '.linuxbrew', 'bin', exe_name), ...
+        fullfile('/usr', 'bin', exe_name), ...
+        fullfile('/snap', 'bin', exe_name), ...
         fullfile(home, '.cargo', 'bin', exe_name)};
 end
 

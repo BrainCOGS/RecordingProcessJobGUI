@@ -322,6 +322,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %Python environment flags and variables
         py_env
+        py_uv
         py_ibl_env
         py_enabled
 
@@ -445,8 +446,8 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         %Python ephys GUIs (IBL-atlas and phy)
         ibl_apps_dir = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'iblapps-master')
         ibl_atlas_script = fullfile(RecordingProcessJobGUI.ibl_apps_dir, 'atlaselectrophysiology', 'ephys_atlas_gui.py')
-        phy_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_phy.BAT')
-        suite2p_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_suite2p.BAT')
+        phy_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_phy.py')
+        suite2p_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_suite2p.py')
                 
     end
         
