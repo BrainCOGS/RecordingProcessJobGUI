@@ -55,12 +55,15 @@ classdef TestBuildUvScriptCall < matlab.unittest.TestCase
         % --- command shape -------------------------------------------------
 
         function commandOptsOutOfTheRepoProject(testCase)
-            % The repo project's environment is not the GUIs'; --no-project
-            % keeps uv from resolving against pyproject.toml.
+            % The repo project's environment is not the GUIs'. --script tells uv
+            % the path is a PEP 723 script, so it resolves the script's own
+            % dependencies instead of the surrounding pyproject.toml -- which
+            % matters because the launchers live inside the repo.
             [cmd, err] = buildUvScriptCall('/bin/uv', '/s/open_phy.py', {});
             testCase.verifyEmpty(err);
-            testCase.verifySubstring(cmd, '--no-project');
+            testCase.verifySubstring(cmd, '--script');
             testCase.verifySubstring(cmd, ' run ');
+            testCase.verifyFalse(contains(cmd, '--no-project'));
         end
 
         function scriptComesBeforeItsArguments(testCase)

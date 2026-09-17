@@ -10,7 +10,7 @@ assumed phy lived in a conda env named on the command line.
 
 The dependency block above is inline PEP 723 metadata, so
 
-    uv run --no-project PythonScripts/open_phy.py <sorting_output_dir>
+    uv run --script PythonScripts/open_phy.py <sorting_output_dir>
 
 resolves phy into its own cached environment on first use and reuses it after
 that. No conda. uv always runs a PEP 723 script in isolation, so this never

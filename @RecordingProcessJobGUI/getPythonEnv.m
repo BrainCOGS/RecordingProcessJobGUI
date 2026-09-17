@@ -22,11 +22,11 @@ function getPythonEnv(app)
 %                        inline (PEP 723) rather than sharing this repo's
 %                        environment:
 %
-%                            "<uv>" run --no-project <script> <args>
+%                            "<uv>" run --script <script> <args>
 %
 %                        Used for open_phy.py, open_suite2p.py and
-%                        open_ibl_atlas.py. uv always runs a PEP 723 script in
-%                        isolation, so those never pick up the repo's
+%                        open_ibl_atlas.py. --script tells uv the path is a PEP
+%                        723 script, so those never pick up the repo's
 %                        pyproject.toml, whose interpreter and pinned scientific
 %                        stack the Qt tools do not share.
 %

@@ -20,7 +20,7 @@ function OpenExtGUI2(app, event)
 %   The GUI is launched through uv (app.py_uv), which runs a standalone launcher
 %   declaring its dependencies inline (PEP 723):
 %
-%       "<uv>" run --no-project "<app.ibl_atlas_script>" -o True -d <data_path>
+%       "<uv>" run --script "<app.ibl_atlas_script>" -o True -d <data_path>
 %
 %   where -o requests offline mode and -d gives the data directory. The launcher
 %   (PythonScripts/open_ibl_atlas.py) installs iblapps straight from upstream, so

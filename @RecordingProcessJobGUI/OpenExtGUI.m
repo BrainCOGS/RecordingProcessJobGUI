@@ -17,8 +17,8 @@ function OpenExtGUI(app, event)
 %   (kilosort) and '_output'. If no such directory exists the function reports
 %   'Cannot find sorting directory' and gives up.
 %
-%   Both tools are launched by shelling out to uv (app.py_uv), which runs a
-%   standalone launcher declaring its own dependencies inline (PEP 723):
+%   Both tools are launched by shelling out to `uv run --script` (app.py_uv),
+%   which runs a standalone launcher declaring its dependencies inline (PEP 723):
 %     - electrophysiology -> app.phy_script (PythonScripts/open_phy.py)
 %     - imaging           -> app.suite2p_script (PythonScripts/open_suite2p.py)
 %   Both are passed the sorting output directory, and uv provisions each tool's

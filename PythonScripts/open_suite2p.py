@@ -7,7 +7,7 @@
 Cross-platform replacement for open_suite2p.BAT. As with open_phy.py the
 dependency block is inline PEP 723 metadata, so
 
-    uv run --no-project PythonScripts/open_suite2p.py [output_dir]
+    uv run --script PythonScripts/open_suite2p.py [output_dir]
 
 resolves suite2p into its own cached environment -- no conda, and no entry in
 the repo's pyproject.toml, since uv runs a PEP 723 script in isolation.

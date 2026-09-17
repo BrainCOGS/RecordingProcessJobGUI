@@ -3,7 +3,7 @@ function [system_call, err_msg] = buildUvScriptCall(uv_exe, script_path, script_
 %
 %   Produces
 %
-%       "<uv>" run --no-project "<script>" "<arg>" ...
+%       "<uv>" run --script "<script>" "<arg>" ...
 %
 %   which runs one of the standalone launchers in PythonScripts/. Each declares
 %   its dependencies inline (PEP 723), so uv provisions that tool's environment
@@ -11,9 +11,11 @@ function [system_call, err_msg] = buildUvScriptCall(uv_exe, script_path, script_
 %   which shelled out to `conda activate` and so only ever worked on Windows,
 %   and only when the user had built the conda envs by hand.
 %
-%   --no-project keeps uv from picking up the repo's pyproject.toml. uv also
-%   always runs a PEP 723 script in isolation, so the flag is belt-and-braces
-%   rather than load-bearing, but it makes the intent explicit at the call site.
+%   --script tells uv the path is a PEP 723 script rather than something to
+%   resolve against the surrounding project, so the repo's pyproject.toml is
+%   ignored even though the launchers live inside the repo. Verified: the
+%   command still resolves correctly with a pyproject.toml present whose
+%   python floor the GUIs cannot satisfy.
 %
 %   Inputs:
 %       uv_exe      (char/string) - Path to uv, quoted or bare. '' when uv was
@@ -52,7 +54,7 @@ if isempty(script_path) || ~(ischar(script_path) || isstring(script_path)) || ..
     return
 end
 
-parts = {quoteIfNeeded(uv_exe), 'run', '--no-project', quoteIfNeeded(script_path)};
+parts = {quoteIfNeeded(uv_exe), 'run', '--script', quoteIfNeeded(script_path)};
 
 for i = 1:numel(script_args)
     parts{end+1} = quoteIfNeeded(script_args{i}); %#ok<AGROW>
