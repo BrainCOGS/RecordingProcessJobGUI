@@ -17,13 +17,15 @@ function OpenExtGUI(app, event)
 %   (kilosort) and '_output'. If no such directory exists the function reports
 %   'Cannot find sorting directory' and gives up.
 %
-%   Both tools are launched by shelling out to a .BAT wrapper that activates the
-%   iblenv conda environment (app.py_iblenv_name):
-%     - electrophysiology -> app.phy_script (PythonScripts/open_phy.BAT), passed
-%       the env name and the data path;
-%     - imaging           -> app.suite2p_script (PythonScripts/open_suite2p.BAT),
-%       passed only the env name, so it relies on the cd into the output
-%       directory that this function performs first.
+%   Both tools are launched through uv (buildUvToolCall / uvToolSpec), which
+%   provisions each tool's python environment on demand:
+%     - electrophysiology -> phy template-gui params.py
+%     - imaging           -> suite2p
+%   Both rely on the cd into the sorting output directory that this function
+%   performs first, since that is where phy reads params.py from. They previously
+%   went through open_phy.BAT / open_suite2p.BAT, conda-activate wrappers that
+%   only ran on Windows and depended on hand-built conda envs.
+%
 %   MATLAB blocks until the external GUI exits; a uiprogressdlg is shown meanwhile
 %   because neither tool reports progress back. The working directory is restored
 %   to where it started before returning.
@@ -37,10 +39,10 @@ function OpenExtGUI(app, event)
 %              shows an error dialog
 %
 %   Dependencies:
-%       - open_phy.BAT / open_suite2p.BAT (via app.phy_script / app.suite2p_script)
-%       - iblenv conda environment (app.py_iblenv_name)
+%       - buildUvToolCall / uvToolSpec
+%       - uv (app.uv_exe), which provisions the environments on demand
 %
-%   See also: OpenExtGUI2, jobTableSelected, OpenLog, getPythonEnv
+%   See also: OpenExtGUI2, buildUvToolCall, uvToolSpec, jobTableSelected, OpenLog
 
 current_dir = pwd;
 success_process = true;
@@ -66,13 +68,29 @@ if ~isempty(app.selectedJobRow)
         data_path = fullfile(data_path, output_dir);
         cd(data_path);
         if this_modality == "electrophysiology"
-            system_call = [{app.phy_script} {app.py_iblenv_name} {data_path}];
+            % phy reads the sorting output from the working directory, which
+            % was set to data_path above; params.py is the file the sorter
+            % writes there (the old .BAT asked for a win_params.py that this
+            % pipeline never produces).
+            tool_name = 'phy';
+            tool_args = {'template-gui', 'params.py'};
             tool = 'Phy';
         elseif this_modality == "imaging"
-            system_call = [{app.suite2p_script} {app.py_iblenv_name}];
+            tool_name = 'suite2p';
+            tool_args = {};
             tool = 'suite2p';
         end
-        system_call = char(strjoin(string(system_call)));
+
+        [system_call, err_msg] = buildUvToolCall(app.uv_exe, tool_name, tool_args);
+        if ~isempty(err_msg)
+            uiconfirm(app.UIFigure, ['Cannot open ' tool '. ' err_msg], ...
+                '', ...
+                'Options',{'OK'}, ...
+                'Icon','error');
+            cd(current_dir);
+            return
+        end
+
         progressdlg = uiprogressdlg(app.UIFigure, 'Message',['Opening ', tool ,', no progress shown, be patinet']);
         try
             [out, cmdout] = system(system_call);

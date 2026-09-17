@@ -324,6 +324,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         py_env
         py_ibl_env
         py_enabled
+        uv_exe          % path to the uv executable, '' when unavailable
 
         %Config table configuration
         param_table_names
@@ -442,11 +443,12 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         preparams_list_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams_list.mat')
         params_mat          = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'params.mat')
         
-        %Python ephys GUIs (IBL-atlas and phy)
+        %Python ephys GUIs (IBL-atlas and phy). phy and suite2p are launched by
+        %name through uv (see uvToolSpec), so they need no script constant; the
+        %open_phy.BAT / open_suite2p.BAT wrappers they used to point at were
+        %conda-activate scripts that only ran on Windows.
         ibl_apps_dir = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'iblapps-master')
         ibl_atlas_script = fullfile(RecordingProcessJobGUI.ibl_apps_dir, 'atlaselectrophysiology', 'ephys_atlas_gui.py')
-        phy_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_phy.BAT')
-        suite2p_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_suite2p.BAT')
                 
     end
         

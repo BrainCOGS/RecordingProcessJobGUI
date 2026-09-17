@@ -17,11 +17,14 @@ function getPythonEnv(app)
 %                        Consumers (fillParams, writeParametersDB) just
 %                        interpolate it into a system() call, so a multi-word
 %                        prefix works the same as a bare path.
-%     - app.py_ibl_env - the interpreter of the iblenv conda env
-%                        (RecordingProcessJobGUI.py_iblenv_name), which this repo
-%                        does not own. Used for the IBL ephys atlas GUI and phy.
-%                        Wrapped in double quotes so paths with spaces survive
-%                        the system() call.
+%     - app.uv_exe     - the bare path to uv, used by buildUvToolCall to launch
+%                        the external Qt GUIs (phy, suite2p, the IBL atlas) in
+%                        isolated uv-provisioned environments. Those cannot use
+%                        py_env: it targets this repo's project, which requires
+%                        python >=3.14, while the GUIs need 3.10.
+%     - app.py_ibl_env - the interpreter of the iblenv conda env, kept only for
+%                        rigs that still rely on a hand-built env. The GUI
+%                        buttons no longer require it.
 %
 %   uv is located with findUv (PATH first, then the standard per-user install
 %   dirs, since MATLAB's system() inherits a minimal PATH) and, failing that,
@@ -30,15 +33,17 @@ function getPythonEnv(app)
 %   fillParams fall back to getParamsFromMatlab and what disables the phy / atlas
 %   GUI buttons, so a rig without a working python setup still runs.
 %
-%   The iblenv interpreter is looked up by getCondaEnvPython, which matches the
-%   env name against the Name column of `conda env list` and returns [] on any
-%   failure (conda not installed, env missing) without affecting app.py_enabled.
+%   The iblenv interpreter is looked up by getCondaEnvPython, which parses
+%   `conda env list` with parseCondaEnvList (handling both conda's and
+%   micromamba's table layouts) and returns [] on any failure (conda not
+%   installed, env missing) without affecting app.py_enabled. Callers must treat
+%   an empty py_ibl_env as "no conda env available".
 %
 %   Inputs:
 %       app (RecordingProcessJobGUI) - The application object
 %
 %   Outputs:
-%       None - Sets app.py_env, app.py_ibl_env and app.py_enabled
+%       None - Sets app.uv_exe, app.py_env, app.py_ibl_env and app.py_enabled
 %
 %   Dependencies:
 %       - uv (https://docs.astral.sh/uv/), installed on demand if absent
@@ -46,7 +51,7 @@ function getPythonEnv(app)
 %       - conda on the system PATH (`conda env list`) for py_ibl_env only
 %       - Constant RecordingProcessJobGUI.py_iblenv_name ('iblenv')
 %
-%   See also: startupFcn, fillParams, getParamsFromMatlab
+%   See also: startupFcn, fillParams, getParamsFromMatlab, parseCondaEnvList
 
 repo_root = fileparts(RecordingProcessJobGUI.gui_path);
 
@@ -56,12 +61,14 @@ if isempty(uv_exe)
 end
 
 if isempty(uv_exe)
+    app.uv_exe     = '';
     app.py_env     = [];
     app.py_enabled = false;
     warning('RecordingProcessJobGUI:noUv', ...
         ['Could not find or install uv.\n' ...
          'Install it manually from https://docs.astral.sh/uv/ and restart the app.']);
 else
+    app.uv_exe     = uv_exe;
     app.py_env     = ['"' uv_exe '" run --project "' repo_root '" python'];
     app.py_enabled = true;
 end
@@ -149,9 +156,10 @@ end
 function py_path = getCondaEnvPython(env_name)
 %getCondaEnvPython Look up a conda env's interpreter by name.
 %
-%   Matches env_name against the leading Name column of `conda env list`, rather
-%   than assuming the name occurs exactly twice in the raw output (which breaks
-%   on names that are prefixes of others, e.g. iblenv vs iblenv2).
+%   Locates env_name in `conda env list` via parseCondaEnvList, which matches the
+%   name exactly (so iblenv never resolves to iblenv2) and understands both the
+%   conda and micromamba table layouts - `conda` is frequently an alias for
+%   micromamba, which leaves the Name column blank and prints only the path.
 
 py_path = [];
 
@@ -161,29 +169,18 @@ try
         return
     end
 
-    lines = strsplit(conda_envs, newline);
-    for i = 1:numel(lines)
-        this_line = strtrim(lines{i});
-        if isempty(this_line) || startsWith(this_line, '#')
-            continue
-        end
-
-        tokens = strsplit(this_line);
-        tokens = tokens(~cellfun(@isempty, tokens));
-        if numel(tokens) < 2 || ~strcmp(tokens{1}, env_name)
-            continue
-        end
-
-        env_dir = tokens{end};
-        if ispc
-            candidate = fullfile(env_dir, 'python.exe');
-        else
-            candidate = fullfile(env_dir, 'bin', 'python');
-        end
-        if isfile(candidate)
-            py_path = ['"' candidate '"'];
-        end
+    env_dir = parseCondaEnvList(conda_envs, env_name);
+    if isempty(env_dir)
         return
+    end
+
+    if ispc
+        candidate = fullfile(env_dir, 'python.exe');
+    else
+        candidate = fullfile(env_dir, 'bin', 'python');
+    end
+    if isfile(candidate)
+        py_path = ['"' candidate '"'];
     end
 catch
     py_path = [];
