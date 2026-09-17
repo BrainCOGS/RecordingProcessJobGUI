@@ -1,28 +1,18 @@
 
 import os
+import sys
+
 from scipy.io import savemat
 
 this_dir = os.path.dirname(__file__)
 os.chdir(this_dir)
 
+# Import by path, not via the cwd, so the helper is found however this is run.
+sys.path.insert(0, os.path.abspath(this_dir))
+from matlab_export import matlab_safe
+
 import datajoint as dj
 dj.conn()
-
-def replace_none_inplace(data, replacement=[]):
-    """Recursively replaces None values in a dictionary in-place."""
-    if isinstance(data, dict):
-        for key, value in data.items():
-            if value is None:
-                data[key] = replacement
-            elif isinstance(data, dict):
-                replace_none_inplace(value, replacement)
-    elif isinstance(data, list):
-        for index, item in enumerate(data):
-            if item is None:
-                data[index] = replacement
-            elif isinstance(item, (dict, list)):
-                replace_none_inplace(item, replacement)
-
 
 ephys_element =dj.create_virtual_module('u19_pipeline_ephys_element','u19_pipeline_ephys_element')
 imaging_element =dj.create_virtual_module('u19_pipeline_imaging_element','u19_pipeline_imaging_element')
@@ -134,11 +124,9 @@ for idx, premethod_list in enumerate(all_methods_data):
 
 dj.conn().close()
 
-replace_none_inplace(params_dict_dict)
-
-savemat('params.mat', params_dict_dict)
-savemat('preparams.mat', preparams_dict_dict)
-savemat('preparams_list.mat', preparams_steps_dict_dict)
+savemat('params.mat', matlab_safe(params_dict_dict))
+savemat('preparams.mat', matlab_safe(preparams_dict_dict))
+savemat('preparams_list.mat', matlab_safe(preparams_steps_dict_dict))
 
 #savemat('methods.mat', methods_dict)
 #savemat('premethods.mat', premethods_dict)

@@ -39,3 +39,13 @@ end
 
 json_pretty = strrep(json_pretty, '[{', sprintf('[\r{\r'));
 json_pretty = strrep(json_pretty, '}]', sprintf('\r}\r]'));
+
+% Undo the 'x' that PythonScripts/matlab_export.py prepends to paramset keys
+% MATLAB cannot use as struct field names, so the viewer shows the key as it is
+% stored in the database ("x1Preg" -> "1Preg"). The match is deliberately
+% narrow: the 'x' must open a string, be followed by a digit or underscore, and
+% that string must end in '":' - i.e. be a key, not a value. So xcorr keeps its
+% x, and the string value "x1abc" is left alone. The optional \r allows for the
+% line break the loop above inserts between the quote and the field name, so
+% this must run after that loop.
+json_pretty = regexprep(json_pretty, ['(?<=")(' sprintf('\r') '?)x(?=[0-9_][^"]*":)'], '$1');
