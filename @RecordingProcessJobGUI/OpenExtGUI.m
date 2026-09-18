@@ -13,9 +13,10 @@ function OpenExtGUI(app, event)
 %   recording_modality are then read out of the cached app.DataTable rather than
 %   re-queried. The results live under
 %   app.RootProcessedDirectories.<modality>/<post_path>, and inside it this looks
-%   for the sorting output subdirectory, matched as a name containing both 'kil'
-%   (kilosort) and '_output'. If no such directory exists the function reports
-%   'Cannot find sorting directory' and gives up.
+%   for the tool's output subdirectory. The name is modality-dependent: imaging
+%   matches 'suite2p' + '_output', everything else 'kil' (kilosort) + '_output'.
+%   If no such directory exists the function names the modality and the path it
+%   searched, and gives up.
 %
 %   Both tools are launched by shelling out to `uv run --script` (app.py_uv),
 %   which runs a standalone launcher declaring its dependencies inline (PEP 723):
@@ -63,7 +64,23 @@ if ~isempty(app.selectedJobRow)
     dir_info = dir(data_path);
     dir_info = {dir_info.name};
 
-    output_dir_idx =  contains(dir_info, 'kil') & contains(dir_info, '_output');
+    % Resolved before any error path, so the dialogs below can name the tool
+    % the user actually asked for rather than always saying 'Phy'.
+    if this_modality == "imaging"
+        tool = 'suite2p';
+    else
+        tool = 'Phy';
+    end
+
+    % The output subdirectory is named after the tool that produced it, so the
+    % pattern is per-modality: ephys sorters write e.g. kilosort4_output, while
+    % imaging writes suite2p_output. Matching 'kil' for both is what made the
+    % suite2p button report 'Cannot find sorting directory' on every imaging job.
+    if this_modality == "imaging"
+        output_dir_idx = contains(dir_info, 'suite2p') & contains(dir_info, '_output');
+    else
+        output_dir_idx = contains(dir_info, 'kil') & contains(dir_info, '_output');
+    end
     output_dir = dir_info(output_dir_idx);
 
     if ~app.py_enabled
@@ -78,12 +95,10 @@ if ~isempty(app.selectedJobRow)
         output_dir = output_dir{1};
         data_path = fullfile(data_path, output_dir);
         cd(data_path);
-        if this_modality == "electrophysiology"
-            launcher = app.phy_script;
-            tool = 'Phy';
-        elseif this_modality == "imaging"
+        if this_modality == "imaging"
             launcher = app.suite2p_script;
-            tool = 'suite2p';
+        else
+            launcher = app.phy_script;
         end
         [system_call, err_msg] = buildUvScriptCall(app.py_uv, launcher, {data_path});
         if ~isempty(err_msg)
@@ -114,12 +129,13 @@ if ~isempty(app.selectedJobRow)
         end
         clear cleanup_dlg
     else
-        this_err.message = 'Cannot find sorting directory';
+        this_err.message = ['Cannot find the ' char(this_modality) ...
+            ' output directory under ' data_path '.'];
         success_process = false;
     end
 
     if ~success_process
-        uiconfirm(app.UIFigure,['Error while opening Phy ' this_err.message], ...
+        uiconfirm(app.UIFigure,['Error while opening ' tool '. ' this_err.message], ...
             '', ...
             'Options',{'OK'}, ...
             'Icon','error');
