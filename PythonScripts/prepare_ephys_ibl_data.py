@@ -7,7 +7,7 @@
 # # same pinned revision as open_ibl_atlas.py, not upstream: the fork carries a
 # # local change to extract_files.rmsmap. This used to come from an editable
 # # install of an in-tree copy inside the iblenv conda env.
-# iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", rev = "3c3782863f23928a1fcaf67263ee60fdb43a2d7f" }
+# iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", rev = "609ca79297e9bd334d50d7c801d1caf6726632c3" }
 #
 # [tool.uv]
 # # iblapps pins PyQt5==5.12.3, which has no Apple Silicon wheel.

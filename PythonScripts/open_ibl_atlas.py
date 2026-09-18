@@ -6,7 +6,7 @@
 # # BrainCOGS' fork of iblapps, not upstream: it carries the local changes this
 # # app depends on (see below). Pinned to a revision rather than a branch so a
 # # launch months from now resolves what was tested here; bump it deliberately.
-# iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", rev = "3c3782863f23928a1fcaf67263ee60fdb43a2d7f" }
+# iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", rev = "609ca79297e9bd334d50d7c801d1caf6726632c3" }
 #
 # [tool.uv]
 # # iblapps' requirements.txt pins PyQt5==5.12.3, which publishes no Apple
@@ -29,11 +29,10 @@ pyproject.toml is ignored even though this file lives inside the repo.
 Why the fork, by git, rather than the vendored copy
 --------------------------------------------------
 PythonScripts/iblapps-master/ was a snapshot of BrainCOGS/iblapps taken in
-2022. It is a real fork, not a plain copy: it adds the -d/--directory argument
-this app launches the GUI with, a launch_gui() helper, the remote= parameter on
-MainWindow, a progress-bar tweak in extract_files.rmsmap and a
-prepare_ephys_data_ibl.py. Installing from the fork
-keeps all of that, which copying upstream would silently drop.
+2022. It is a real fork, not a plain copy: it carries a progress-bar tweak in
+extract_files.rmsmap, a prepare_ephys_data_ibl.py, and -- until the fork merged
+upstream -- the -d/--directory argument this app launches the GUI with.
+Installing from the fork keeps that, which copying upstream would drop.
 
 Keeping the 2022 snapshot instead would mean pinning the whole stack to the IBL
 API of that era -- ibllib<2.15 (4.x dropped ibllib.atlas, and 2.40 had already
@@ -41,12 +40,13 @@ removed the brainbox.io.spikeglx symbol plot_data imports), ONE-api<3,
 ibl-neuropixel<1, scipy<1.13, setuptools<81 -- which also caps the interpreter
 at python 3.12, since scipy<1.13 ships no wheels for 3.13+.
 
-The fork has since merged upstream (last in 2024), so it needs none of those
-pins. Verified importing atlaselectrophysiology.ephys_atlas_gui from the fork on
-python 3.14.7 with ibllib 4.0.1, ONE-api 3.5.2, iblatlas 1.2.1.
+The fork has since merged upstream, so it needs none of those pins. Verified
+importing atlaselectrophysiology.ephys_atlas_gui from the fork on python
+3.14.7 with ibllib 4.0.1, ONE-api 3.5.2, iblatlas 1.2.1.
 
-The fork is 21 commits behind upstream. Merging upstream into it is worth doing
-on its own, but is deliberately not part of this change.
+That merge also brought upstream's multi-shank channel grouping and NP1 bank
+scaling fixes, and dropped remote= from MainWindow -- which is why this
+launcher no longer offers -r.
 
 iblatlas is listed explicitly because iblapps imports it while ibllib 4.x no
 longer pulls it in; setuptools because parts of the IBL stack still import
@@ -83,19 +83,17 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="IBL electrophysiology atlas GUI")
     parser.add_argument("-o", "--offline", default=False, required=False,
                         help="Offline mode")
-    parser.add_argument("-r", "--remote", default=False, required=False,
-                        action="store_true", help="Remote mode")
     parser.add_argument("-i", "--insertion", default=None, required=False,
                         help="Insertion mode")
     parser.add_argument("-d", "--directory", default=None, required=False,
                         help="Data directory")
     args = parser.parse_args(argv)
 
-    # -r/--remote is forwarded because the fork's MainWindow still accepts it;
-    # upstream dropped that parameter, so this would raise TypeError there.
+    # No -r/--remote: upstream removed the remote= parameter from MainWindow as
+    # part of its ONE3 change, and the fork took that in its upstream merge, so
+    # passing it now raises TypeError. The MATLAB caller never sent it.
     app = QtWidgets.QApplication([])
-    mainapp = MainWindow(offline=args.offline, probe_id=args.insertion,
-                         remote=args.remote)
+    mainapp = MainWindow(offline=args.offline, probe_id=args.insertion)
 
     # Mirrors the __main__ block of ephys_atlas_gui.py, which assumed -d was
     # always given and raised an opaque TypeError when it was not.
