@@ -49,7 +49,7 @@ function writeParametersDB(app, event)
 %
 %   Dependencies:
 %       - PythonScripts/upload_params.py (RecordingProcessJobGUI.py_upload_params),
-%         run in the app.py_env conda environment
+%         run through uv via app.py_env
 %       - DataJoint method tables: pipeline_ephys_element.ClusteringMethod /
 %         PreClusterMethod, pipeline_imaging_element.ProcessingMethod /
 %         PreprocessMethod

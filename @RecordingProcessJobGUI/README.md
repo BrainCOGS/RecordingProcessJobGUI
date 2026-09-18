@@ -91,7 +91,7 @@ A secondary **surgery figure** (`createComponentsSurgeryFigure`, `addSurgeryData
 ├── configParams.m                    Per-modality table/field registry, cup data paths
 ├── createComponents.m                Builds the whole UI (all six tabs) and wires callbacks
 ├── createComponentsSurgeryFigure.m   Builds the surgery sub-figure
-├── getPythonEnv.m                    Locate the EnvAutoPipeGUI and iblenv conda envs
+├── getPythonEnv.m                    Locate (or install) uv; no conda involved
 ├── getParamsFromMatlab.m             Fetch paramsets/step lists without python
 ├── getDefaultParamsMod.m             Default pre-params and params for the modality
 │
@@ -217,9 +217,13 @@ modality.
   DefaultParams, RecordingBehaviorSession, RecordingRecordingSession),
   `recording_process` (Processing, Status, LogStatus), `subject`, `lab`,
   `action.Surgery`, `pipeline_ephys_element.*`, `pipeline_imaging_element.*`.
-- **Python** — conda envs `EnvAutoPipeGUI` and `iblenv`; scripts in
-  `PythonScripts/` (`read_params.py`, `upload_params.py`, `open_phy.BAT`,
-  `open_suite2p.BAT`, `iblapps-master/`).
+- **Python** — [uv](https://docs.astral.sh/uv/), located (or installed) at
+  startup by `getPythonEnv`; no conda. `read_params.py` and `upload_params.py`
+  run against the root `pyproject.toml`, while `open_phy.py`, `open_suite2p.py`
+  and `open_ibl_atlas.py` are standalone launchers declaring their dependencies
+  inline (PEP 723), so uv provisions each into its own cached environment.
+  `open_ibl_atlas.py` installs iblapps straight from upstream, so there is no
+  in-tree copy to keep in sync.
 - **`dirwalk/`** — recursive recording-directory discovery.
 - **ROBOCOPY** — copying recordings to cup (Windows).
 - **Repo-root helpers** — `fetchDataDJTable`, `fetch_table_except`,

@@ -1,6 +1,37 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["iblapps", "iblatlas", "ibllib", "phylib", "numpy", "setuptools"]
+#
+# [tool.uv.sources]
+# # atlaselectrophysiology.extract_files lives in iblapps. BrainCOGS' fork at the
+# # same pinned revision as open_ibl_atlas.py, not upstream: the fork carries a
+# # local change to extract_files.rmsmap. This used to come from an editable
+# # install of an in-tree copy inside the iblenv conda env.
+# iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", rev = "609ca79297e9bd334d50d7c801d1caf6726632c3" }
+#
+# [tool.uv]
+# # iblapps pins PyQt5==5.12.3, which has no Apple Silicon wheel.
+# override-dependencies = ["pyqt5>=5.15"]
+# ///
+"""Convert a kilosort output directory to IBL (ONE) format.
+
+Run by hand, not from the GUI:
+
+    uv run --script PythonScripts/prepare_ephys_ibl_data.py
+
+The ks_path / ephys_path / out_path constants below are hardcoded to one
+session and must be edited before each run.
+
+Previously this needed the iblenv conda env plus an editable install of the
+in-tree iblapps copy. Both are gone; the dependency block above provisions
+everything through uv instead.
+"""
+
 
 from pathlib import Path
-from ibllib.io import spikeglx
+# spikeglx moved out of ibllib.io into its own top-level module, provided by
+# ibl-neuropixel.
+import spikeglx
 from atlaselectrophysiology.extract_files import extract_data, extract_rmsmap, _sample2v 
 import ibllib.ephys.ephysqc as ephysqc
 from phylib.io import alf
