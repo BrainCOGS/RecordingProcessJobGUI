@@ -4,9 +4,12 @@
 #
 # [tool.uv.sources]
 # # BrainCOGS' fork of iblapps, not upstream: it carries the local changes this
-# # app depends on (see below). Pinned to a revision rather than a branch so a
-# # launch months from now resolves what was tested here; bump it deliberately.
-# iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", rev = "609ca79297e9bd334d50d7c801d1caf6726632c3" }
+# # app depends on (see below). Tracked by branch rather than pinned to a commit,
+# # so a fix merged to the fork reaches this GUI without a matching commit here.
+# # uv resolves the branch tip when it first builds the environment and then
+# # caches it, so a later merge is picked up on the next rebuild; force one with
+# # `uv cache clean iblapps` if a known fix has not appeared.
+# iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", branch = "master" }
 #
 # [tool.uv]
 # # iblapps' requirements.txt pins PyQt5==5.12.3, which publishes no Apple

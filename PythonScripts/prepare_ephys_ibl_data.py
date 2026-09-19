@@ -3,11 +3,11 @@
 # dependencies = ["iblapps", "iblatlas", "ibllib", "phylib", "numpy", "setuptools"]
 #
 # [tool.uv.sources]
-# # atlaselectrophysiology.extract_files lives in iblapps. BrainCOGS' fork at the
-# # same pinned revision as open_ibl_atlas.py, not upstream: the fork carries a
-# # local change to extract_files.rmsmap. This used to come from an editable
+# # atlaselectrophysiology.extract_files lives in iblapps. BrainCOGS' fork, not
+# # upstream: it carries a local change to extract_files.rmsmap. Tracked by
+# # branch, matching open_ibl_atlas.py. This used to come from an editable
 # # install of an in-tree copy inside the iblenv conda env.
-# iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", rev = "609ca79297e9bd334d50d7c801d1caf6726632c3" }
+# iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", branch = "master" }
 #
 # [tool.uv]
 # # iblapps pins PyQt5==5.12.3, which has no Apple Silicon wheel.
