@@ -37,6 +37,17 @@ import ibllib.ephys.ephysqc as ephysqc
 from phylib.io import alf
 import numpy as np
 import os
+import sys
+
+# Advisory: the iblapps branch this tracks may have moved since uv built this
+# environment. Prints a note and continues; never blocks the run.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from iblapps_version import check_for_update
+
+    check_for_update(Path(__file__).resolve())
+except Exception:
+    pass
 
 # Paths
 # Path to KS2 output
