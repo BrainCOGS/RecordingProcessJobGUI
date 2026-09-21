@@ -13,17 +13,22 @@ function OpenExtGUI(app, event)
 %   recording_modality are then read out of the cached app.DataTable rather than
 %   re-queried. The results live under
 %   app.RootProcessedDirectories.<modality>/<post_path>, and inside it this looks
-%   for the sorting output subdirectory, matched as a name containing both 'kil'
-%   (kilosort) and '_output'. If no such directory exists the function reports
-%   'Cannot find sorting directory' and gives up.
+%   for the tool's output subdirectory. The name is modality-dependent: imaging
+%   matches 'suite2p' + '_output', everything else 'kil' (kilosort) + '_output'.
+%   If no such directory exists the function names the modality and the path it
+%   searched, and gives up.
 %
-%   Both tools are launched by shelling out to a .BAT wrapper that activates the
-%   iblenv conda environment (app.py_iblenv_name):
-%     - electrophysiology -> app.phy_script (PythonScripts/open_phy.BAT), passed
-%       the env name and the data path;
-%     - imaging           -> app.suite2p_script (PythonScripts/open_suite2p.BAT),
-%       passed only the env name, so it relies on the cd into the output
-%       directory that this function performs first.
+%   Both tools are launched by shelling out to `uv run --script` (app.py_uv),
+%   which runs a standalone launcher declaring its dependencies inline (PEP 723):
+%     - electrophysiology -> app.phy_script (PythonScripts/open_phy.py)
+%     - imaging           -> app.suite2p_script (PythonScripts/open_suite2p.py)
+%   Both are passed the sorting output directory, and uv provisions each tool's
+%   environment on first use. This replaces the old .BAT wrappers, which were
+%   cmd.exe-only (on macOS zsh rejected them outright) and assumed phy and
+%   suite2p lived in a conda env; neither tool needs conda now. When uv could not
+%   be found or installed (~app.py_enabled) that is reported instead of building
+%   a command around an empty interpreter.
+%
 %   MATLAB blocks until the external GUI exits; a uiprogressdlg is shown meanwhile
 %   because neither tool reports progress back. The working directory is restored
 %   to where it started before returning.
@@ -37,8 +42,9 @@ function OpenExtGUI(app, event)
 %              shows an error dialog
 %
 %   Dependencies:
-%       - open_phy.BAT / open_suite2p.BAT (via app.phy_script / app.suite2p_script)
-%       - iblenv conda environment (app.py_iblenv_name)
+%       - open_phy.py / open_suite2p.py (via app.phy_script / app.suite2p_script)
+%       - uv (app.py_uv, located by getPythonEnv)
+%       - buildUvScriptCall
 %
 %   See also: OpenExtGUI2, jobTableSelected, OpenLog, getPythonEnv
 
@@ -58,44 +64,78 @@ if ~isempty(app.selectedJobRow)
     dir_info = dir(data_path);
     dir_info = {dir_info.name};
 
-    output_dir_idx =  contains(dir_info, 'kil') & contains(dir_info, '_output');
+    % Resolved before any error path, so the dialogs below can name the tool
+    % the user actually asked for rather than always saying 'Phy'.
+    if this_modality == "imaging"
+        tool = 'suite2p';
+    else
+        tool = 'Phy';
+    end
+
+    % The output subdirectory is named after the tool that produced it, so the
+    % pattern is per-modality: ephys sorters write e.g. kilosort4_output, while
+    % imaging writes suite2p_output. Matching 'kil' for both is what made the
+    % suite2p button report 'Cannot find sorting directory' on every imaging job.
+    if this_modality == "imaging"
+        output_dir_idx = contains(dir_info, 'suite2p') & contains(dir_info, '_output');
+    else
+        output_dir_idx = contains(dir_info, 'kil') & contains(dir_info, '_output');
+    end
     output_dir = dir_info(output_dir_idx);
 
-    if ~isempty(output_dir)
+    if ~app.py_enabled
+        % uv is what provisions every external GUI, so without it there is
+        % nothing to launch. Say so plainly rather than interpolating an empty
+        % path into a command and failing somewhere in the shell.
+        this_err.message = ['uv is not installed, so the ' char(this_modality) ...
+            ' GUI cannot be launched. Install it from https://docs.astral.sh/uv/ ' ...
+            'and restart the app.'];
+        success_process = false;
+    elseif ~isempty(output_dir)
         output_dir = output_dir{1};
         data_path = fullfile(data_path, output_dir);
         cd(data_path);
-        if this_modality == "electrophysiology"
-            system_call = [{app.phy_script} {app.py_iblenv_name} {data_path}];
-            tool = 'Phy';
-        elseif this_modality == "imaging"
-            system_call = [{app.suite2p_script} {app.py_iblenv_name}];
-            tool = 'suite2p';
+        if this_modality == "imaging"
+            launcher = app.suite2p_script;
+        else
+            launcher = app.phy_script;
         end
-        system_call = char(strjoin(string(system_call)));
+        [system_call, err_msg] = buildUvScriptCall(app.py_uv, launcher, {data_path});
+        if ~isempty(err_msg)
+            % Reports itself and returns, so the shared error dialog below is
+            % not reached and this_err / success_process need not be set.
+            cd(current_dir);
+            uiconfirm(app.UIFigure, ['Cannot open ' tool '. ' err_msg], ...
+                '', 'Options',{'OK'}, 'Icon','error');
+            return
+        end
         progressdlg = uiprogressdlg(app.UIFigure, 'Message',['Opening ', tool ,', no progress shown, be patinet']);
+        cleanup_dlg = onCleanup(@() close(progressdlg));
         try
             [out, cmdout] = system(system_call);
             disp(cmdout);
             cd(current_dir);
+            % Inside the try: when system() throws, out is never assigned, and
+            % checking it afterwards raised its own error that masked the real
+            % failure.
+            if out ~= 0
+                success_process = false;
+                this_err.message = cmdout;
+            end
         catch err
             this_err = err;
             success_process = false;
             cd(current_dir);
         end
-        if out ~= 0
-            success_process = false;
-            this_err.message = cmdout;
-            cd(current_dir);
-        end
-        close(progressdlg);
+        clear cleanup_dlg
     else
-        this_err.message = 'Cannot find sorting directory';
+        this_err.message = ['Cannot find the ' char(this_modality) ...
+            ' output directory under ' data_path '.'];
         success_process = false;
     end
 
     if ~success_process
-        uiconfirm(app.UIFigure,['Error while opening Phy ' this_err.message], ...
+        uiconfirm(app.UIFigure,['Error while opening ' tool '. ' this_err.message], ...
             '', ...
             'Options',{'OK'}, ...
             'Icon','error');

@@ -37,7 +37,7 @@ function fillParams(app)
 %              app.MehodsTable and app.PreMethodsTable
 %
 %   Dependencies:
-%       - PythonScripts/read_params.py (run in the app.py_env conda env), and the
+%       - PythonScripts/read_params.py (run through uv via app.py_env), and the
 %         params.mat / preparams.mat / preparams_list.mat files it writes
 %       - getParamsFromMatlab, getMethods, loadParamsFile, splitDescriptionColumnParams
 %       - convertTable2Categorical, fetch_table_except

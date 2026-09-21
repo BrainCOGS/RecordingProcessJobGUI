@@ -54,12 +54,15 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
 %       session_number = -1.
 %
 %   Python:
-%       Two conda environments are located at startup by getPythonEnv:
-%       EnvAutoPipeGUI (app.py_env) runs PythonScripts/read_params.py and
-%       upload_params.py, which exchange parameters with MATLAB through
-%       params.mat / preparams.mat / preparams_list.mat; iblenv (app.py_ibl_env)
-%       runs the IBL ephys atlas GUI and phy. app.py_enabled is false when the
-%       environments are not found, and the GUI runs without those features.
+%       uv is located (or installed) at startup by getPythonEnv; no conda is
+%       involved. app.py_env runs PythonScripts/read_params.py and
+%       upload_params.py against the repo's pyproject.toml, exchanging
+%       parameters with MATLAB through params.mat / preparams.mat /
+%       preparams_list.mat. app.py_uv runs the three external GUI launchers
+%       (open_phy.py, open_suite2p.py, open_ibl_atlas.py), each of which
+%       declares its own dependencies inline (PEP 723) so uv provisions them on
+%       demand. app.py_enabled is false when uv cannot be found, and the GUI
+%       runs without those features.
 %
 %   Class folder:
 %       @RecordingProcessJobGUI is a MATLAB class folder: this file holds the
@@ -322,7 +325,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         
         %Python environment flags and variables
         py_env
-        py_ibl_env
+        py_uv
         py_enabled
 
         %Config table configuration
@@ -432,7 +435,6 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         %Python environment variables
         gui_path = fileparts(mfilename('fullpath'));
         py_env_name    = 'EnvAutoPipeGUI';
-        py_iblenv_name = 'iblenv';
         %Python scripts
         py_scripts_dir = fullfile(fileparts(RecordingProcessJobGUI.gui_path), 'PythonScripts')
         py_read_params = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'read_params.py')
@@ -442,11 +444,13 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         preparams_list_mat  = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'preparams_list.mat')
         params_mat          = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'params.mat')
         
-        %Python ephys GUIs (IBL-atlas and phy)
-        ibl_apps_dir = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'iblapps-master')
-        ibl_atlas_script = fullfile(RecordingProcessJobGUI.ibl_apps_dir, 'atlaselectrophysiology', 'ephys_atlas_gui.py')
-        phy_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_phy.BAT')
-        suite2p_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_suite2p.BAT')
+        %Python ephys GUIs (IBL-atlas, phy and suite2p). Each is a standalone
+        %launcher run through uv; the dependencies live in the script's own
+        %PEP 723 header, so there is no conda env and no in-tree copy of
+        %iblapps to keep in sync.
+        ibl_atlas_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_ibl_atlas.py')
+        phy_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_phy.py')
+        suite2p_script = fullfile(RecordingProcessJobGUI.py_scripts_dir, 'open_suite2p.py')
                 
     end
         
