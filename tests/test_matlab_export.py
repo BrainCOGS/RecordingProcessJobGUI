@@ -1,4 +1,13 @@
-"""Tests for the savemat sanitising helpers in PythonScripts/matlab_export.py."""
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["pytest", "scipy", "numpy"]
+# ///
+"""Tests for the savemat sanitising helpers in PythonScripts/matlab_export.py.
+
+Run with:
+
+    uv run --script tests/test_matlab_export.py
+"""
 
 import json
 import os
@@ -131,3 +140,7 @@ class TestSavematRoundTrip:
         record = {"param_0": matlab_safe({"params": {"fast_disk": None, "tau": 1.0}})}
         loaded = save_and_load(record, tmp_path)
         assert loaded["param_0"]["params"][0, 0]["fast_disk"][0, 0].size == 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(pytest.main([__file__, "-q", "--no-header"]))
