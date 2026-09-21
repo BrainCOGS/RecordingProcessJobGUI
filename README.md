@@ -28,3 +28,26 @@ missing, and every python tool it shells out to declares its own dependencies.
 If uv cannot be found or installed, the GUI still runs — the parameter helpers
 fall back to a MATLAB-only path, and the external GUI buttons report that uv is
 missing instead of failing obscurely.
+
+## Tests
+
+The python suites declare their own dependencies inline (PEP 723), so they need
+no environment set up first:
+
+```bash
+uv run --script tests/test_matlab_export.py
+uv run --script tests/test_open_phy_dat_path.py
+```
+
+The MATLAB suites are `matlab.unittest` classes and run through `runtests`:
+
+```bash
+matlab -batch "addpath(pwd); runtests({'tests/TestBuildUvScriptCall.m','tests/TestOutputDirMatch.m'})"
+```
+
+`tests/test_jsonencodepretty.m` is a plain script with bare asserts rather than
+a test class, so `runtests` cannot collect it. Call it by name:
+
+```bash
+matlab -batch "addpath(pwd); addpath([pwd filesep 'tests']); test_jsonencodepretty"
+```
