@@ -12,6 +12,8 @@ Recording_Automation_GUI/
 
 # uv-managed virtualenv (uv.lock is committed for reproducibility)
 .venv/
-# Python bytecode
+
+# Python bytecode and pytest caches
 __pycache__/
 *.py[cod]
+.pytest_cache/

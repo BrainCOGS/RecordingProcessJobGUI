@@ -1,27 +1,15 @@
 
 import os
+import sys
+
 from scipy.io import savemat
 
 this_dir = os.path.dirname(__file__)
 os.chdir(this_dir)
 
-
-def matlab_safe(obj):
-    """Replace None with [] so scipy.io.savemat can serialize the structure.
-
-    savemat has no encoding for None and raises TypeError on it. Nullable
-    columns and nulls nested inside `params` blobs (e.g. the suite2p imaging
-    paramset) otherwise break the whole .mat file. MATLAB reads [] as empty.
-    """
-    if obj is None:
-        return []
-    if isinstance(obj, dict):
-        return {k: matlab_safe(v) for k, v in obj.items()}
-    if isinstance(obj, list):
-        return [matlab_safe(v) for v in obj]
-    if isinstance(obj, tuple):
-        return tuple(matlab_safe(v) for v in obj)
-    return obj
+# Import by path, not via the cwd, so the helper is found however this is run.
+sys.path.insert(0, os.path.abspath(this_dir))
+from matlab_export import matlab_safe
 
 import datajoint as dj
 dj.conn()
@@ -135,7 +123,6 @@ for idx, premethod_list in enumerate(all_methods_data):
 '''
 
 dj.conn().close()
-
 
 savemat('params.mat', matlab_safe(params_dict_dict))
 savemat('preparams.mat', matlab_safe(preparams_dict_dict))
