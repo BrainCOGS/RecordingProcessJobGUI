@@ -9,3 +9,6 @@
 Recording_Automation_GUI/
 
 *app_data.mat
+
+# uv-managed virtualenv (uv.lock is committed for reproducibility)
+.venv/
