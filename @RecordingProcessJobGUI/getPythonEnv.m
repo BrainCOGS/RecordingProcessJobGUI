@@ -17,11 +17,18 @@ function getPythonEnv(app)
 %                        Consumers (fillParams, writeParametersDB) just
 %                        interpolate it into a system() call, so a multi-word
 %                        prefix works the same as a bare path.
-%     - app.py_ibl_env - the interpreter of the iblenv conda env
-%                        (RecordingProcessJobGUI.py_iblenv_name), which this repo
-%                        does not own. Used for the IBL ephys atlas GUI and phy.
-%                        Wrapped in double quotes so paths with spaces survive
-%                        the system() call.
+%     - app.py_uv      - the quoted uv executable on its own, for the external
+%                        GUI launchers, which declare their own dependencies
+%                        inline (PEP 723) rather than sharing this repo's
+%                        environment:
+%
+%                            "<uv>" run --script <script> <args>
+%
+%                        Used for open_phy.py, open_suite2p.py and
+%                        open_ibl_atlas.py. --script tells uv the path is a PEP
+%                        723 script, so those never pick up the repo's
+%                        pyproject.toml, whose interpreter and pinned scientific
+%                        stack the Qt tools do not share.
 %
 %   uv is located with findUv (PATH first, then the standard per-user install
 %   dirs, since MATLAB's system() inherits a minimal PATH) and, failing that,
@@ -30,21 +37,19 @@ function getPythonEnv(app)
 %   fillParams fall back to getParamsFromMatlab and what disables the phy / atlas
 %   GUI buttons, so a rig without a working python setup still runs.
 %
-%   The iblenv interpreter is looked up by getCondaEnvPython, which matches the
-%   env name against the Name column of `conda env list` and returns [] on any
-%   failure (conda not installed, env missing) without affecting app.py_enabled.
+%   Nothing here uses conda any more. The three external GUIs used to require a
+%   hand-built iblenv conda env; each now declares its dependencies in its own
+%   launcher script and uv provisions them on demand.
 %
 %   Inputs:
 %       app (RecordingProcessJobGUI) - The application object
 %
 %   Outputs:
-%       None - Sets app.py_env, app.py_ibl_env and app.py_enabled
+%       None - Sets app.py_env, app.py_uv and app.py_enabled
 %
 %   Dependencies:
 %       - uv (https://docs.astral.sh/uv/), installed on demand if absent
 %       - pyproject.toml at the repo root declaring the helper-script env
-%       - conda on the system PATH (`conda env list`) for py_ibl_env only
-%       - Constant RecordingProcessJobGUI.py_iblenv_name ('iblenv')
 %
 %   See also: startupFcn, fillParams, getParamsFromMatlab
 
@@ -57,17 +62,16 @@ end
 
 if isempty(uv_exe)
     app.py_env     = [];
+    app.py_uv      = [];
     app.py_enabled = false;
     warning('RecordingProcessJobGUI:noUv', ...
         ['Could not find or install uv.\n' ...
          'Install it manually from https://docs.astral.sh/uv/ and restart the app.']);
 else
     app.py_env     = ['"' uv_exe '" run --project "' repo_root '" python'];
+    app.py_uv      = ['"' uv_exe '"'];
     app.py_enabled = true;
 end
-
-% The IBL atlas GUI still lives in a separate conda environment.
-app.py_ibl_env = getCondaEnvPython(RecordingProcessJobGUI.py_iblenv_name);
 
 end
 
@@ -85,7 +89,23 @@ else
     which_cmd = 'command -v uv';
 end
 
-% 1. Already on PATH?
+% 1. Already on PATH? MATLAB's system() inherits a minimal PATH that typically
+%    omits ~/.local/bin and Homebrew, so on unix ask a login shell first: it
+%    sources the user's profile and therefore sees the PATH they actually have.
+%    Measured on the reporting machine: a plain probe found nothing, the
+%    login-shell probe found /opt/homebrew/bin/uv.
+if ~ispc
+    [status, out] = system(['$SHELL -l -c ''' which_cmd ''' 2>/dev/null']);
+    if status == 0
+        lines = strsplit(strtrim(out), newline);
+        candidate = strtrim(lines{end});
+        if ~isempty(candidate) && isfile(candidate)
+            uv_exe = candidate;
+            return
+        end
+    end
+end
+
 [status, out] = system(which_cmd);
 if status == 0
     lines = strsplit(strtrim(out), newline);
@@ -105,10 +125,16 @@ if ispc
         fullfile(home, 'AppData', 'Local', 'Programs', 'uv', exe_name), ...
         fullfile(home, 'AppData', 'Roaming', 'uv', 'bin', exe_name)};
 else
+    % macOS and linux. Astral's installer prefers ~/.local/bin; the rest cover
+    % homebrew (both arm64 and intel prefixes), linuxbrew, distro packages and
+    % old cargo installs.
     candidates = { ...
         fullfile(home, '.local', 'bin', exe_name), ...
         fullfile('/opt', 'homebrew', 'bin', exe_name), ...
         fullfile('/usr', 'local', 'bin', exe_name), ...
+        fullfile('/home', 'linuxbrew', '.linuxbrew', 'bin', exe_name), ...
+        fullfile('/usr', 'bin', exe_name), ...
+        fullfile('/snap', 'bin', exe_name), ...
         fullfile(home, '.cargo', 'bin', exe_name)};
 end
 
@@ -142,51 +168,5 @@ if status ~= 0
 end
 
 uv_exe = findUv();
-
-end
-
-
-function py_path = getCondaEnvPython(env_name)
-%getCondaEnvPython Look up a conda env's interpreter by name.
-%
-%   Matches env_name against the leading Name column of `conda env list`, rather
-%   than assuming the name occurs exactly twice in the raw output (which breaks
-%   on names that are prefixes of others, e.g. iblenv vs iblenv2).
-
-py_path = [];
-
-try
-    [status, conda_envs] = system('conda env list');
-    if status ~= 0
-        return
-    end
-
-    lines = strsplit(conda_envs, newline);
-    for i = 1:numel(lines)
-        this_line = strtrim(lines{i});
-        if isempty(this_line) || startsWith(this_line, '#')
-            continue
-        end
-
-        tokens = strsplit(this_line);
-        tokens = tokens(~cellfun(@isempty, tokens));
-        if numel(tokens) < 2 || ~strcmp(tokens{1}, env_name)
-            continue
-        end
-
-        env_dir = tokens{end};
-        if ispc
-            candidate = fullfile(env_dir, 'python.exe');
-        else
-            candidate = fullfile(env_dir, 'bin', 'python');
-        end
-        if isfile(candidate)
-            py_path = ['"' candidate '"'];
-        end
-        return
-    end
-catch
-    py_path = [];
-end
 
 end
