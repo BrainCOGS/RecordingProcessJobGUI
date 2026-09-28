@@ -1,0 +1,76 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python ${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        # open_phy.py and the tests/ scripts declare requires-python >=3.12.
+        python: ["3.12", "3.14"]
+    env:
+      UV_PYTHON: ${{ matrix.python }}
+      # phy's tests build real Qt widgets; there is no display on a runner.
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4  # v10.1.0
+
+      # PyQt5's wheels bundle Qt but link against the system GL, fontconfig
+      # and glib, which a bare ubuntu image lacks (libGL.so.1 is the first to
+      # fail), even for the offscreen platform plugin.
+      - name: Install Qt runtime libraries
+        if: runner.os == 'Linux'
+        run: >-
+          sudo apt-get update &&
+          sudo apt-get install -y --no-install-recommends
+          libgl1 libegl1 libxkbcommon0 libfontconfig1 libglib2.0-0t64 libdbus-1-3
+
+      - name: open_phy.py tests (real phy and PyQt5)
+        run: uv run --no-project --with phy --with pytest pytest PythonScripts/tests
+
+      - name: open_phy.py dat_path tests
+        run: uv run --script tests/test_open_phy_dat_path.py
+
+      - name: iblapps_version.py tests
+        run: uv run --script tests/test_iblapps_version.py
+
+      - name: matlab_export.py tests
+        run: uv run --script tests/test_matlab_export.py
+
+  matlab:
+    name: MATLAB
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Public repositories can run MATLAB on GitHub-hosted runners without a
+      # license.
+      - uses: matlab-actions/setup-matlab@f9e43010f1ae678f7cfa0542fe2a4f60f7d1ad8d  # v3.1.0
+
+      - uses: matlab-actions/run-command@bfa857648f4895aa98a446fe41c85e0788421ed5  # v3.3.0
+        with:
+          command: >-
+            addpath(pwd); addpath(fullfile(pwd, 'tests'));
+            assertSuccess(runtests({'tests/TestBuildUvScriptCall.m', 'tests/TestOutputDirMatch.m'}));
+            test_jsonencodepretty
