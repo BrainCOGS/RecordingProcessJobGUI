@@ -126,6 +126,32 @@ def test_absoluteness_is_platform_independent():
     assert not is_abs("sub/temp_wh.dat")
 
 
+@pytest.mark.parametrize(
+    "dat_path, expected",
+    [
+        ("/mnt/cup/x.dat", True),
+        ("/", True),
+        (r"\\cup.pni.princeton.edu\share\x.dat", True),
+        ("//cup.pni.princeton.edu/share/x.dat", True),
+        (r"C:\data\x.dat", True),
+        ("C:/data/x.dat", True),
+        ("", False),
+        ("temp_wh.dat", False),
+        ("./temp_wh.dat", False),
+        ("sub/temp_wh.dat", False),
+        ("C:temp_wh.dat", False),  # drive-relative, not absolute
+    ],
+)
+def test_absoluteness_under_windows_path_semantics(monkeypatch, dat_path, expected):
+    # Regression: on Windows, Path("/mnt/cup/x.dat").is_absolute() is False
+    # (no drive), so the linux cluster's dat_path was taken as relative and
+    # never rewritten. Swap in Windows path semantics so this fails on any host.
+    from pathlib import PureWindowsPath
+
+    monkeypatch.setitem(_NS, "Path", PureWindowsPath)
+    assert _NS["_is_absolute"](dat_path) is expected
+
+
 def test_windows_sorted_session_rewrites_end_to_end(tmp_path):
     (tmp_path / "temp_wh.dat").write_bytes(b"")
     params = write_params(tmp_path, r"X:\braininit\x\temp_wh.dat")

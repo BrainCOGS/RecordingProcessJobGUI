@@ -103,6 +103,9 @@ def _is_absolute(dat_path: str) -> bool:
     """
     if Path(dat_path).is_absolute():
         return True
+    # Windows reads /mnt/... as drive-relative, not absolute.
+    if dat_path.startswith("/"):
+        return True
     if re.match(r"^[A-Za-z]:[\\/]", dat_path):      # C:\... or C:/...
         return True
     if dat_path.startswith("\\\\") or dat_path.startswith("//"):  # UNC
