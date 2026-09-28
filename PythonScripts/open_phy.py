@@ -35,6 +35,22 @@ recording, and it drops TraceView with only a terse warning in phy.log.
 This launcher detects that and hands phy a patched copy of params.py from a
 temp directory, leaving the file on the share untouched. See _localize_params.
 
+Cache location on Windows
+-------------------------
+phy caches through joblib in <dir_path>\\.phy, and joblib nests
+<module>\\<class>\\<method>\\func_code.py.<uuid>-<pid>-<thread> beneath it. A
+kilosort directory on the share is already ~170 characters of UNC path, so
+those writes land near 300 characters. Unless LongPathsEnabled is set, Windows
+refuses anything at or over MAX_PATH (260) with FileNotFoundError, and the
+correlogram and amplitude views come up empty.
+
+When that would happen, phy is handed the \\\\?\\ extended-length form of its
+usual cache directory (\\\\?\\UNC\\server\\share\\... for the share). Windows
+exempts \\\\?\\ paths from MAX_PATH whatever LongPathsEnabled says, so the cache
+stays next to the data, as it always has. joblib builds everything below it
+with os.path.join, so the backslash-only rule \\\\?\\ imposes holds all the
+way down. See _cache_too_deep and _extended_path.
+
 The directory argument is optional and defaults to the current working
 directory, matching the old .BAT, which relied on the caller's cd.
 """
@@ -42,6 +58,7 @@ directory, matching the old .BAT, which relied on the caller's cd.
 from __future__ import annotations
 
 import ast
+import ntpath
 import re
 import sys
 import tempfile
@@ -243,6 +260,73 @@ def _install_font_fallback() -> None:
     phy_gui._load_font = load_font
 
 
+#: Windows' MAX_PATH. A process that is not long-path aware (or runs where
+#: LongPathsEnabled is 0) cannot open a path of this many characters or more.
+MAX_PATH = 260
+
+#: Room joblib needs below phy's .phy cache directory. The deepest writes seen
+#: on a real session were 124 characters (func_code.py temp files under
+#: TemplateMixin\\get_spike_template_amplitudes); the rest is headroom for
+#: longer pids and thread ids, and for joblib versions that add a joblib\\ level.
+CACHE_DEPTH = 160
+
+
+def _long_paths_enabled() -> bool:
+    """True if Windows is configured to allow paths beyond MAX_PATH."""
+    if sys.platform != "win32":
+        return False
+    import winreg
+
+    try:
+        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
+                            r"SYSTEM\CurrentControlSet\Control\FileSystem") as key:
+            value, _ = winreg.QueryValueEx(key, "LongPathsEnabled")
+    except OSError:
+        return False
+    return value == 1
+
+
+def _cache_too_deep(dir_path: str, *, windows: bool, long_paths: bool) -> bool:
+    """True if phy's cache under dir_path would run past MAX_PATH."""
+    if not windows or long_paths or not dir_path:
+        return False
+    return len(dir_path) + len("\\.phy") + CACHE_DEPTH >= MAX_PATH
+
+
+def _extended_path(path: str) -> str:
+    """Return the \\\\?\\ extended-length form of an absolute Windows path.
+
+    \\\\?\\ tells Windows to skip path normalisation, which is what lifts
+    MAX_PATH -- but it also means '/', '.' and '..' are no longer interpreted,
+    so they are resolved here first.
+    """
+    if path.startswith("\\\\?\\"):
+        return path
+    p = ntpath.normpath(path.replace("/", "\\")) if path else ""
+    if p.startswith("\\\\"):
+        return "\\\\?\\UNC\\" + p[2:]
+    if re.match(r"^[A-Za-z]:\\", p):
+        return "\\\\?\\" + p
+    raise ValueError(f"Not an absolute Windows path: {path!r}")
+
+
+def _install_cache_redirect(cache_dir: Path) -> None:
+    """Make phy put its cache in cache_dir instead of <dir_path>\\.phy.
+
+    Mirrors BaseController._set_cache with only the location changed.
+    """
+    from phy.apps.base import BaseController
+    from phy.utils.context import Context
+
+    def _set_cache(self, clear_cache=None):
+        self.cache_dir = Path(cache_dir)
+        if clear_cache:
+            self._clear_cache()
+        self.context = Context(self.cache_dir)
+
+    BaseController._set_cache = _set_cache
+
+
 def main(argv: list[str]) -> int:
     data_dir = Path(argv[0]).expanduser() if argv else Path.cwd()
 
@@ -250,8 +334,10 @@ def main(argv: list[str]) -> int:
         print(f"Not a directory: {data_dir}", file=sys.stderr)
         return 1
 
-    # params.py is what the sorter writes. The old .BAT asked for win_params.py,
-    # a filename this pipeline has never produced.
+    # params.py is what kilosort writes. The old .BAT used win_params.py, a copy
+    # the sorter adds with the share prefix rewritten for Windows; it is absent
+    # for sessions sorted before that was added, and _localize_params does the
+    # same rewrite on every platform.
     params = data_dir / "params.py"
     if not params.is_file():
         print(
@@ -261,6 +347,13 @@ def main(argv: list[str]) -> int:
         return 1
 
     params = _localize_params(data_dir, params)
+
+    if _cache_too_deep(str(data_dir.absolute()), windows=sys.platform == "win32",
+                       long_paths=_long_paths_enabled()):
+        cache_dir = _extended_path(str(data_dir.absolute() / ".phy"))
+        print(f"Note: phy's cache path is past MAX_PATH; using {cache_dir}",
+              file=sys.stderr)
+        _install_cache_redirect(Path(cache_dir))
 
     _install_font_fallback()
     template_gui(params)
