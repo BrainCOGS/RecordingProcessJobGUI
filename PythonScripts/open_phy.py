@@ -196,6 +196,53 @@ def _localize_params(data_dir: Path, params: Path) -> Path:
     return tmp
 
 
+def _install_font_fallback() -> None:
+    """Stop phy crashing when Qt refuses its bundled icon font.
+
+    phy's _load_font registers fa-solid-900.ttf (Font Awesome, used for the
+    dock title-bar buttons) and indexes applicationFontFamilies(font_id)[0].
+    If Qt cannot register the file, font_id is -1, the list is empty, and phy
+    dies with IndexError before the window opens. This happens on Windows
+    machines that block untrusted fonts (fonts loaded from outside
+    %windir%\\Fonts), a common managed-machine policy.
+
+    The replacement tries the file, then the same bytes from memory, which
+    goes through a different Windows API, and finally settles for the default
+    font. The last case costs only the glyphs on the dock buttons, which is
+    much better than no GUI at all.
+    """
+    from PyQt5.QtGui import QFont, QFontDatabase
+    from phy.gui import gui as phy_gui
+    from phy.gui import qt as phy_qt
+
+    def families(font_id: int) -> list[str]:
+        return QFontDatabase.applicationFontFamilies(font_id) if font_id >= 0 else []
+
+    def load_font(name, size=8):
+        if name in phy_qt._FONTS:
+            return phy_qt._FONTS[name]
+        path = phy_qt._static_abs_path(name)
+        found = families(QFontDatabase.addApplicationFont(str(path)))
+        if not found and path.is_file():
+            found = families(QFontDatabase.addApplicationFontFromData(path.read_bytes()))
+        if found:
+            font = QFontDatabase().font(found[0], None, size)
+        else:
+            print(
+                f"Note: Qt could not load phy's icon font {name}; dock buttons "
+                "will show placeholder glyphs.",
+                file=sys.stderr,
+            )
+            font = QFont()
+            font.setPointSize(size)
+        phy_qt._FONTS[name] = font
+        return font
+
+    # gui.py binds the name at import, so patch it there as well.
+    phy_qt._load_font = load_font
+    phy_gui._load_font = load_font
+
+
 def main(argv: list[str]) -> int:
     data_dir = Path(argv[0]).expanduser() if argv else Path.cwd()
 
@@ -215,6 +262,7 @@ def main(argv: list[str]) -> int:
 
     params = _localize_params(data_dir, params)
 
+    _install_font_fallback()
     template_gui(params)
     return 0
 
