@@ -24,7 +24,6 @@ jobs:
         # open_phy.py and the tests/ scripts declare requires-python >=3.12.
         python: ["3.12", "3.14"]
     env:
-      UV_PYTHON: ${{ matrix.python }}
       # phy's tests build real Qt widgets; there is no display on a runner.
       QT_QPA_PLATFORM: offscreen
     steps:
@@ -32,7 +31,11 @@ jobs:
         with:
           persist-credentials: false
 
+      # python-version exports UV_PYTHON and keys the cache per version, so
+      # the two legs on one OS don't race to save the same entry.
       - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4  # v10.1.0
+        with:
+          python-version: ${{ matrix.python }}
 
       # PyQt5's wheels bundle Qt but link against the system GL, fontconfig
       # and glib, which a bare ubuntu image lacks (libGL.so.1 is the first to
