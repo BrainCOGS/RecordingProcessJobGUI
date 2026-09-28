@@ -80,7 +80,7 @@ if ~isempty(app.selectedJobRow)
             return
         end
         
-        progressdlg = uiprogressdlg(app.UIFigure, 'Message','Opening IBL Atlas GUI, no progress shown, be patinet');
+        progressdlg = uiprogressdlg(app.UIFigure, 'Message','Opening IBL Atlas GUI, no progress shown, be patient');
         % onCleanup so the dialog closes even when system() throws; it used to
         % leak and leave the app with a modal progress bar over it.
         cleanup_dlg = onCleanup(@() close(progressdlg));

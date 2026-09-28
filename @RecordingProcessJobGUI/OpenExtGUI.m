@@ -109,7 +109,7 @@ if ~isempty(app.selectedJobRow)
                 '', 'Options',{'OK'}, 'Icon','error');
             return
         end
-        progressdlg = uiprogressdlg(app.UIFigure, 'Message',['Opening ', tool ,', no progress shown, be patinet']);
+        progressdlg = uiprogressdlg(app.UIFigure, 'Message',['Opening ', tool ,', no progress shown, be patient']);
         cleanup_dlg = onCleanup(@() close(progressdlg));
         try
             [out, cmdout] = system(system_call);
