@@ -17,3 +17,7 @@ Recording_Automation_GUI/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# Windows build: uv.exe fetched for bundling, and buildWindowsApp output
+/bin/
+/dist/

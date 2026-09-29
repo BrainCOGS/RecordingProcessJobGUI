@@ -7,6 +7,28 @@ GUI to register recordings in the automatic pipeline
 
 See the instructions [here](https://braincogs.github.io/software/configure_systems.html#configure-new-recording-system). Ensure that all the information under the "System Configuration" tab is entered correctly otherwise your behavior data may not show up.
 
+### Windows installer (no MATLAB needed)
+
+Every push to `main` builds a standalone Windows app and publishes it on the
+[releases page](https://github.com/BrainCOGS/RecordingProcessJobGUI/releases/latest).
+Download `Recording_Automation_GUI_Installer.exe` and run it. If the machine
+doesn't have the free MATLAB Runtime, the installer downloads it. MATLAB itself
+isn't required.
+
+The build bundles the latest [uv](https://docs.astral.sh/uv/), so the python
+tools work on a rig that never installed it. If uv is already installed on the
+machine, the app uses that copy instead.
+
+The compiled app stores the rig's System Configuration in
+`%APPDATA%\RecordingProcessJobGUI\system_conf_job_gui.json`, so the
+configuration is kept when the app is updated.
+
+The build is `.github/workflows/windows-release.yml`, which runs
+`build/buildWindowsApp.m`. You can run the same script on a Windows machine
+that has MATLAB Compiler. The workflow needs a MATLAB batch licensing token in
+the `MLM_LICENSE_TOKEN` repository secret, because GitHub's free MATLAB license
+doesn't cover MATLAB Compiler.
+
 ### Installation on Mac/Linux
 
 ```bash
@@ -42,7 +64,7 @@ uv run --script tests/test_open_phy_dat_path.py
 The MATLAB suites are `matlab.unittest` classes and run through `runtests`:
 
 ```bash
-matlab -batch "addpath(pwd); runtests({'tests/TestBuildUvScriptCall.m','tests/TestOutputDirMatch.m'})"
+matlab -batch "addpath(pwd); runtests({'tests/TestBuildUvScriptCall.m','tests/TestOutputDirMatch.m','tests/TestBundledUvPath.m','tests/TestResolveConfFile.m'})"
 ```
 
 `tests/test_jsonencodepretty.m` is a plain script with bare asserts rather than

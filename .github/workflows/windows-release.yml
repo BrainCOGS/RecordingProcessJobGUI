@@ -1,0 +1,161 @@
+name: Windows release
+
+# Compiles the GUI with MATLAB Compiler on every push to main and publishes it
+# as a GitHub release. Users install it with the installer, which pulls the free
+# MATLAB Runtime on first install; no MATLAB license is needed to run it.
+#
+# Setup: MATLAB Compiler is a "transformation product", which the free
+# public-repo license on GitHub runners does not cover. Request a MATLAB batch
+# licensing token (see "Licensing" in https://github.com/matlab-actions/setup-matlab)
+# and add it as the repository secret MLM_LICENSE_TOKEN.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      u19_ref:
+        description: U19-pipeline-matlab branch, tag or SHA to bundle
+        default: master
+
+permissions:
+  contents: read
+
+# Each push to main is its own release, so let them all finish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  APP_NAME: Recording_Automation_GUI
+  # Keep in step with the Runtime rigs already have installed; users need the
+  # Runtime of this exact release.
+  MATLAB_RELEASE: R2023b
+  VERSION: 1.7.${{ github.run_number }}
+
+jobs:
+  build:
+    name: Build Windows app
+    runs-on: windows-latest
+    outputs:
+      u19_sha: ${{ steps.u19.outputs.sha }}
+      uv_version: ${{ steps.uv.outputs.version }}
+    steps:
+      - name: Check for the MATLAB license token
+        env:
+          MLM_LICENSE_TOKEN: ${{ secrets.MLM_LICENSE_TOKEN }}
+        shell: bash
+        run: |
+          if [ -z "$MLM_LICENSE_TOKEN" ]; then
+            echo "::error::Set the MLM_LICENSE_TOKEN secret; MATLAB Compiler is not licensed on GitHub runners without it."
+            exit 1
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          path: app
+          persist-credentials: false
+
+      # The DataJoint schema classes (lab, recording, subject, ...) the GUI
+      # queries live in this repo.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          repository: BrainCOGS/U19-pipeline-matlab
+          ref: ${{ inputs.u19_ref || 'master' }}
+          path: U19-pipeline-matlab
+          persist-credentials: false
+
+      - id: u19
+        shell: bash
+        run: echo "sha=$(git -C U19-pipeline-matlab rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      # Ship the latest uv so rigs without it can still run the python tools;
+      # a uv installed on the machine takes precedence (see bundledUvPath).
+      - name: Download latest uv
+        id: uv
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = gh release view --repo astral-sh/uv --json tagName --jq .tagName
+          $zip = 'uv-x86_64-pc-windows-msvc.zip'
+          gh release download $tag --repo astral-sh/uv --dir $env:RUNNER_TEMP `
+            --pattern $zip --pattern "$zip.sha256"
+          $expected = (Get-Content "$env:RUNNER_TEMP/$zip.sha256").Split(' ')[0]
+          $actual = (Get-FileHash "$env:RUNNER_TEMP/$zip" -Algorithm SHA256).Hash
+          if ($actual -ne $expected) { throw "uv $tag checksum mismatch: $actual != $expected" }
+          Expand-Archive "$env:RUNNER_TEMP/$zip" -DestinationPath "$env:RUNNER_TEMP/uv"
+          New-Item -ItemType Directory -Force app/bin | Out-Null
+          Copy-Item "$env:RUNNER_TEMP/uv/uv.exe" app/bin/
+          app/bin/uv.exe --version
+          "version=$tag" >> $env:GITHUB_OUTPUT
+
+      - uses: matlab-actions/setup-matlab@f9e43010f1ae678f7cfa0542fe2a4f60f7d1ad8d  # v3.1.0
+        with:
+          release: ${{ env.MATLAB_RELEASE }}
+          products: MATLAB_Compiler
+          cache: true
+
+      - name: Compile app and installer
+        uses: matlab-actions/run-command@bfa857648f4895aa98a446fe41c85e0788421ed5  # v3.3.0
+        env:
+          MLM_LICENSE_TOKEN: ${{ secrets.MLM_LICENSE_TOKEN }}
+        with:
+          command: >-
+            cd app; addpath build;
+            buildWindowsApp(U19Root=fullfile(getenv('GITHUB_WORKSPACE'), 'U19-pipeline-matlab'),
+            OutputDir=fullfile(getenv('GITHUB_WORKSPACE'), 'dist'),
+            Version=getenv('VERSION'))
+
+      - name: Collect release files
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force release | Out-Null
+          Copy-Item "dist/installer/${env:APP_NAME}_Installer.exe" release/
+          Compress-Archive -Path "dist/app/*" -DestinationPath "release/${env:APP_NAME}_app_only.zip"
+          Get-ChildItem release
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: windows-release
+          path: release/
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          name: windows-release
+          path: release
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          U19_SHA: ${{ needs.build.outputs.u19_sha }}
+          UV_VERSION: ${{ needs.build.outputs.uv_version }}
+        run: |
+          cat > notes.md <<EOF
+          Built from ${GITHUB_SHA} with MATLAB ${MATLAB_RELEASE}.
+
+          **Install:** download \`${APP_NAME}_Installer.exe\` and run it. It installs
+          the free MATLAB Runtime ${MATLAB_RELEASE} if the machine does not have it;
+          MATLAB itself is not needed.
+
+          \`${APP_NAME}_app_only.zip\` is the bare executable for machines that
+          already have the MATLAB Runtime ${MATLAB_RELEASE}.
+
+          Bundled: uv ${UV_VERSION}, BrainCOGS/U19-pipeline-matlab@${U19_SHA}.
+          EOF
+          gh release create "v${VERSION}" release/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "${APP_NAME} ${VERSION}" \
+            --notes-file notes.md \
+            --latest
