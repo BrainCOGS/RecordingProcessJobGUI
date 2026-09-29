@@ -217,8 +217,8 @@ modality.
   DefaultParams, RecordingBehaviorSession, RecordingRecordingSession),
   `recording_process` (Processing, Status, LogStatus), `subject`, `lab`,
   `action.Surgery`, `pipeline_ephys_element.*`, `pipeline_imaging_element.*`.
-- **Python** — [uv](https://docs.astral.sh/uv/), located (or installed) at
-  startup by `getPythonEnv`; no conda. `read_params.py` and `upload_params.py`
+- **Python** — [uv](https://docs.astral.sh/uv/), installed by the user and
+  located at startup by `getPythonEnv`; no conda. `read_params.py` and `upload_params.py`
   run against the root `pyproject.toml`, while `open_phy.py`, `open_suite2p.py`
   and `open_ibl_atlas.py` are standalone launchers declaring their dependencies
   inline (PEP 723), so uv provisions each into its own cached environment.
