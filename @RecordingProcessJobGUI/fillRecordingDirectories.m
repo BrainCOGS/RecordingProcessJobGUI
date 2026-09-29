@@ -54,7 +54,9 @@ if ~isempty(rec_dirs)
         app.RecordingDirectoryTable.times_dir);
 
     app.RecordingDirectoryDropDown.Items = app.RecordingDirectoryTable.rec_dir_dropdown;
-    if any(strcmp(app.RecordingDirectoryDropDown.Items, previous_value))
+    % Value is not text while the dropdown has no items (first fill at startup)
+    has_previous = ischar(previous_value) || isStringScalar(previous_value);
+    if has_previous && any(strcmp(app.RecordingDirectoryDropDown.Items, previous_value))
         app.RecordingDirectoryDropDown.Value = previous_value;
     end
     app.CreateProcessingJobButton.Enable = 'on';
