@@ -13,9 +13,19 @@ See the instructions [here](https://braincogs.github.io/software/configure_syste
 git clone git@github.com:BrainCOGS/RecordingProcessJobGUI.git --recurse-submodules
 ```
 
-That is the whole install. There is no conda environment to build: the app
-locates [uv](https://docs.astral.sh/uv/) at startup, installing it if it is
-missing, and every python tool it shells out to declares its own dependencies.
+Then install [uv](https://docs.astral.sh/uv/) once per machine, from a normal
+terminal (the app does not install it for you):
+
+```powershell
+winget install --id=astral-sh.uv -e
+```
+
+On macOS/Linux use `curl -LsSf https://astral.sh/uv/install.sh | sh`. Restart
+MATLAB afterwards so it sees the new PATH.
+
+There is no conda environment to build: the app locates uv at startup, and
+every python tool it shells out to declares its own dependencies. Without uv
+the app still runs, but the python tools are disabled.
 
 - The parameter helpers (`read_params.py`, `upload_params.py`) run against the
   repo's `pyproject.toml`.
