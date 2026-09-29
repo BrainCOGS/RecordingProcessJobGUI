@@ -172,6 +172,7 @@
       <file>${PROJECT_ROOT}\fetch_table_except.m</file>
       <file>${PROJECT_ROOT}\fetchDataDJTable.m</file>
       <file>${PROJECT_ROOT}\find_datestr_recording_directory.m</file>
+      <file>${PROJECT_ROOT}\find_recording_directories.m</file>
       <file>${PROJECT_ROOT}\get_mod_time_directory.m</file>
       <file>${PROJECT_ROOT}\jsonencodepretty.m</file>
       <file>${PROJECT_ROOT}\load_gui_vars.m</file>

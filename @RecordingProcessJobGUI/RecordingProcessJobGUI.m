@@ -99,6 +99,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         SelectRecordingDirectoryLabel   matlab.ui.control.Label
         RecordingDirectoryDropDownLabel matlab.ui.control.Label
         RecordingDirectoryDropDown      matlab.ui.control.DropDown
+        RefreshRecordingDirectoriesButton matlab.ui.control.Button
         SurgeryCheckBox                 matlab.ui.control.CheckBox
         IstherebehaviorSessionCheckBox  matlab.ui.control.CheckBox
         BehaviorSessionDropDownLabel    matlab.ui.control.Label
@@ -477,6 +478,7 @@ classdef RecordingProcessJobGUI < matlab.apps.AppBase
         status = copyRecording(app, this_recording_directory, this_local_directory, recording_modality);
         dir_session_match = checkLocaldirSessionMatch(app,local_directory, subject_fullname, session_date);
         findLikelyBehaviorSessionFromRecDir(app,event);
+        fillRecordingDirectories(app, event);
         restoreColorSessionDropDown(app,event);
 
         %Sub surgery figure
