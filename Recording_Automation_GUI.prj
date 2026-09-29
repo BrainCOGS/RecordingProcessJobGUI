@@ -179,6 +179,7 @@
       <file>${PROJECT_ROOT}\OneDrive_Folder_Icon.svg.png</file>
       <file>${PROJECT_ROOT}\reload.png</file>
       <file>${PROJECT_ROOT}\saveJSONfile.m</file>
+      <file>${PROJECT_ROOT}\rename_table_var.m</file>
       <file>${PROJECT_ROOT}\struct2string.m</file>
       <file>C:\Experiments\ViRMEn\database\@SessionFlagger\brain_cogs_on_white_small_brain_cogs_on_white.png</file>
       <file>C:\Experiments\ViRMEn\database\accumfun.m</file>

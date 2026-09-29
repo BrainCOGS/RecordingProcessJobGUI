@@ -18,7 +18,7 @@ function configParams(app)
 %
 %   Callers index it with the live modality string, e.g.
 %   app.param_table_names.(app.Configuration.RecordingModality).table_class, and
-%   then renamevars the modality-specific column onto the "common" name held in the
+%   then renames (rename_table_var) the modality-specific column onto the "common" name held in the
 %   flat properties alongside each struct (app.params_idx_field,
 %   app.param_methods_method_field, app.preparam_steps_idx_field, ...). That
 %   rename-to-common trick is what lets getParamsFromMatlab, getMethods and the

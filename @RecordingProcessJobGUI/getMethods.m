@@ -48,7 +48,7 @@ for i=1:length(method_modalities)
     this_mod = app.param_methods_table_names.(method_modalities{i});
     this_method_table = fetchDataDJTable(this_mod.table_class(), [], {this_mod.method_field}, "table");
     if ismember("clustering_method", this_method_table.Properties.VariableNames)
-        this_method_table = renamevars(this_method_table,"clustering_method","processing_method");
+        this_method_table = rename_table_var(this_method_table,"clustering_method","processing_method");
     end
     this_method_table.recording_modality = repmat(method_modalities(i),size(this_method_table,1),1);
     Methods = [Methods; this_method_table];
@@ -64,7 +64,7 @@ for i=1:length(method_modalities)
     this_method_table = fetchDataDJTable(this_mod.table_class(), [], {this_mod.method_field}, "table");
     if ~isempty(this_method_table)
         if ismember("precluster_method", this_method_table.Properties.VariableNames)
-            this_method_table = renamevars(this_method_table,"precluster_method","preprocess_method");
+            this_method_table = rename_table_var(this_method_table,"precluster_method","preprocess_method");
         end
         this_method_table.recording_modality = repmat(method_modalities(i),size(this_method_table,1),1);
         PreMethods = [PreMethods; this_method_table];
