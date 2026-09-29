@@ -16,16 +16,10 @@ function postConfigurationActions(app)
 %     - Resolves app.FileExtensions from app.AllFileExtensions for this modality -
 %       the regexps that identify a raw recording ('^.*\g0' for electrophysiology;
 %       .tiff/.tif/.avi for imaging). These are set by configParams.
-%     - Walks app.Configuration.RecordingRootDirectory with dirwalk/visitor2 to find
-%       every directory holding raw files of this modality, then drops directories
-%       that are contained in another hit - for ephys each probe sits in its own
-%       subdirectory, and the parent (the actual recording) is what should be
-%       listed, not one entry per probe.
-%     - Builds app.RecordingDirectoryTable with columns full_recording_directory,
-%       times_dir (last-modified time from get_mod_time_directory), recording_dir
-%       (path relative to the root) and rec_dir_dropdown (relative path + time, what
-%       the user picks from), and feeds it to app.RecordingDirectoryDropDown. With
-%       no hits the dropdown reads 'No recordings found' and
+%     - Fills the Recording Directory dropdown with fillRecordingDirectories: every
+%       folder under app.Configuration.RecordingRootDirectory holding raw files of
+%       this modality (for ephys, probe subfolders collapse into their gate
+%       folder). With no hits the dropdown reads 'No recordings found' and
 %       app.CreateProcessingJobButton is disabled.
 %     - Fills the behavior sessions for the configured behavior rig(s) - each rig
 %       name becomes a session_location key - plus the pre-param step lists and the
@@ -41,7 +35,7 @@ function postConfigurationActions(app)
 %              selected tab, and populates the session / params dropdowns
 %
 %   Dependencies:
-%       - dirwalk, visitor2, get_mod_time_directory
+%       - fillRecordingDirectories
 %       - fillSessions, fillPreParamsSets, fillDefaultParams
 %       - configParams (must have run: provides app.AllFileExtensions)
 %
@@ -70,45 +64,7 @@ app.TabGroup.SelectedTab = app.TabGroup.Children(1);
 app.FileExtensions = app.AllFileExtensions.(app.Configuration.RecordingModality);
 
 %Fill possible recording directories from modality and selected root dir
-[rec_dirs, ~] = dirwalk(app.Configuration.RecordingRootDirectory, @visitor2, app.FileExtensions{:});
-rec_dirs = rec_dirs(~cellfun('isempty',rec_dirs));
-
-%Delete repeated directories (for probes)
-if ~isempty(rec_dirs)
-idx_good = 1:length(rec_dirs);
-for i=1:length(rec_dirs)
-    comp = rec_dirs{i};
-    for j=i+1:length(rec_dirs)
-        if contains(rec_dirs{j},comp)
-            idx_good(idx_good == j) = [];
-        end
-    end
-end
-rec_dirs = rec_dirs(idx_good); 
-end
-
-if ~isempty(rec_dirs)
-
-    app.RecordingDirectoryTable = cell2table(rec_dirs,'VariableNames',{'full_recording_directory'});
-    app.RecordingDirectoryTable.times_dir = cellfun(@get_mod_time_directory, rec_dirs,'UniformOutput',0);
-    app.RecordingDirectoryTable.recording_dir =  strrep(rec_dirs, app.Configuration.RecordingRootDirectory, '');
-
-    app.RecordingDirectoryTable = ...
-        app.RecordingDirectoryTable(~cellfun('isempty',app.RecordingDirectoryTable.recording_dir),:);
-
-    space_cell = repmat({'           '},height(app.RecordingDirectoryTable),1);
-
-    app.RecordingDirectoryTable.rec_dir_dropdown = strcat(app.RecordingDirectoryTable.recording_dir,space_cell, ...
-        app.RecordingDirectoryTable.times_dir);
-
-    %rec_dirs = strrep(rec_dirs, app.Configuration.RecordingRootDirectory, '');
-    %rec_dirs = rec_dirs(~cellfun('isempty',rec_dirs));
-    app.RecordingDirectoryDropDown.Items = app.RecordingDirectoryTable.rec_dir_dropdown;
-    app.CreateProcessingJobButton.Enable = 'on';
-else
-    app.RecordingDirectoryDropDown.Items = {'No recordings found'};
-    app.CreateProcessingJobButton.Enable = 'off';
-end
+fillRecordingDirectories(app);
     
 key = cell2struct(app.Configuration.BehaviorRig','session_location');
 fillSessions(app, key);    

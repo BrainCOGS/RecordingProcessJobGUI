@@ -1,53 +1,71 @@
-
-function fillRecordingDirectories(app)
-%FILLRECORDINGDIRECTORIES Scan the recording root directory and fill the subject dropdowns
+function fillRecordingDirectories(app, event)
+%FILLRECORDINGDIRECTORIES Scan the recording root directory and fill the Recording Directory dropdown
 %
-%   Superseded and currently unreachable: nothing in the class calls this method.
-%   The live scan of app.Configuration.RecordingRootDirectory that actually builds
-%   app.RecordingDirectoryTable and app.RecordingDirectoryDropDown.Items now happens
-%   in postConfigurationActions. Kept only because it is still listed in the class
-%   method list and in Recording_Automation_GUI.prj -- read postConfigurationActions
-%   instead, and see the report notes below before reviving this.
+%   Called from postConfigurationActions once the configuration is valid, and as
+%   the ButtonPushed callback of app.RefreshRecordingDirectoriesButton on the Add
+%   Recording tab, so recordings copied in while the GUI is open can be picked
+%   without re-running Configure.
 %
-%   As written, when the root directory exists it dirwalks it with @visitor2 for
-%   '^.*\.mat$' files (discarding both outputs), then fetches every
-%   subject_fullname from lab.User * subject.Subject and loads the sorted list,
-%   prefixed with 'All', into app.RecordingSubjectDropDown and
-%   app.RecordingSubjectDropDown_2 -- i.e. the body is a copy of fillSubjects and
-%   never touches a recording directory at all. The `key` restriction it branches on
-%   is never a parameter of this function, so the unrestricted fetch always runs.
+%   find_recording_directories walks app.Configuration.RecordingRootDirectory for
+%   folders directly holding files that match app.FileExtensions. Nested hits are
+%   collapsed only for electrophysiology (probe subfolders of a SpikeGLX gate
+%   folder); for imaging every folder with raw files is listed.
+%
+%   Builds app.RecordingDirectoryTable with columns full_recording_directory,
+%   times_dir (last-modified time from get_mod_time_directory), recording_dir
+%   (path relative to the root) and rec_dir_dropdown (relative path + time, what
+%   the user picks from). With no hits the dropdown reads 'No recordings found'
+%   and app.CreateProcessingJobButton is disabled. The previously selected
+%   directory stays selected if it is still there.
 %
 %   Inputs:
 %       app (RecordingProcessJobGUI) - The GUI application object
+%       event                        - Button ButtonPushed event (optional). When
+%                                      given (the Refresh button), the busy label
+%                                      is shown during the walk; configureSystem
+%                                      manages it itself otherwise
 %
 %   Outputs:
-%       None - Sets the Items/Value of app.RecordingSubjectDropDown and
-%              app.RecordingSubjectDropDown_2
+%       None - Sets app.RecordingDirectoryTable, app.RecordingDirectoryDropDown
+%              and app.CreateProcessingJobButton.Enable
 %
-%   Dependencies:
-%       - DataJoint tables: lab.User, subject.Subject
-%       - dirwalk, visitor2
-%
-%   See also: postConfigurationActions, fillSubjects, findLikelyBehaviorSessionFromRecDir
+%   See also: find_recording_directories, postConfigurationActions,
+%   get_mod_time_directory, findLikelyBehaviorSessionFromRecDir
 
-if isfolder(app.Configuration.RecordingRootDirectory)
-    
-[fileNmes, dirs] = dirwalk(app.Configuration.RecordingRootDirectory, @visitor2, '^.*\.mat$');
-
-if nargin < 2
-    key = '';
+from_button = nargin > 1;
+if from_button
+    updateBusyLabel(app, 0);
 end
 
-if isempty(key)
-    users_subj = fetch(lab.User * proj(subject.Subject, 'user_id'),  'user_id');
+previous_value = app.RecordingDirectoryDropDown.Value;
+
+root_dir = char(app.Configuration.RecordingRootDirectory);
+collapse_nested = strcmp(app.Configuration.RecordingModality, 'electrophysiology');
+rec_dirs = find_recording_directories(root_dir, app.FileExtensions, collapse_nested);
+
+if ~isempty(rec_dirs)
+
+    app.RecordingDirectoryTable = cell2table(rec_dirs,'VariableNames',{'full_recording_directory'});
+    app.RecordingDirectoryTable.times_dir = cellfun(@get_mod_time_directory, rec_dirs,'UniformOutput',0);
+    app.RecordingDirectoryTable.recording_dir =  strrep(rec_dirs, root_dir, '');
+
+    space_cell = repmat({'           '},height(app.RecordingDirectoryTable),1);
+
+    app.RecordingDirectoryTable.rec_dir_dropdown = strcat(app.RecordingDirectoryTable.recording_dir,space_cell, ...
+        app.RecordingDirectoryTable.times_dir);
+
+    app.RecordingDirectoryDropDown.Items = app.RecordingDirectoryTable.rec_dir_dropdown;
+    if any(strcmp(app.RecordingDirectoryDropDown.Items, previous_value))
+        app.RecordingDirectoryDropDown.Value = previous_value;
+    end
+    app.CreateProcessingJobButton.Enable = 'on';
 else
-    users_subj = fetch(lab.User * proj(subject.Subject, 'user_id') & key, 'user_id');
+    app.RecordingDirectoryDropDown.Items = {'No recordings found'};
+    app.CreateProcessingJobButton.Enable = 'off';
 end
 
-subjects = sort({users_subj.subject_fullname});
-app.RecordingSubjectDropDown_2.Items = [{'All'} subjects];
-app.RecordingSubjectDropDown_2.Value = 'All';
-app.RecordingSubjectDropDown.Items = [{'All'} subjects];
-app.RecordingSubjectDropDown.Value = 'All';
+if from_button
+    updateBusyLabel(app, 1);
+end
 
 end

@@ -13,8 +13,9 @@ function createComponents(app)
 %
 %   The tabs, in creation order:
 %     1. app.AddRecordingProcessingJobTab   "Add Recording" - recording directory
-%        dropdown, behavior-session pickers, surgery checkbox, and the create
-%        button. Callbacks: findLikelyBehaviorSessionFromRecDir,
+%        dropdown and its Refresh button, behavior-session pickers, surgery
+%        checkbox, and the create button. Callbacks: fillRecordingDirectories,
+%        findLikelyBehaviorSessionFromRecDir,
 %        checkBoxSessionRecording, restoreColorSessionDropDown,
 %        DefaultParamsCheckBoxToggle, createRecordingButton.
 %     2. app.SelectRecordingParametersTab   "Select Parameters" - two mirrored
@@ -160,6 +161,15 @@ app.RecordingDirectoryDropDown.Layout.Row = 2;
 app.RecordingDirectoryDropDown.Layout.Column = [2 4];
 app.RecordingDirectoryDropDown.Items = {};
 app.RecordingDirectoryDropDown.ValueChangedFcn = createCallbackFcn(app, @findLikelyBehaviorSessionFromRecDir, true);
+
+% Create RefreshRecordingDirectoriesButton
+app.RefreshRecordingDirectoriesButton = uibutton(app.GridLayout2, 'push');
+app.RefreshRecordingDirectoriesButton.Text = 'Refresh';
+app.RefreshRecordingDirectoriesButton.Icon = 'reload.png';
+app.RefreshRecordingDirectoriesButton.Tooltip = 'Re-scan the recording root directory for new recordings';
+app.RefreshRecordingDirectoriesButton.Layout.Row = 1;
+app.RefreshRecordingDirectoriesButton.Layout.Column = 4;
+app.RefreshRecordingDirectoriesButton.ButtonPushedFcn = createCallbackFcn(app, @fillRecordingDirectories, true);
 
 
 % Create SurgeryCheckBox
