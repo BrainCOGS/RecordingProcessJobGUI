@@ -7,9 +7,9 @@ function fillRecordingDirectories(app, event)
 %   without re-running Configure.
 %
 %   find_recording_directories walks app.Configuration.RecordingRootDirectory for
-%   folders directly holding files that match app.FileExtensions. Nested hits are
-%   collapsed only for electrophysiology (probe subfolders of a SpikeGLX gate
-%   folder); for imaging every folder with raw files is listed.
+%   folders directly holding files that match app.FileExtensions, keeping only
+%   the top folder when hits are nested (ephys probe subfolders, imaging
+%   pipeline subfolders).
 %
 %   Builds app.RecordingDirectoryTable with columns full_recording_directory,
 %   times_dir (last-modified time from get_mod_time_directory), recording_dir
@@ -40,8 +40,7 @@ end
 previous_value = app.RecordingDirectoryDropDown.Value;
 
 root_dir = char(app.Configuration.RecordingRootDirectory);
-collapse_nested = strcmp(app.Configuration.RecordingModality, 'electrophysiology');
-rec_dirs = find_recording_directories(root_dir, app.FileExtensions, collapse_nested);
+rec_dirs = find_recording_directories(root_dir, app.FileExtensions);
 
 if ~isempty(rec_dirs)
 

@@ -18,8 +18,7 @@ function postConfigurationActions(app)
 %       .tiff/.tif/.avi for imaging). These are set by configParams.
 %     - Fills the Recording Directory dropdown with fillRecordingDirectories: every
 %       folder under app.Configuration.RecordingRootDirectory holding raw files of
-%       this modality (for ephys, probe subfolders collapse into their gate
-%       folder). With no hits the dropdown reads 'No recordings found' and
+%       this modality, with nested hits collapsed into their top folder. With no hits the dropdown reads 'No recordings found' and
 %       app.CreateProcessingJobButton is disabled.
 %     - Fills the behavior sessions for the configured behavior rig(s) - each rig
 %       name becomes a session_location key - plus the pre-param step lists and the
