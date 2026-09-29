@@ -31,9 +31,10 @@ function getPythonEnv(app)
 %                        stack the Qt tools do not share.
 %
 %   uv is located with findUv (PATH first, then the standard per-user install
-%   dirs, since MATLAB's system() inherits a minimal PATH) and, failing that,
-%   bootstrapped with installUv via Astral's official installer. If uv still
-%   cannot be found, app.py_enabled is set false. That flag is what makes
+%   dirs, since MATLAB's system() inherits a minimal PATH). The GUI never
+%   installs uv itself: piping Astral's installer script into PowerShell from
+%   MATLAB got flagged as a trojan by Windows Defender, so users install uv
+%   themselves (see README). If uv cannot be found, app.py_enabled is set false. That flag is what makes
 %   fillParams fall back to getParamsFromMatlab and what disables the phy / atlas
 %   GUI buttons, so a rig without a working python setup still runs.
 %
@@ -48,7 +49,7 @@ function getPythonEnv(app)
 %       None - Sets app.py_env, app.py_uv and app.py_enabled
 %
 %   Dependencies:
-%       - uv (https://docs.astral.sh/uv/), installed on demand if absent
+%       - uv (https://docs.astral.sh/uv/), installed by the user
 %       - pyproject.toml at the repo root declaring the helper-script env
 %
 %   See also: startupFcn, fillParams, getParamsFromMatlab
@@ -56,17 +57,20 @@ function getPythonEnv(app)
 repo_root = fileparts(RecordingProcessJobGUI.gui_path);
 
 uv_exe = findUv();
-if isempty(uv_exe)
-    uv_exe = installUv();
-end
 
 if isempty(uv_exe)
     app.py_env     = [];
     app.py_uv      = [];
     app.py_enabled = false;
+    if ispc
+        install_hint = 'winget install --id=astral-sh.uv -e';
+    else
+        install_hint = 'curl -LsSf https://astral.sh/uv/install.sh | sh';
+    end
     warning('RecordingProcessJobGUI:noUv', ...
-        ['Could not find or install uv.\n' ...
-         'Install it manually from https://docs.astral.sh/uv/ and restart the app.']);
+        ['Could not find uv, so the python tools are disabled.\n' ...
+         'Install it from a terminal (%s, or see https://docs.astral.sh/uv/) ' ...
+         'and restart MATLAB.'], install_hint);
 else
     app.py_env     = ['"' uv_exe '" run --project "' repo_root '" python'];
     app.py_uv      = ['"' uv_exe '"'];
@@ -123,7 +127,8 @@ if ispc
     candidates = { ...
         fullfile(home, '.local', 'bin', exe_name), ...
         fullfile(home, 'AppData', 'Local', 'Programs', 'uv', exe_name), ...
-        fullfile(home, 'AppData', 'Roaming', 'uv', 'bin', exe_name)};
+        fullfile(home, 'AppData', 'Roaming', 'uv', 'bin', exe_name), ...
+        fullfile(home, 'AppData', 'Local', 'Microsoft', 'WinGet', 'Links', exe_name)};
 else
     % macOS and linux. Astral's installer prefers ~/.local/bin; the rest cover
     % homebrew (both arm64 and intel prefixes), linuxbrew, distro packages and
@@ -147,26 +152,3 @@ end
 
 end
 
-
-function uv_exe = installUv()
-%installUv Bootstrap uv using Astral's official installer, then re-locate it.
-
-uv_exe = '';
-
-if ispc
-    install_cmd = ['powershell -ExecutionPolicy ByPass ' ...
-                   '-c "irm https://astral.sh/uv/install.ps1 | iex"'];
-else
-    install_cmd = 'curl -LsSf https://astral.sh/uv/install.sh | sh';
-end
-
-fprintf('uv not found. Installing it from https://astral.sh/uv ...\n');
-[status, out] = system(install_cmd);
-if status ~= 0
-    fprintf(2, 'uv install failed:\n%s\n', out);
-    return
-end
-
-uv_exe = findUv();
-
-end
