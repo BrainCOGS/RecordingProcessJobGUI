@@ -2,7 +2,8 @@ function configuration_done = checkConfiguration(app)
 %CHECKCONFIGURATION Load this rig's system configuration and report whether it is complete
 %
 %   Reads the per-rig configuration file (app.ConfFileName =
-%   'system_conf_job_gui.json', at the repo root) into app.Configuration and decides
+%   'system_conf_job_gui.json', at the repo root, or under %APPDATA% in the
+%   compiled app; see resolveConfFile) into app.Configuration and decides
 %   whether this machine has been set up yet. Called by startupFcn before anything
 %   else is filled in, and again by configureSystem right after a new configuration
 %   is written, so it is the single place that defines what "configured" means.
@@ -64,8 +65,17 @@ if (~isdeployed)
     %addpath(genpath('/Users/alvaros/Documents/MATLAB/BrainCogsProjects/Datajoint_proj/U19-pipeline-matlab'))
 end
 
-%Read configuration field
-app.ConfFileFullName = fullfile(app.RootFolder, app.ConfFileName);
+%Read configuration field. The compiled app keeps it in a per-user folder,
+%because its own folder is replaced on every update.
+user_conf_dir = '';
+if isdeployed
+    if ispc
+        user_conf_dir = fullfile(getenv('APPDATA'), 'RecordingProcessJobGUI');
+    else
+        user_conf_dir = fullfile(getenv('HOME'), '.config', 'RecordingProcessJobGUI');
+    end
+end
+app.ConfFileFullName = resolveConfFile(fullfile(app.RootFolder, app.ConfFileName), user_conf_dir);
 if isfile(app.ConfFileFullName)
     app.Configuration = loadJSONfile(app.ConfFileFullName);
 else

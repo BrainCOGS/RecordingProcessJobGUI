@@ -31,8 +31,10 @@ function getPythonEnv(app)
 %                        stack the Qt tools do not share.
 %
 %   uv is located with findUv (PATH first, then the standard per-user install
-%   dirs, since MATLAB's system() inherits a minimal PATH) and, failing that,
-%   bootstrapped with installUv via Astral's official installer. If uv still
+%   dirs, since MATLAB's system() inherits a minimal PATH), then the copy the
+%   Windows release bundles at bin/uv.exe (bundledUvPath) and, failing both,
+%   bootstrapped with installUv via Astral's official installer. A uv the
+%   user installed wins over the bundled one so it can be upgraded separately. If uv still
 %   cannot be found, app.py_enabled is set false. That flag is what makes
 %   fillParams fall back to getParamsFromMatlab and what disables the phy / atlas
 %   GUI buttons, so a rig without a working python setup still runs.
@@ -48,7 +50,9 @@ function getPythonEnv(app)
 %       None - Sets app.py_env, app.py_uv and app.py_enabled
 %
 %   Dependencies:
-%       - uv (https://docs.astral.sh/uv/), installed on demand if absent
+%       - uv (https://docs.astral.sh/uv/), bundled with the Windows release
+%         and installed on demand if absent
+%       - bundledUvPath
 %       - pyproject.toml at the repo root declaring the helper-script env
 %
 %   See also: startupFcn, fillParams, getParamsFromMatlab
@@ -56,6 +60,9 @@ function getPythonEnv(app)
 repo_root = fileparts(RecordingProcessJobGUI.gui_path);
 
 uv_exe = findUv();
+if isempty(uv_exe)
+    uv_exe = bundledUvPath(repo_root);
+end
 if isempty(uv_exe)
     uv_exe = installUv();
 end
