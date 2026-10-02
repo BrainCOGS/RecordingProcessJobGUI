@@ -1,4 +1,3 @@
-
 import os
 import sys
 
@@ -9,22 +8,32 @@ os.chdir(this_dir)
 
 # Import by path, not via the cwd, so the helper is found however this is run.
 sys.path.insert(0, os.path.abspath(this_dir))
+import datajoint as dj
 from matlab_export import matlab_safe
 
-import datajoint as dj
 dj.conn()
 
-ephys_element =dj.create_virtual_module('u19_pipeline_ephys_element','u19_pipeline_ephys_element')
-imaging_element =dj.create_virtual_module('u19_pipeline_imaging_element','u19_pipeline_imaging_element')
+ephys_element = dj.create_virtual_module(
+    "u19_pipeline_ephys_element", "u19_pipeline_ephys_element"
+)
+imaging_element = dj.create_virtual_module(
+    "u19_pipeline_imaging_element", "u19_pipeline_imaging_element"
+)
 
-modalities             = ['electrophysiology', 'imaging']
+modalities = ["electrophysiology", "imaging"]
 
-params_tables          = [ephys_element.ClusteringParamSet, imaging_element.ProcessingParamSet]
-preparams_steps_tables = [(ephys_element.PreClusterParamSteps * ephys_element.PreClusterParamSteps.Step * ephys_element.PreClusterParamSet)]
-preparams_tables       = [ephys_element.PreClusterParamSet]
+params_tables = [ephys_element.ClusteringParamSet, imaging_element.ProcessingParamSet]
+preparams_steps_tables = [
+    (
+        ephys_element.PreClusterParamSteps
+        * ephys_element.PreClusterParamSteps.Step
+        * ephys_element.PreClusterParamSet
+    )
+]
+preparams_tables = [ephys_element.PreClusterParamSet]
 
-#method_tables          = [ephys_element.ClusteringMethod, imaging_element.ProcessingMethod]
-#pre_method_tables      = [ephys_element.PreClusterMethod]
+# method_tables          = [ephys_element.ClusteringMethod, imaging_element.ProcessingMethod]
+# pre_method_tables      = [ephys_element.PreClusterMethod]
 
 ###################################Fetch all params from all modalities
 params_dict_list = []
@@ -32,42 +41,48 @@ for table in params_tables:
     params_dict_list.append(table.fetch(as_dict=True))
 
 
-#Append all params in the same dictionary
+# Append all params in the same dictionary
 params_dict_dict = {}
 num_params = 0
 for idx, param_modality_list in enumerate(params_dict_list):
     for param_dict in param_modality_list:
-        param_dict['recording_modality'] = modalities[idx]
-        param_dict['param_set_hash'] = str(param_dict['param_set_hash'])
-        if 'clustering_method' in param_dict:
-            param_dict['processing_method'] = param_dict.pop('clustering_method')
+        param_dict["recording_modality"] = modalities[idx]
+        param_dict["param_set_hash"] = str(param_dict["param_set_hash"])
+        if "clustering_method" in param_dict:
+            param_dict["processing_method"] = param_dict.pop("clustering_method")
 
-        params_dict_dict['param_'+str(num_params)] = param_dict
-        num_params +=1
+        params_dict_dict["param_" + str(num_params)] = param_dict
+        num_params += 1
 
 #################################################Fetch all preparamsStepList from all modalities
 preparams_steps = []
 for table in preparams_steps_tables:
     preparams_steps.append(table.fetch(as_dict=True))
 
-#Append all preparams in the same dictionary
+# Append all preparams in the same dictionary
 preparams_steps_dict_dict = {}
 num_preparams_steps = 0
 for idx, preparam_modality_list in enumerate(preparams_steps):
     for param_dict in preparam_modality_list:
-        param_dict['param_set_hash'] = str(param_dict['param_set_hash'])
-        param_dict['recording_modality'] = modalities[idx]
-        if 'precluster_param_steps_id' in param_dict:
-            param_dict['preprocess_param_steps_id'] = param_dict.pop('precluster_param_steps_id')
-        if 'precluster_method' in param_dict:
-            param_dict['preprocess_method'] = param_dict.pop('precluster_method')
-        if 'precluster_param_steps_name' in param_dict:
-            param_dict['preprocess_param_steps_name'] = param_dict.pop('precluster_param_steps_name')
-        if 'precluster_param_steps_desc' in param_dict:
-            param_dict['preprocess_param_steps_desc'] = param_dict.pop('precluster_param_steps_desc')
+        param_dict["param_set_hash"] = str(param_dict["param_set_hash"])
+        param_dict["recording_modality"] = modalities[idx]
+        if "precluster_param_steps_id" in param_dict:
+            param_dict["preprocess_param_steps_id"] = param_dict.pop(
+                "precluster_param_steps_id"
+            )
+        if "precluster_method" in param_dict:
+            param_dict["preprocess_method"] = param_dict.pop("precluster_method")
+        if "precluster_param_steps_name" in param_dict:
+            param_dict["preprocess_param_steps_name"] = param_dict.pop(
+                "precluster_param_steps_name"
+            )
+        if "precluster_param_steps_desc" in param_dict:
+            param_dict["preprocess_param_steps_desc"] = param_dict.pop(
+                "precluster_param_steps_desc"
+            )
 
-        preparams_steps_dict_dict['param_'+str(num_preparams_steps)] = param_dict
-        num_preparams_steps +=1
+        preparams_steps_dict_dict["param_" + str(num_preparams_steps)] = param_dict
+        num_preparams_steps += 1
 
 #################################################Fetch all preparams from all modalities
 preparams_dict_list = []
@@ -75,20 +90,20 @@ for table in preparams_tables:
     preparams_dict_list.append(table.fetch(as_dict=True))
 
 
-#Append all preparams in the same dictionary
+# Append all preparams in the same dictionary
 preparams_dict_dict = {}
 num_preparams = 0
 for idx, preparam_modality_list in enumerate(preparams_dict_list):
     for param_dict in preparam_modality_list:
-        param_dict['recording_modality'] = modalities[idx]
-        param_dict['param_set_hash'] = str(param_dict['param_set_hash'])
-        if 'precluster_method' in param_dict:
-            param_dict['preprocess_method'] = param_dict.pop('precluster_method')
+        param_dict["recording_modality"] = modalities[idx]
+        param_dict["param_set_hash"] = str(param_dict["param_set_hash"])
+        if "precluster_method" in param_dict:
+            param_dict["preprocess_method"] = param_dict.pop("precluster_method")
 
-        preparams_dict_dict['param_'+str(num_preparams)] = param_dict
-        num_preparams +=1
+        preparams_dict_dict["param_" + str(num_preparams)] = param_dict
+        num_preparams += 1
 
-'''
+"""
 #################################################Fetch all methods from all modalities
 all_methods_data = []
 for table in method_tables:
@@ -120,13 +135,13 @@ for idx, premethod_list in enumerate(all_methods_data):
 
         premethods_dict['premethod_'+str(num_preparams_steps)] = dict
         num_premethods +=1        
-'''
+"""
 
 dj.conn().close()
 
-savemat('params.mat', matlab_safe(params_dict_dict))
-savemat('preparams.mat', matlab_safe(preparams_dict_dict))
-savemat('preparams_list.mat', matlab_safe(preparams_steps_dict_dict))
+savemat("params.mat", matlab_safe(params_dict_dict))
+savemat("preparams.mat", matlab_safe(preparams_dict_dict))
+savemat("preparams_list.mat", matlab_safe(preparams_steps_dict_dict))
 
-#savemat('methods.mat', methods_dict)
-#savemat('premethods.mat', premethods_dict)
+# savemat('methods.mat', methods_dict)
+# savemat('premethods.mat', premethods_dict)

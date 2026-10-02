@@ -17,9 +17,7 @@ import warnings
 import pytest
 from scipy.io import loadmat, savemat
 
-sys.path.insert(
-    0, os.path.join(os.path.dirname(__file__), os.pardir, "PythonScripts")
-)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir, "PythonScripts"))
 
 from matlab_export import matlab_field_name, matlab_safe  # noqa: E402
 

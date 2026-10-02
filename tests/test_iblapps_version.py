@@ -27,9 +27,7 @@ from pathlib import Path
 
 import pytest
 
-sys.path.insert(
-    0, str(Path(__file__).resolve().parent.parent / "PythonScripts")
-)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "PythonScripts"))
 
 import iblapps_version as iv  # noqa: E402
 
@@ -45,30 +43,42 @@ def write_header(tmp_path: Path, body: str) -> Path:
 
 # --- reading the declared source ------------------------------------------
 
+
 def test_reads_url_and_branch_from_header(tmp_path):
-    p = write_header(tmp_path, '''# /// script
+    p = write_header(
+        tmp_path,
+        """# /// script
 # [tool.uv.sources]
 # iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", branch = "master" }
 # ///
-''')
+""",
+    )
     assert iv.tracked_source(p) == (
-        "https://github.com/BrainCOGS/iblapps.git", "master")
+        "https://github.com/BrainCOGS/iblapps.git",
+        "master",
+    )
 
 
 def test_non_default_branch_is_read(tmp_path):
-    p = write_header(tmp_path, '''# /// script
+    p = write_header(
+        tmp_path,
+        """# /// script
 # iblapps = { git = "https://example.com/x.git", branch = "develop" }
 # ///
-''')
+""",
+    )
     assert iv.tracked_source(p) == ("https://example.com/x.git", "develop")
 
 
 def test_commit_pin_has_nothing_to_track(tmp_path):
     # A rev pin is reproducible by construction; there is no branch to lag.
-    p = write_header(tmp_path, '''# /// script
+    p = write_header(
+        tmp_path,
+        """# /// script
 # iblapps = { git = "https://github.com/BrainCOGS/iblapps.git", rev = "abc123" }
 # ///
-''')
+""",
+    )
     assert iv.tracked_source(p) is None
 
 
@@ -83,21 +93,33 @@ def test_header_without_iblapps_is_none(tmp_path):
 
 # --- remote lookup ---------------------------------------------------------
 
+
 def test_remote_commit_parses_ls_remote(monkeypatch):
-    monkeypatch.setattr(iv.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(
-        a[0], 0, stdout=f"{SHA_A}\trefs/heads/master\n", stderr=""))
+    monkeypatch.setattr(
+        iv.subprocess,
+        "run",
+        lambda *a, **k: subprocess.CompletedProcess(
+            a[0], 0, stdout=f"{SHA_A}\trefs/heads/master\n", stderr=""
+        ),
+    )
     assert iv.remote_commit() == SHA_A
 
 
 def test_remote_commit_none_when_git_fails(monkeypatch):
-    monkeypatch.setattr(iv.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(
-        a[0], 128, stdout="", stderr="fatal: repository not found"))
+    monkeypatch.setattr(
+        iv.subprocess,
+        "run",
+        lambda *a, **k: subprocess.CompletedProcess(
+            a[0], 128, stdout="", stderr="fatal: repository not found"
+        ),
+    )
     assert iv.remote_commit() is None
 
 
 def test_remote_commit_none_on_timeout(monkeypatch):
     def boom(*a, **k):
         raise subprocess.TimeoutExpired(cmd="git", timeout=5)
+
     monkeypatch.setattr(iv.subprocess, "run", boom)
     assert iv.remote_commit() is None
 
@@ -105,31 +127,48 @@ def test_remote_commit_none_on_timeout(monkeypatch):
 def test_remote_commit_none_when_git_missing(monkeypatch):
     def boom(*a, **k):
         raise FileNotFoundError("git")
+
     monkeypatch.setattr(iv.subprocess, "run", boom)
     assert iv.remote_commit() is None
 
 
 def test_remote_commit_rejects_non_sha_output(monkeypatch):
     # A proxy or captive portal returning HTML must not be read as a sha.
-    monkeypatch.setattr(iv.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(
-        a[0], 0, stdout="<html>login</html>\n", stderr=""))
+    monkeypatch.setattr(
+        iv.subprocess,
+        "run",
+        lambda *a, **k: subprocess.CompletedProcess(
+            a[0], 0, stdout="<html>login</html>\n", stderr=""
+        ),
+    )
     assert iv.remote_commit() is None
 
 
 def test_remote_commit_none_on_empty_branch(monkeypatch):
     # Branch does not exist: ls-remote exits 0 with no output.
-    monkeypatch.setattr(iv.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(
-        a[0], 0, stdout="", stderr=""))
+    monkeypatch.setattr(
+        iv.subprocess,
+        "run",
+        lambda *a, **k: subprocess.CompletedProcess(a[0], 0, stdout="", stderr=""),
+    )
     assert iv.remote_commit() is None
 
 
 # --- the check itself ------------------------------------------------------
 
+
 def run_check(monkeypatch, tmp_path, have, want, header=True):
-    p = write_header(tmp_path, '''# /// script
+    p = (
+        write_header(
+            tmp_path,
+            """# /// script
 # iblapps = { git = "https://example.com/x.git", branch = "master" }
 # ///
-''') if header else None
+""",
+        )
+        if header
+        else None
+    )
     monkeypatch.setattr(iv, "installed_commit", lambda *a, **k: have)
     monkeypatch.setattr(iv, "remote_commit", lambda *a, **k: want)
     buf = io.StringIO()
@@ -162,10 +201,13 @@ def test_silent_when_not_installed_from_vcs(monkeypatch, tmp_path):
 
 
 def test_silent_when_header_pins_a_commit(monkeypatch, tmp_path):
-    p = write_header(tmp_path, '''# /// script
+    p = write_header(
+        tmp_path,
+        """# /// script
 # iblapps = { git = "https://example.com/x.git", rev = "abc123" }
 # ///
-''')
+""",
+    )
     monkeypatch.setattr(iv, "installed_commit", lambda *a, **k: SHA_A)
     monkeypatch.setattr(iv, "remote_commit", lambda *a, **k: SHA_B)
     buf = io.StringIO()
@@ -177,12 +219,22 @@ def test_never_raises_even_if_everything_breaks(monkeypatch, tmp_path):
     # The whole point: a broken check must not stop the GUI opening.
     def boom(*a, **k):
         raise RuntimeError("kaboom")
+
     monkeypatch.setattr(iv, "installed_commit", boom)
     monkeypatch.setattr(iv, "remote_commit", boom)
-    assert iv.check_for_update(write_header(tmp_path, '''# /// script
+    assert (
+        iv.check_for_update(
+            write_header(
+                tmp_path,
+                """# /// script
 # iblapps = { git = "https://example.com/x.git", branch = "master" }
 # ///
-'''), stream=io.StringIO()) is False
+""",
+            ),
+            stream=io.StringIO(),
+        )
+        is False
+    )
 
 
 def test_uses_the_url_from_the_header_not_the_default(monkeypatch, tmp_path):
@@ -193,10 +245,13 @@ def test_uses_the_url_from_the_header_not_the_default(monkeypatch, tmp_path):
         seen["url"], seen["branch"] = url, branch
         return SHA_B
 
-    p = write_header(tmp_path, '''# /// script
+    p = write_header(
+        tmp_path,
+        """# /// script
 # iblapps = { git = "https://example.com/fork.git", branch = "develop" }
 # ///
-''')
+""",
+    )
     monkeypatch.setattr(iv, "installed_commit", lambda *a, **k: SHA_A)
     monkeypatch.setattr(iv, "remote_commit", spy)
     iv.check_for_update(p, stream=io.StringIO())
