@@ -22,7 +22,10 @@ repos:
     - id: check-case-conflict
     - id: check-merge-conflict
     - id: check-symlinks
+    # Enviblenv.yml is a legacy conda env file with inconsistent indentation
+    # that is not valid YAML; left as is.
     - id: check-yaml
+      exclude: ^Enviblenv\.yml$
     - id: check-toml
     - id: debug-statements
     - id: end-of-file-fixer
