@@ -69,16 +69,16 @@ from phy.apps.template import template_gui
 #: Mount prefixes for the same lab share, one per platform. The sorting
 #: pipeline runs on linux and bakes its own prefix into params.py.
 SHARE_PREFIXES = (
-    "/mnt/cup/",                     # linux (the sorting cluster)
-    "/Volumes/",                     # macOS
-    "//cup.pni.princeton.edu/",      # windows, UNC forward-slash form
-    "\\\\cup.pni.princeton.edu\\\\",      # windows, UNC backslash form
+    "/mnt/cup/",  # linux (the sorting cluster)
+    "/Volumes/",  # macOS
+    "//cup.pni.princeton.edu/",  # windows, UNC forward-slash form
+    "\\\\cup.pni.princeton.edu\\\\",  # windows, UNC backslash form
 )
 
 
 def _dat_paths(params_text: str) -> list[str] | None:
     """Return the dat_path value from params.py text, always as a list."""
-    m = re.search(r"^dat_path\s*=\s*(.+?)\s*$", params_text, re.M)
+    m = re.search(r"^dat_path\s*=\s*(.+?)\s*$", params_text, re.MULTILINE)
     if not m:
         return None
     try:
@@ -106,7 +106,7 @@ def _is_absolute(dat_path: str) -> bool:
     # Windows reads /mnt/... as drive-relative, not absolute.
     if dat_path.startswith("/"):
         return True
-    if re.match(r"^[A-Za-z]:[\\/]", dat_path):      # C:\... or C:/...
+    if re.match(r"^[A-Za-z]:[\\/]", dat_path):  # C:\... or C:/...
         return True
     if dat_path.startswith("\\\\") or dat_path.startswith("//"):  # UNC
         return True
@@ -136,7 +136,7 @@ def _relocate(dat_path: str, data_dir: Path) -> str | None:
         pfx = prefix.replace("\\", "/")
         if not normalized.startswith(pfx):
             continue
-        tail = normalized[len(pfx):]
+        tail = normalized[len(pfx) :]
         # Try the tail whole, then with its leading share-name component
         # dropped, since the prefixes differ in whether they include it.
         tails = [tail]
@@ -204,15 +204,17 @@ def _localize_params(data_dir: Path, params: Path) -> Path:
         "dat_path = " + repr(new_value),
         text,
         count=1,
-        flags=re.M,
+        flags=re.MULTILINE,
     )
     # phy defaults dir_path to the params.py directory; pin it to the real one.
     patched += f"\ndir_path = {str(data_dir)!r}\n"
 
     tmp = Path(tempfile.mkdtemp(prefix="phy_params_")) / "params.py"
     tmp.write_text(patched)
-    print(f"Rewrote dat_path for this platform: {dat_paths[0]} -> "
-          f"{replacements[0]}", file=sys.stderr)
+    print(
+        f"Rewrote dat_path for this platform: {dat_paths[0]} -> {replacements[0]}",
+        file=sys.stderr,
+    )
     return tmp
 
 
@@ -231,9 +233,9 @@ def _install_font_fallback() -> None:
     font. The last case costs only the glyphs on the dock buttons, which is
     much better than no GUI at all.
     """
-    from PyQt5.QtGui import QFont, QFontDatabase
     from phy.gui import gui as phy_gui
     from phy.gui import qt as phy_qt
+    from PyQt5.QtGui import QFont, QFontDatabase
 
     def families(font_id: int) -> list[str]:
         return QFontDatabase.applicationFontFamilies(font_id) if font_id >= 0 else []
@@ -244,7 +246,9 @@ def _install_font_fallback() -> None:
         path = phy_qt._static_abs_path(name)
         found = families(QFontDatabase.addApplicationFont(str(path)))
         if not found and path.is_file():
-            found = families(QFontDatabase.addApplicationFontFromData(path.read_bytes()))
+            found = families(
+                QFontDatabase.addApplicationFontFromData(path.read_bytes())
+            )
         if found:
             font = QFontDatabase().font(found[0], None, size)
         else:
@@ -281,8 +285,9 @@ def _long_paths_enabled() -> bool:
     import winreg
 
     try:
-        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
-                            r"SYSTEM\CurrentControlSet\Control\FileSystem") as key:
+        with winreg.OpenKey(
+            winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\FileSystem"
+        ) as key:
             value, _ = winreg.QueryValueEx(key, "LongPathsEnabled")
     except OSError:
         return False
@@ -351,11 +356,16 @@ def main(argv: list[str]) -> int:
 
     params = _localize_params(data_dir, params)
 
-    if _cache_too_deep(str(data_dir.absolute()), windows=sys.platform == "win32",
-                       long_paths=_long_paths_enabled()):
+    if _cache_too_deep(
+        str(data_dir.absolute()),
+        windows=sys.platform == "win32",
+        long_paths=_long_paths_enabled(),
+    ):
         cache_dir = _extended_path(str(data_dir.absolute() / ".phy"))
-        print(f"Note: phy's cache path is past MAX_PATH; using {cache_dir}",
-              file=sys.stderr)
+        print(
+            f"Note: phy's cache path is past MAX_PATH; using {cache_dir}",
+            file=sys.stderr,
+        )
         _install_cache_redirect(Path(cache_dir))
 
     _install_font_fallback()

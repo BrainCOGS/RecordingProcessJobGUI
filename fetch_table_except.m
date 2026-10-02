@@ -45,5 +45,3 @@ end
 fields_str = strjoin(all_fields,', ');
 
 data = struct2table(conn.query(['SELECT ' fields_str ' FROM ' table_name]));
-
-

@@ -33,17 +33,21 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import open_phy  # noqa: E402
-from phy.apps.base import BaseController  # noqa: E402
+import open_phy
+from phy.apps.base import BaseController
 
 ROOT = r"\\cup.pni.princeton.edu\braininit\Data\Processed\electrophysiology\jk8386\jk8386_jk131"
 #: The session from the traceback above (no behavior session, so the
 #: recording folder is <yyyymmdd_HHMMSS>).
-KS_DIR = ROOT + (r"\20260826_153642\jk131_08262026_g0\jk131_08262026_g0_imec0"
-                 r"\job_id_1396\kilosort4_output")
+KS_DIR = ROOT + (
+    r"\20260826_153642\jk131_08262026_g0\jk131_08262026_g0_imec0"
+    r"\job_id_1396\kilosort4_output"
+)
 #: A normally named session from the same subject, 4 characters shorter.
-KS_DIR_G0 = ROOT + (r"\20260826_g0\jk131_20260826_g0\jk131_20260826_g0_imec0"
-                    r"\job_id_1317\kilosort4_output")
+KS_DIR_G0 = ROOT + (
+    r"\20260826_g0\jk131_20260826_g0\jk131_20260826_g0_imec0"
+    r"\job_id_1317\kilosort4_output"
+)
 #: The paths joblib failed to write, relative to <kilosort dir>\.phy.
 OBSERVED_TAILS = (
     r"\phy\apps\base\BaseController\_get_correlograms"
@@ -54,6 +58,7 @@ OBSERVED_TAILS = (
 
 
 # --- the bug ---------------------------------------------------------------
+
 
 def test_observed_cache_writes_exceed_max_path():
     """Documents the failure: the share-side cache paths are over the limit."""
@@ -76,6 +81,7 @@ def test_normally_named_session_is_too_deep_as_well():
 
 
 # --- when the default is kept ----------------------------------------------
+
 
 def test_short_local_directory_keeps_default():
     short = r"D:\NPX_DATA\jk131\job_id_1396\kilosort4_output"
@@ -102,6 +108,7 @@ def test_threshold_boundary():
 
 
 # --- LongPathsEnabled ------------------------------------------------------
+
 
 def _fake_winreg(value=None, error=None):
     def query(key, name):
@@ -143,6 +150,7 @@ def test_long_paths_missing_value_is_off(monkeypatch):
 
 # --- the phy hook ----------------------------------------------------------
 
+
 @pytest.fixture
 def restore_set_cache(monkeypatch):
     monkeypatch.setattr(BaseController, "_set_cache", BaseController._set_cache)
@@ -176,9 +184,12 @@ def test_redirect_honours_clear_cache(restore_set_cache, tmp_path):
 
 # --- extended-length paths -------------------------------------------------
 
+
 def test_unc_path_gets_unc_prefix():
-    assert (open_phy._extended_path(r"\\cup.pni.princeton.edu\braininit\Data")
-            == r"\\?\UNC\cup.pni.princeton.edu\braininit\Data")
+    assert (
+        open_phy._extended_path(r"\\cup.pni.princeton.edu\braininit\Data")
+        == r"\\?\UNC\cup.pni.princeton.edu\braininit\Data"
+    )
 
 
 def test_drive_path_gets_prefix():
@@ -192,8 +203,7 @@ def test_already_extended_path_is_unchanged():
 
 def test_forward_slashes_become_backslashes():
     """\\\\?\\ turns off normalisation, so '/' would be a literal character."""
-    assert (open_phy._extended_path("//server/share/a/b")
-            == r"\\?\UNC\server\share\a\b")
+    assert open_phy._extended_path("//server/share/a/b") == r"\\?\UNC\server\share\a\b"
     assert open_phy._extended_path("C:/a/b") == r"\\?\C:\a\b"
 
 
@@ -217,5 +227,3 @@ def test_share_cache_keeps_every_observed_write_on_the_share():
     assert cache.startswith("\\\\?\\UNC\\cup.pni.princeton.edu\\braininit\\")
     assert cache.endswith(r"\kilosort4_output\.phy")
     assert "/" not in cache
-
-

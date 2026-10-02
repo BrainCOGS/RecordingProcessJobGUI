@@ -44,7 +44,7 @@ dir_dt = NaT;
 dir_pieces = split(directory, "/");
 
 %% Find all expressions that looks like date in dir
-expressions = {'\d{8}', '\d{4}-\d{2}-\d{2}', '\d{4}-\d{2}-\d{4}'}; 
+expressions = {'\d{8}', '\d{4}-\d{2}-\d{2}', '\d{4}-\d{2}-\d{4}'};
 all_numdate_matches = {};
 for i =1:length(dir_pieces)
 
@@ -76,4 +76,3 @@ end
 
 
 end
-
