@@ -29,7 +29,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "PythonScripts"))
 
-import iblapps_version as iv  # noqa: E402
+import iblapps_version as iv
 
 SHA_A = "a" * 40
 SHA_B = "b" * 40

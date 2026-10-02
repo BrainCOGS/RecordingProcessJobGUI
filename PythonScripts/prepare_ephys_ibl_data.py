@@ -31,13 +31,13 @@ import os
 import sys
 from pathlib import Path
 
-import ibllib.ephys.ephysqc as ephysqc
 import numpy as np
 
 # spikeglx moved out of ibllib.io into its own top-level module, provided by
 # ibl-neuropixel.
 import spikeglx
 from atlaselectrophysiology.extract_files import _sample2v, extract_data, extract_rmsmap
+from ibllib.ephys import ephysqc
 from phylib.io import alf
 
 # Advisory: the iblapps branch this tracks may have moved since uv built this

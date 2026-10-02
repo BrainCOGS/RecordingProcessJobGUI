@@ -78,7 +78,7 @@ SHARE_PREFIXES = (
 
 def _dat_paths(params_text: str) -> list[str] | None:
     """Return the dat_path value from params.py text, always as a list."""
-    m = re.search(r"^dat_path\s*=\s*(.+?)\s*$", params_text, re.M)
+    m = re.search(r"^dat_path\s*=\s*(.+?)\s*$", params_text, re.MULTILINE)
     if not m:
         return None
     try:
@@ -204,7 +204,7 @@ def _localize_params(data_dir: Path, params: Path) -> Path:
         "dat_path = " + repr(new_value),
         text,
         count=1,
-        flags=re.M,
+        flags=re.MULTILINE,
     )
     # phy defaults dir_path to the params.py directory; pin it to the real one.
     patched += f"\ndir_path = {str(data_dir)!r}\n"

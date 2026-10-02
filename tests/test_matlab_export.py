@@ -19,7 +19,7 @@ from scipy.io import loadmat, savemat
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir, "PythonScripts"))
 
-from matlab_export import matlab_field_name, matlab_safe  # noqa: E402
+from matlab_export import matlab_field_name, matlab_safe
 
 REPO_ROOT = os.path.join(os.path.dirname(__file__), os.pardir)
 SUITE2P_PARAMS = os.path.join(REPO_ROOT, "Original_Params_DB", "suite2p_params.json")

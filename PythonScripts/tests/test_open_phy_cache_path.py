@@ -33,8 +33,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import open_phy  # noqa: E402
-from phy.apps.base import BaseController  # noqa: E402
+import open_phy
+from phy.apps.base import BaseController
 
 ROOT = r"\\cup.pni.princeton.edu\braininit\Data\Processed\electrophysiology\jk8386\jk8386_jk131"
 #: The session from the traceback above (no behavior session, so the

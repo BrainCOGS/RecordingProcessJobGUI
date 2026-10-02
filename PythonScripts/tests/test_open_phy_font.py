@@ -22,11 +22,11 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import open_phy  # noqa: E402
-from phy.gui import gui as phy_gui  # noqa: E402
-from phy.gui import qt as phy_qt  # noqa: E402
-from PyQt5.QtGui import QFont, QFontDatabase  # noqa: E402
-from PyQt5.QtWidgets import QApplication  # noqa: E402
+import open_phy
+from phy.gui import gui as phy_gui
+from phy.gui import qt as phy_qt
+from PyQt5.QtGui import QFont, QFontDatabase
+from PyQt5.QtWidgets import QApplication
 
 FONT = "fa-solid-900.ttf"
 
