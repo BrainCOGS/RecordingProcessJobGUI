@@ -51,7 +51,10 @@ jobs:
           libgl1 libegl1 libxkbcommon0 libfontconfig1 libglib2.0-0t64 libdbus-1-3
 
       - name: open_phy.py tests (real phy and PyQt5)
-        run: uv run --no-project --with phy --with pytest pytest PythonScripts/tests
+        # --isolated: without it, `--no-project --with` layers phy/pytest over the
+        # runner's system Python, whose older platformdirs shadows the layered one
+        # (platformdirs>=4.12.2 registers a pytest plugin the old copy lacks).
+        run: uv run --isolated --no-project --with phy --with pytest pytest PythonScripts/tests
 
       - name: open_phy.py dat_path tests
         run: uv run --script tests/test_open_phy_dat_path.py
