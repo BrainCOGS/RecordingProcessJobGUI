@@ -76,7 +76,7 @@ function writeSingleElement(fid, currentField,currentElementValue,tabs, key)
             fprintf(fid,'true');
         else
             fprintf(fid,'false');
-        end 
+        end
     else %ischar or something else ...
         fprintf(fid,'"%s"',currentElementValue);
     end

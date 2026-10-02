@@ -118,7 +118,7 @@ for idx, method_list in enumerate(all_methods_data):
             dict['processing_method'] = dict.pop('clustering_method')
 
         methods_dict['method_'+str(num_preparams_steps)] = dict
-        num_methods +=1 
+        num_methods +=1
 
 #################################################Fetch all premethods from all modalities
 all_premethods_data = []
@@ -134,7 +134,7 @@ for idx, premethod_list in enumerate(all_methods_data):
             dict['preprocessing_method'] = dict.pop('precluster_method')
 
         premethods_dict['premethod_'+str(num_preparams_steps)] = dict
-        num_premethods +=1        
+        num_premethods +=1
 """
 
 dj.conn().close()

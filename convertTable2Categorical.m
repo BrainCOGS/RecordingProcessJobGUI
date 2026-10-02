@@ -33,6 +33,5 @@ for i=1:length(vars)
     if iscell(in_table.(var)) && ischar(in_table.(var){1})
         out_table.(var) = categorical(in_table.(var));
     end
-    
-end
 
+end

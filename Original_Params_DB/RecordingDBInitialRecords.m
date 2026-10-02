@@ -10,8 +10,8 @@ clear key
  key.recording_modality = 'electrophysiology';
  key.process_paramset_desc = 'kilosort params';
  key.process_paramset = loadJSONfile('kilosort_params.json');
- 
- 
+
+
  try
      try_insert(recording.ProcessParamSet, key);
  catch ME
@@ -66,7 +66,7 @@ catch ME
     ME.message
 end
 
- 
+
 clear key
 key.recording_modality = 'imaging';
 key.preprocess_paramset_desc = 'suite2p load';
@@ -172,4 +172,3 @@ try
 catch ME
     ME.message
 end
-

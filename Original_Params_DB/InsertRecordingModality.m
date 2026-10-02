@@ -37,5 +37,3 @@ key.process_unit_dir_fieldname = '';
 key.process_repository = '';
 
 insert(recording.RecordingModality, key);
-
-
