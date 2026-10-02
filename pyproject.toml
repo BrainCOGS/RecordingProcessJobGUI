@@ -14,6 +14,7 @@ dependencies = [
 
 [tool.uv]
 package = false
+preview-features = ["audit-command"]
 
 [dependency-groups]
 dev = [

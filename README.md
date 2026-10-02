@@ -61,3 +61,17 @@ a test class, so `runtests` cannot collect it. Call it by name:
 ```bash
 matlab -batch "addpath(pwd); addpath([pwd filesep 'tests']); test_jsonencodepretty"
 ```
+
+## Development
+
+Linting and formatting run through [prek](https://github.com/j178/prek) (a
+drop-in `pre-commit` replacement). The vendored MATLAB toolboxes and binary
+files are excluded; the hooks cover the Python helpers and the repo metadata.
+
+```bash
+uv sync
+uv tool install prek
+prek install            # run the hooks on every commit
+prek run --all-files    # or run them by hand
+uv run pytest tests
+```

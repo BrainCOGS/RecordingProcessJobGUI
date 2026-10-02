@@ -11,7 +11,7 @@ exclude: |
     dirwalk/|
     @RecordingProcessJobGUI/|
     PythonScripts/__pycache__/|
-    .*\.(mat|mlapp|fig|p|png|ico|pyc)$
+    .*\.(mat|mlapp|fig|p|png|ico|pyc|prj)$
   )
 
 repos:
@@ -32,7 +32,7 @@ repos:
     # name-tests-test is limited to Python files.
     - id: name-tests-test
       args: ["--pytest-test-first"]
-      files: \.py$
+      files: ^(tests|PythonScripts/tests)/.*\.py$
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: "v0.16.10"
