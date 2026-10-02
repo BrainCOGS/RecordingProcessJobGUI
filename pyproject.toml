@@ -14,3 +14,26 @@ dependencies = [
 
 [tool.uv]
 package = false
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
+[tool.ruff]
+# The scripts run on whatever Python uv provisions for them (PEP 723 headers
+# declare >=3.12), so target the oldest one in use rather than requires-python.
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# These scripts chdir / extend sys.path before importing their sibling helpers,
+# so the imports cannot move to the top of the file.
+"PythonScripts/read_params.py" = ["E402"]
+"PythonScripts/register_preparam_steps.py" = ["E402"]
+"PythonScripts/upload_params.py" = ["E402"]
+# spikeglx and extract_data are imported but unused; they are left alone rather
+# than risk dropping an import that has side effects in the IBL environment.
+"PythonScripts/prepare_ephys_ibl_data.py" = ["F401"]
