@@ -89,17 +89,19 @@ def main(argv: list[str]) -> int:
     if platform.system() == "Darwin" and platform.release().split(".")[0] == "20":
         os.environ["QT_MAC_WANTS_LAYER"] = "1"
 
+    from atlaselectrophysiology.ephys_atlas_gui import MainWindow
     from PyQt5 import QtWidgets
 
-    from atlaselectrophysiology.ephys_atlas_gui import MainWindow
-
     parser = argparse.ArgumentParser(description="IBL electrophysiology atlas GUI")
-    parser.add_argument("-o", "--offline", default=False, required=False,
-                        help="Offline mode")
-    parser.add_argument("-i", "--insertion", default=None, required=False,
-                        help="Insertion mode")
-    parser.add_argument("-d", "--directory", default=None, required=False,
-                        help="Data directory")
+    parser.add_argument(
+        "-o", "--offline", default=False, required=False, help="Offline mode"
+    )
+    parser.add_argument(
+        "-i", "--insertion", default=None, required=False, help="Insertion mode"
+    )
+    parser.add_argument(
+        "-d", "--directory", default=None, required=False, help="Data directory"
+    )
     args = parser.parse_args(argv)
 
     # No -r/--remote: upstream removed the remote= parameter from MainWindow as
@@ -117,20 +119,25 @@ def main(argv: list[str]) -> int:
             return 1
         mainapp.folder_line.setText(str(folder_path))
         try:
-            mainapp.prev_alignments, shank_options = \
-                mainapp.loaddata.get_info(folder_path)
+            mainapp.prev_alignments, shank_options = mainapp.loaddata.get_info(
+                folder_path
+            )
         except FileNotFoundError as exc:
             # get_info reads the ONE/ALF files the conversion step writes. A
             # directory that has not been converted yet raises deep inside
             # numpy; report which file was missing instead of a traceback.
-            print(f"{folder_path} does not look like a converted ibl_data "
-                  f"directory: missing {Path(exc.filename).name}",
-                  file=sys.stderr)
+            print(
+                f"{folder_path} does not look like a converted ibl_data "
+                f"directory: missing {Path(exc.filename).name}",
+                file=sys.stderr,
+            )
             return 1
-        mainapp.populate_lists(shank_options, mainapp.shank_list,
-                               mainapp.shank_combobox)
-        mainapp.populate_lists(mainapp.prev_alignments, mainapp.align_list,
-                               mainapp.align_combobox)
+        mainapp.populate_lists(
+            shank_options, mainapp.shank_list, mainapp.shank_combobox
+        )
+        mainapp.populate_lists(
+            mainapp.prev_alignments, mainapp.align_list, mainapp.align_combobox
+        )
         mainapp.on_shank_selected(0)
         mainapp.data_button_pressed()
 

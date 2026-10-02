@@ -22,12 +22,11 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from PyQt5.QtGui import QFont, QFontDatabase  # noqa: E402
-from PyQt5.QtWidgets import QApplication  # noqa: E402
-
-import open_phy  # noqa: E402
-from phy.gui import gui as phy_gui  # noqa: E402
-from phy.gui import qt as phy_qt  # noqa: E402
+import open_phy
+from phy.gui import gui as phy_gui
+from phy.gui import qt as phy_qt
+from PyQt5.QtGui import QFont, QFontDatabase
+from PyQt5.QtWidgets import QApplication
 
 FONT = "fa-solid-900.ttf"
 
@@ -46,13 +45,15 @@ def fresh_font_state(monkeypatch):
 
 
 def _fail_file_load(monkeypatch):
-    monkeypatch.setattr(QFontDatabase, "addApplicationFont",
-                        staticmethod(lambda path: -1))
+    monkeypatch.setattr(
+        QFontDatabase, "addApplicationFont", staticmethod(lambda path: -1)
+    )
 
 
 def _fail_data_load(monkeypatch):
-    monkeypatch.setattr(QFontDatabase, "addApplicationFontFromData",
-                        staticmethod(lambda data: -1))
+    monkeypatch.setattr(
+        QFontDatabase, "addApplicationFontFromData", staticmethod(lambda data: -1)
+    )
 
 
 def test_unpatched_phy_crashes_when_font_rejected(qapp, monkeypatch):
@@ -89,10 +90,12 @@ def test_id_ok_but_no_families_is_treated_as_failure(qapp, monkeypatch):
     """A valid id with an empty family list must not IndexError either."""
     _fail_file_load(monkeypatch)
     _fail_data_load(monkeypatch)
-    monkeypatch.setattr(QFontDatabase, "addApplicationFont",
-                        staticmethod(lambda path: 0))
-    monkeypatch.setattr(QFontDatabase, "applicationFontFamilies",
-                        staticmethod(lambda font_id: []))
+    monkeypatch.setattr(
+        QFontDatabase, "addApplicationFont", staticmethod(lambda path: 0)
+    )
+    monkeypatch.setattr(
+        QFontDatabase, "applicationFontFamilies", staticmethod(lambda font_id: [])
+    )
     open_phy._install_font_fallback()
     assert isinstance(phy_qt._load_font(FONT), QFont)
 
@@ -104,8 +107,11 @@ def test_missing_font_file_falls_back(qapp, monkeypatch):
 
 def test_result_is_cached_and_warns_once(qapp, monkeypatch, capsys):
     calls = []
-    monkeypatch.setattr(QFontDatabase, "addApplicationFont",
-                        staticmethod(lambda path: calls.append(path) or -1))
+    monkeypatch.setattr(
+        QFontDatabase,
+        "addApplicationFont",
+        staticmethod(lambda path: calls.append(path) or -1),
+    )
     _fail_data_load(monkeypatch)
     open_phy._install_font_fallback()
     first = phy_qt._load_font(FONT)

@@ -21,19 +21,18 @@ Run with:
 
 from __future__ import annotations
 
-import ast
-import re
-import sys
-import tempfile
 from pathlib import Path
 
 import pytest
 
 # open_phy.py imports phy at module scope, which is a heavy dependency these
 # tests do not need, so load just the helpers above main().
-_SRC = (Path(__file__).resolve().parent.parent
-        / "PythonScripts" / "open_phy.py").read_text()
-_BODY = _SRC.split("from phy.apps.template import template_gui", 1)[1].split("def main(")[0]
+_SRC = (
+    Path(__file__).resolve().parent.parent / "PythonScripts" / "open_phy.py"
+).read_text()
+_BODY = _SRC.split("from phy.apps.template import template_gui", 1)[1].split(
+    "def main("
+)[0]
 _NS: dict = {}
 exec(  # noqa: S102 - loading our own source, not user input
     "import ast, re, sys, tempfile\nfrom pathlib import Path\n" + _BODY, _NS
@@ -60,6 +59,7 @@ def write_params(tmp_path: Path, dat_path, extra: str = "") -> Path:
 
 # --- parsing --------------------------------------------------------------
 
+
 def test_reads_a_plain_string(tmp_path):
     p = write_params(tmp_path, "/mnt/cup/x/temp_wh.dat")
     assert _dat_paths(p.read_text()) == ["/mnt/cup/x/temp_wh.dat"]
@@ -84,6 +84,7 @@ def test_empty_string_dat_path():
 
 
 # --- relocation -----------------------------------------------------------
+
 
 def test_finds_raw_file_beside_params(tmp_path):
     (tmp_path / "temp_wh.dat").write_bytes(b"")
@@ -172,6 +173,7 @@ def test_macos_volumes_prefix(tmp_path):
 
 
 # --- end to end -----------------------------------------------------------
+
 
 def test_rewrites_unreachable_path_and_pins_dir_path(tmp_path):
     (tmp_path / "temp_wh.dat").write_bytes(b"")

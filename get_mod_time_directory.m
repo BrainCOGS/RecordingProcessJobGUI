@@ -34,7 +34,3 @@ folder_datetime = info(1).date;
 folder_time = folder_datetime(13:17);
 
 end
-
-
-
-

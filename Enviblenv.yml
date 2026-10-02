@@ -52,4 +52,4 @@ dependencies:
    - tqdm
    - easyqc
     - pip
-     - git+https://github.com/BrainCOGS/iblapps.git 
+     - git+https://github.com/BrainCOGS/iblapps.git

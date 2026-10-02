@@ -60,7 +60,7 @@ if nargin < 5
 end
 
 if nargin < 6
-   no_blobs = false; 
+   no_blobs = false;
 end
 
 %Remove blob fields from fetch
@@ -76,7 +76,7 @@ if no_blobs
         end
     end
 end
-            
+
 if ~isempty(extra_query)
     fields = [fields extra_query];
 end

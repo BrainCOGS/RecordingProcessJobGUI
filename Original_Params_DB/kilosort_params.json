@@ -8,7 +8,7 @@
  "momentum": [20, 400],
  "sigmaMask": 30,
  "ThPre": 8,
- "CAR": 1, 
+ "CAR": 1,
  "spkTh": -6,
  "reorder": 1,
  "nskip": 25,

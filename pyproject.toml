@@ -28,3 +28,57 @@ dependencies = [
 exclude-newer = "7 days"
 
 package = false
+preview-features = ["audit-command"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.ruff]
+# The scripts run on whatever Python uv provisions for them (PEP 723 headers
+# declare >=3.12), so target the oldest one in use rather than requires-python.
+target-version = "py312"
+
+[tool.ruff.lint]
+extend-select = [
+    "A",    # flake8-builtins: shadowing built-ins
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "T100", # leftover breakpoints / debugger calls
+    "B",    # flake8-bugbear
+    "SIM",  # flake8-simplify
+    "UP",   # pyupgrade
+    "C4",   # flake8-comprehensions
+]
+ignore = [
+    "N815",   # reference ignore: mixedCase class attributes
+    "A002",   # reference ignore: argument shadows a builtin
+    "N806",   # reference ignore: non-lowercase variable in a function
+    "E501",   # ruff format owns line length; the rest are long paths/URLs in strings
+    "BLE001", # the helper scripts deliberately catch broad exceptions to stay best-effort
+    "S110",   # same: advisory try/except/pass blocks must never abort a run
+]
+
+[tool.ruff.lint.per-file-ignores]
+# These scripts chdir / extend sys.path before importing their sibling helpers,
+# so the imports cannot move to the top of the file.
+"PythonScripts/read_params.py" = ["E402"]
+"PythonScripts/register_preparam_steps.py" = ["E402"]
+"PythonScripts/upload_params.py" = ["E402", "C408"]  # C408: dict(...) calls left as written
+# spikeglx and extract_data are imported but unused; they are left alone rather
+# than risk dropping an import that has side effects in the IBL environment.
+"PythonScripts/prepare_ephys_ibl_data.py" = ["F401", "RUF015"]  # RUF015: list(...)[0] raises IndexError when no file matches; next() would raise StopIteration
+"PythonScripts/iblapps_version.py" = ["PLW1510"]  # subprocess.run result is checked via returncode
+"PythonScripts/open_phy.py" = ["SIM103", "PIE810"]  # keep the explicit if/return and startswith chain as written
+"PythonScripts/tests/test_open_phy_cache_path.py" = ["ISC004"]  # implicit string concatenation in a list is intentional
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+addopts = ["-ra", "--showlocals", "--strict-config", "--strict-markers", "--import-mode=importlib"]
+xfail_strict = true
+log_level = "INFO"
+testpaths = ["tests"]
+filterwarnings = ["error"]

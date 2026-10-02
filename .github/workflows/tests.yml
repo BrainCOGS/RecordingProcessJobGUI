@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,6 +18,7 @@ jobs:
   python:
     name: Python ${{ matrix.python }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -36,6 +38,7 @@ jobs:
       - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
         with:
           python-version: ${{ matrix.python }}
+          enable-cache: true
 
       # PyQt5's wheels bundle Qt but link against the system GL, fontconfig
       # and glib, which a bare ubuntu image lacks (libGL.so.1 is the first to
@@ -62,6 +65,7 @@ jobs:
   matlab:
     name: MATLAB
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
@@ -77,3 +81,27 @@ jobs:
             addpath(pwd); addpath(fullfile(pwd, 'tests'));
             assertSuccess(runtests({'tests/TestBuildUvScriptCall.m', 'tests/TestOutputDirMatch.m'}));
             test_jsonencodepretty
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
+        with:
+          enable-cache: true
+
+      # Audits the locked tree against OSV and fails on any finding. `--locked`
+      # also fails if uv.lock is out of date with pyproject.toml.
+      #
+      # GHSA-h35f-9h28-mq5c (setuptools sdist MANIFEST.in bypass) is ignored on
+      # purpose: the fix is in setuptools 83, which removed pkg_resources, and
+      # datajoint<2 imports pkg_resources at module scope, so taking it breaks
+      # the helper scripts. The flaw is in building sdists, which this project
+      # does not do (package = false).
+      - name: Audit dependencies
+        run: uv audit --locked --ignore GHSA-h35f-9h28-mq5c

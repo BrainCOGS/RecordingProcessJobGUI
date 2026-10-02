@@ -34,7 +34,7 @@ props = mc.PropertyList;
 propNames = {props.Name};
 
 for i=1:length(app_fields)
-    
+
     idx_prop = find(matches(propNames,app_fields{i}));
     if ~isempty(idx_prop)
         access = props(idx_prop).SetAccess;
