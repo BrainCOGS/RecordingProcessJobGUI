@@ -5,8 +5,9 @@ description = "Python helper scripts for the RecordingProcessJobGUI MATLAB app"
 requires-python = ">=3.14"
 dependencies = [
     # datajoint 2.x renamed the config file to datajoint.json and ignores the
-    # dj_local_conf.json this repo ships, so it cannot connect. Stay on 0.14.x.
-    "datajoint<2.0",
+    # dj_local_conf.json this repo ships, so it cannot connect. 0.14.10 is the
+    # first 0.14 release without pkg_resources; pin it exactly.
+    "datajoint==0.14.10",
     "element-interface",
     "pandas",
     "scipy",
