@@ -7,7 +7,7 @@ dependencies:
   - pip:
     - scipy
     - pandas
-    - datajoint
+    - datajoint==0.14.10
     - phy --pre --upgrade
     - pip
       - git+https://github.com/datajoint/element-interface.git

@@ -12,7 +12,7 @@ dependencies:
    - colorlog
    - cython
    - dataclasses
-   - datajoint
+   - datajoint==0.14.10
    - flake8
    - globus-sdk
    - graphviz

@@ -100,11 +100,5 @@ jobs:
 
       # Audits the locked tree against OSV and fails on any finding. `--locked`
       # also fails if uv.lock is out of date with pyproject.toml.
-      #
-      # GHSA-h35f-9h28-mq5c (setuptools sdist MANIFEST.in bypass) is ignored on
-      # purpose: the fix is in setuptools 83, which removed pkg_resources, and
-      # datajoint<2 imports pkg_resources at module scope, so taking it breaks
-      # the helper scripts. The flaw is in building sdists, which this project
-      # does not do (package = false).
       - name: Audit dependencies
-        run: uv audit --locked --ignore GHSA-h35f-9h28-mq5c
+        run: uv audit --locked
