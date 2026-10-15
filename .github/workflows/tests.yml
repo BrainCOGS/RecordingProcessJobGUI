@@ -56,14 +56,19 @@ jobs:
         # (platformdirs>=4.12.2 registers a pytest plugin the old copy lacks).
         run: uv run --isolated --no-project --with phy --with pytest pytest PythonScripts/tests
 
+      # --isolated: the restored uv cache holds the script environments, and
+      # its key only has the minor Python version. When the runner image moves
+      # to a new patch release, those environments point at an interpreter
+      # that's gone (C:\hostedtoolcache\...\3.14.7\x64\python.exe), and on
+      # Windows uv reuses them anyway.
       - name: open_phy.py dat_path tests
-        run: uv run --script tests/test_open_phy_dat_path.py
+        run: uv run --isolated --script tests/test_open_phy_dat_path.py
 
       - name: iblapps_version.py tests
-        run: uv run --script tests/test_iblapps_version.py
+        run: uv run --isolated --script tests/test_iblapps_version.py
 
       - name: matlab_export.py tests
-        run: uv run --script tests/test_matlab_export.py
+        run: uv run --isolated --script tests/test_matlab_export.py
 
   matlab:
     name: MATLAB
