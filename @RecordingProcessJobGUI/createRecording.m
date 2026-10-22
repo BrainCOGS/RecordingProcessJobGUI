@@ -38,8 +38,9 @@ function createRecording(app, event)
 %   (app.PreParamSelectionTable / app.ParamSelectionTable and the fragment list
 %   boxes) is reset. On any error inside the transaction it is cancelled, so a
 %   failed insert never leaves a half-registered recording -- but the files copied
-%   to cup are NOT rolled back. A failed copy or insert is also reported to Slack
-%   through notifySlackJobFailure.
+%   to cup are NOT rolled back. Any failure -- reading the form and the DB before
+%   the copy, the copy itself, or the insert -- shows one error dialog, re-enables
+%   the button and is reported to Slack through notifySlackJobFailure.
 %
 %   Inputs:
 %       app (RecordingProcessJobGUI) - The GUI application object
@@ -66,83 +67,99 @@ function createRecording(app, event)
 
 updateBusyLabel(app, false);
 
-% Get default parameters record (or records)
-default_params_record = createDefaultParamsRecord(app);
+% Everything up to the copy reads the form and the DB; a failure here is
+% reported like the copy and the insert below, and frees the button again.
+try
+    % Get default parameters record (or records)
+    default_params_record = createDefaultParamsRecord(app);
 
-%Filter behavior session
-if app.IstherebehaviorSessionCheckBox.Value
-    behavior_session = app.BehaviorSessions( ...
-        matches(app.BehaviorSessions.session_name, app.BehaviorSessionDropDown.Value), :);
-    %Generate key for part table
-    key_part.subject_fullname    = behavior_session.subject_fullname{:};
-    user_id = behavior_session.user_id{:};
-    key_part.session_date        = behavior_session.session_date{:};
-    key_part.session_number      = behavior_session.session_number;
-    session_date = [key_part.session_date(1:4) key_part.session_date(6:7) key_part.session_date(9:10)];
+    %Filter behavior session
+    if app.IstherebehaviorSessionCheckBox.Value
+        behavior_session = app.BehaviorSessions( ...
+            matches(app.BehaviorSessions.session_name, app.BehaviorSessionDropDown.Value), :);
+        %Generate key for part table
+        key_part.subject_fullname    = behavior_session.subject_fullname{:};
+        user_id = behavior_session.user_id{:};
+        key_part.session_date        = behavior_session.session_date{:};
+        key_part.session_number      = behavior_session.session_number;
+        session_date = [key_part.session_date(1:4) key_part.session_date(6:7) key_part.session_date(9:10)];
 
-% If there is not associated behavior
-else
-    key_part.subject_fullname = app.RecordingSubjectDropDown.Value;
-    user_id = strsplit(key_part.subject_fullname,'_');
-    user_id = user_id{1};
-    rec_date                  = datestr(app.RecordingDateDatePicker.Value,'yyyy-mm-dd');
-    rec_time                  = app.RecordingDateTimePicker.Value;
-    hour_rec = hours(rec_time);
-    minutes_rec = minutes(rand()*60) ;
-    rec_time = datestr(hour_rec+minutes_rec,' HH:MM:SS');
+    % If there is not associated behavior
+    else
+        key_part.subject_fullname = app.RecordingSubjectDropDown.Value;
+        user_id = strsplit(key_part.subject_fullname,'_');
+        user_id = user_id{1};
+        rec_date                  = datestr(app.RecordingDateDatePicker.Value,'yyyy-mm-dd');
+        rec_time                  = app.RecordingDateTimePicker.Value;
+        hour_rec = hours(rec_time);
+        minutes_rec = minutes(rand()*60) ;
+        rec_time = datestr(hour_rec+minutes_rec,' HH:MM:SS');
 
-    key_part.recording_datetime = [rec_date rec_time];
+        key_part.recording_datetime = [rec_date rec_time];
     
-    %For unified path recording
-    rec_date2                 = datestr(app.RecordingDateDatePicker.Value,'yyyymmdd');
-    rec_time2 = datestr(hour_rec+minutes_rec,'_HHMMSS');
-    session_date = [rec_date2 rec_time2];
+        %For unified path recording
+        rec_date2                 = datestr(app.RecordingDateDatePicker.Value,'yyyymmdd');
+        rec_time2 = datestr(hour_rec+minutes_rec,'_HHMMSS');
+        session_date = [rec_date2 rec_time2];
+    end
+
+
+    % Add surgery if needed
+    surgery_info = fetch(action.Surgery & key_part);
+    if app.SurgeryCheckBox.Value && isempty(surgery_info)
+       addSurgeryData(app, key_part.subject_fullname, user_id, app.Configuration.RecordingModality);
+    end
+
+
+    % Generate key for recording table
+    key.recording_modality  = app.Configuration.RecordingModality;
+    key.location            = app.Configuration.System;
+
+
+    this_local_directory = app.RecordingDirectoryTable{...
+        matches(app.RecordingDirectoryTable.rec_dir_dropdown, app.RecordingDirectoryDropDown.Value), 'full_recording_directory'};
+    this_local_directory = this_local_directory{:};
+    %this_local_directory         = fullfile(app.Configuration.RecordingRootDirectory, app.RecordingDirectoryDropDown.Value);
+    last_folder             = strsplit(this_local_directory,filesep);
+    last_folder             = last_folder{end};
+    %key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, [session_date '_g' num2str(key_part.session_number)], last_folder);
+    %Slight difference if there is behavior or not how is saved directory
+    if app.IstherebehaviorSessionCheckBox.Value
+        key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, [session_date '_g' num2str(key_part.session_number)], last_folder);
+    else
+        key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, last_folder);
+    end
+    if ispc
+        key.local_directory     = strrep(this_local_directory,'\','/');
+        this_recording_directory = strrep(key.recording_directory,'/','\');
+    else
+        key.local_directory     = this_local_directory;
+        this_recording_directory = key.recording_directory;
+    end
+    % With new method we already copy recording so we skip status 0 & 1
+    key.status_recording_id = 2;
+
+
+    % What to tell Slack if the copy or the insert fails
+    slack_context = struct( ...
+        'system', key.location, ...
+        'recording_modality', key.recording_modality, ...
+        'subject_fullname', key_part.subject_fullname, ...
+        'local_directory', this_local_directory, ...
+        'recording_directory', key.recording_directory);
+catch err
+    notifySlackJobFailure('Recording preparation', struct( ...
+        'system', app.Configuration.System, ...
+        'recording_modality', app.Configuration.RecordingModality, ...
+        'recording_directory', app.RecordingDirectoryDropDown.Value), err);
+    uiconfirm(app.UIFigure,['Recording was not created ' err.message], ...
+        '', ...
+        'Options',{'OK'}, ...
+        'Icon','error');
+    event.Source.Enable = 'on';
+    updateBusyLabel(app, true);
+    return
 end
-
-
-% Add surgery if needed
-surgery_info = fetch(action.Surgery & key_part);
-if app.SurgeryCheckBox.Value && isempty(surgery_info)
-   addSurgeryData(app, key_part.subject_fullname, user_id, app.Configuration.RecordingModality);
-end
-
-
-% Generate key for recording table
-key.recording_modality  = app.Configuration.RecordingModality;
-key.location            = app.Configuration.System;
-
-
-this_local_directory = app.RecordingDirectoryTable{...
-    matches(app.RecordingDirectoryTable.rec_dir_dropdown, app.RecordingDirectoryDropDown.Value), 'full_recording_directory'};
-this_local_directory = this_local_directory{:};
-%this_local_directory         = fullfile(app.Configuration.RecordingRootDirectory, app.RecordingDirectoryDropDown.Value);
-last_folder             = strsplit(this_local_directory,filesep);
-last_folder             = last_folder{end};
-%key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, [session_date '_g' num2str(key_part.session_number)], last_folder);
-%Slight difference if there is behavior or not how is saved directory
-if app.IstherebehaviorSessionCheckBox.Value
-    key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, [session_date '_g' num2str(key_part.session_number)], last_folder);
-else
-    key.recording_directory = spec_fullfile('/', user_id, key_part.subject_fullname, session_date, last_folder);
-end
-if ispc
-    key.local_directory     = strrep(this_local_directory,'\','/');
-    this_recording_directory = strrep(key.recording_directory,'/','\');
-else
-    key.local_directory     = this_local_directory;
-    this_recording_directory = key.recording_directory;
-end
-% With new method we already copy recording so we skip status 0 & 1
-key.status_recording_id = 2;
-
-
-% What to tell Slack if the copy or the insert fails
-slack_context = struct( ...
-    'system', key.location, ...
-    'recording_modality', key.recording_modality, ...
-    'subject_fullname', key_part.subject_fullname, ...
-    'local_directory', this_local_directory, ...
-    'recording_directory', key.recording_directory);
 
 % Copy recording directory from local machine to cup
 try
@@ -150,7 +167,9 @@ try
     status = copyRecording(app, this_recording_directory, this_local_directory, key.recording_modality);
     close(progressdlg)
 catch err
-    status = -1;
+    if exist('progressdlg', 'var') && isvalid(progressdlg)
+        close(progressdlg)
+    end
     notifySlackJobFailure('Recording copy to cup', slack_context, err);
     uiconfirm(app.UIFigure,['Recording was not created ' err.message], ...
         '', ...
@@ -158,6 +177,8 @@ catch err
         'Icon','error');
     event.Source.Enable = 'on';
     updateBusyLabel(app, true);
+    %Already reported; the status == -1 branch below would report it again
+    return
 end
 %error(err.message);
 if status ~= -1
@@ -219,10 +240,8 @@ if status ~= -1
     
 else
     %copyRecording returned -1 without throwing, so there is no err to report
-    if ~exist('err', 'var')
-        notifySlackJobFailure('Recording copy to cup', slack_context, ...
-            'copyRecording returned -1');
-    end
+    notifySlackJobFailure('Recording copy to cup', slack_context, ...
+        'copyRecording returned -1');
     uiconfirm(app.UIFigure,'Recording was not created, copying the recording directory to cup failed', ...
         '', ...
         'Options',{'OK'}, ...
