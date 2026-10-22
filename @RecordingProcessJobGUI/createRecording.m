@@ -16,11 +16,12 @@ function createRecording(app, event)
 %       compacted to 'yyyymmdd' for the cup path.
 %     - Unchecked: subject comes from app.RecordingSubjectDropDown, user_id is the
 %       prefix of subject_fullname before the first '_', and the datetime is built
-%       from app.RecordingDateDatePicker (date) plus app.RecordingDateTimePicker
-%       (a uispinner holding an integer hour 0-24). A RANDOM number of minutes
-%       (rand()*60) is added to that hour to produce recording_datetime, so the
-%       key is unique per registration. The row goes into
-%       recording.RecordingRecordingSession instead.
+%       by buildRecordingDatetime from app.RecordingDateDatePicker (date) plus
+%       app.RecordingDateTimePicker (a uispinner holding an hour 0-24). A RANDOM
+%       number of minutes (rand()*60) is added to that hour to produce
+%       recording_datetime, so the key is unique per registration. An empty date
+%       picker or an hour outside 0-24 stops here with an error dialog. The row
+%       goes into recording.RecordingRecordingSession instead.
 %
 %   recording_directory (the cup-relative path) differs between the two:
 %     - with behavior:    /<user_id>/<subject_fullname>/<yyyymmdd>_g<session_number>/<last_folder>
@@ -57,7 +58,8 @@ function createRecording(app, event)
 %       - DataJoint tables: recording.Recording, recording.RecordingBehaviorSession,
 %         recording.RecordingRecordingSession, recording.DefaultParams,
 %         action.Surgery; dj.conn transaction
-%       - createDefaultParamsRecord, copyRecording, addSurgeryData, spec_fullfile,
+%       - createDefaultParamsRecord, buildRecordingDatetime, copyRecording,
+%         addSurgeryData, spec_fullfile,
 %         fillRecordingTable, fillRecordingSubjectRT, fillRecordingUserRT,
 %         updateBusyLabel, notifySlackJobFailure
 %       - ROBOCOPY (via copyRecording)
@@ -89,18 +91,20 @@ try
         key_part.subject_fullname = app.RecordingSubjectDropDown.Value;
         user_id = strsplit(key_part.subject_fullname,'_');
         user_id = user_id{1};
-        rec_date                  = datestr(app.RecordingDateDatePicker.Value,'yyyy-mm-dd');
-        rec_time                  = app.RecordingDateTimePicker.Value;
-        hour_rec = hours(rec_time);
-        minutes_rec = minutes(rand()*60) ;
-        rec_time = datestr(hour_rec+minutes_rec,' HH:MM:SS');
-
-        key_part.recording_datetime = [rec_date rec_time];
-    
-        %For unified path recording
-        rec_date2                 = datestr(app.RecordingDateDatePicker.Value,'yyyymmdd');
-        rec_time2 = datestr(hour_rec+minutes_rec,'_HHMMSS');
-        session_date = [rec_date2 rec_time2];
+        %An untouched date picker is NaT, which datestr can't format. A
+        %missing date is the user's to fix, so it is not reported to Slack.
+        try
+            [key_part.recording_datetime, session_date] = buildRecordingDatetime( ...
+                app.RecordingDateDatePicker.Value, app.RecordingDateTimePicker.Value, rand()*60);
+        catch err
+            uiconfirm(app.UIFigure,['Recording was not created: ' err.message], ...
+                'Recording date', ...
+                'Options',{'OK'}, ...
+                'Icon','error');
+            event.Source.Enable = 'on';
+            updateBusyLabel(app, true);
+            return
+        end
     end
 
 
