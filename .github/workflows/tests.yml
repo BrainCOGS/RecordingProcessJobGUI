@@ -89,7 +89,7 @@ jobs:
         with:
           command: >-
             addpath(pwd); addpath(fullfile(pwd, 'tests'));
-            assertSuccess(runtests({'tests/TestBuildUvScriptCall.m', 'tests/TestOutputDirMatch.m'}));
+            assertSuccess(runtests({'tests/TestBuildUvScriptCall.m', 'tests/TestOutputDirMatch.m', 'tests/TestSlackJobFailure.m'}));
             test_jsonencodepretty
 
   audit:

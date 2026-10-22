@@ -38,7 +38,8 @@ function createRecording(app, event)
 %   (app.PreParamSelectionTable / app.ParamSelectionTable and the fragment list
 %   boxes) is reset. On any error inside the transaction it is cancelled, so a
 %   failed insert never leaves a half-registered recording -- but the files copied
-%   to cup are NOT rolled back.
+%   to cup are NOT rolled back. A failed copy or insert is also reported to Slack
+%   through notifySlackJobFailure.
 %
 %   Inputs:
 %       app (RecordingProcessJobGUI) - The GUI application object
@@ -57,7 +58,7 @@ function createRecording(app, event)
 %         action.Surgery; dj.conn transaction
 %       - createDefaultParamsRecord, copyRecording, addSurgeryData, spec_fullfile,
 %         fillRecordingTable, fillRecordingSubjectRT, fillRecordingUserRT,
-%         updateBusyLabel
+%         updateBusyLabel, notifySlackJobFailure
 %       - ROBOCOPY (via copyRecording)
 %
 %   See also: createRecordingButton, createDefaultParamsRecord, copyRecording,
@@ -135,6 +136,14 @@ end
 key.status_recording_id = 2;
 
 
+% What to tell Slack if the copy or the insert fails
+slack_context = struct( ...
+    'system', key.location, ...
+    'recording_modality', key.recording_modality, ...
+    'subject_fullname', key_part.subject_fullname, ...
+    'local_directory', this_local_directory, ...
+    'recording_directory', key.recording_directory);
+
 % Copy recording directory from local machine to cup
 try
     progressdlg = uiprogressdlg(app.UIFigure, 'Message','Copying session to cup Data directory. Be patient, no progress shown', 'Indeterminate','on');
@@ -142,6 +151,7 @@ try
     close(progressdlg)
 catch err
     status = -1;
+    notifySlackJobFailure('Recording copy to cup', slack_context, err);
     uiconfirm(app.UIFigure,['Recording was not created ' err.message], ...
         '', ...
         'Options',{'OK'}, ...
@@ -197,6 +207,7 @@ if status ~= -1
         
     catch err
         conn.cancelTransaction
+        notifySlackJobFailure('Recording registration', slack_context, err);
         uiconfirm(app.UIFigure,['Recording was not created' err.message], ...
             '', ...
             'Options',{'OK'}, ...
@@ -208,6 +219,10 @@ if status ~= -1
     
 else
     %copyRecording returned -1 without throwing, so there is no err to report
+    if ~exist('err', 'var')
+        notifySlackJobFailure('Recording copy to cup', slack_context, ...
+            'copyRecording returned -1');
+    end
     uiconfirm(app.UIFigure,'Recording was not created, copying the recording directory to cup failed', ...
         '', ...
         'Options',{'OK'}, ...
