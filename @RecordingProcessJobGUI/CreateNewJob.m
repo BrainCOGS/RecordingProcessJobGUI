@@ -24,7 +24,8 @@ function CreateNewJob(app, event)
 %       an imaging clone gets a Processing row but no ProcessingImagingParams row.
 %   On success the job table and its filter dropdowns are refreshed and the GUI
 %   returns to the "Manage Processing Jobs" tab. On failure the transaction is
-%   cancelled, so a job can never be left without its params record.
+%   cancelled, so a job can never be left without its params record, and the
+%   failure is reported to Slack through notifySlackJobFailure.
 %
 %   Inputs:
 %       app (RecordingProcessJobGUI) - The application object. Reads
@@ -42,7 +43,7 @@ function CreateNewJob(app, event)
 %   Dependencies:
 %       - recording_process.Processing, recording_process.ProcessingEphysParams
 %       - fillJobTable, fillRecordingSubject, fillRecordingUser
-%       - spec_fullfile, updateBusyLabel
+%       - spec_fullfile, updateBusyLabel, notifySlackJobFailure
 %       - dj.conn (transaction handling)
 %
 %   See also: RunJobDiffParams, RerunJob, fillParams2Select, fillJobTable
@@ -102,6 +103,10 @@ try
 
 catch err
     conn.cancelTransaction
+    notifySlackJobFailure('Job creation', struct( ...
+        'system', app.Configuration.System, ...
+        'source_job_id', app.jobid_to_copy.job_id, ...
+        'recording_modality', modality), err);
     uiconfirm(app.UIFigure,['Job was not created ' err.message], ...
     '', ...
     'Options',{'OK'}, ...
