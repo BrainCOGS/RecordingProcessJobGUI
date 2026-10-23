@@ -52,7 +52,7 @@ uv run --script tests/test_open_phy_dat_path.py
 The MATLAB suites are `matlab.unittest` classes and run through `runtests`:
 
 ```bash
-matlab -batch "addpath(pwd); runtests({'tests/TestBuildUvScriptCall.m','tests/TestOutputDirMatch.m','tests/TestSlackJobFailure.m'})"
+matlab -batch "addpath(pwd); runtests({'tests/TestBuildUvScriptCall.m','tests/TestOutputDirMatch.m','tests/TestSlackJobFailure.m', 'tests/TestBuildRecordingDatetime.m'})"
 ```
 
 `tests/test_jsonencodepretty.m` is a plain script with bare asserts rather than

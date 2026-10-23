@@ -13,7 +13,7 @@ uv run --no-cache --script tests/test_iblapps_version.py
 uv run --no-cache --script tests/test_matlab_export.py
 ```
 
-MATLAB tests: `runtests({'tests/TestBuildUvScriptCall.m', 'tests/TestOutputDirMatch.m', 'tests/TestSlackJobFailure.m'})`
+MATLAB tests: `runtests({'tests/TestBuildUvScriptCall.m', 'tests/TestOutputDirMatch.m', 'tests/TestSlackJobFailure.m', 'tests/TestBuildRecordingDatetime.m'})`
 with the repo on the path. CI runs Python on ubuntu and windows, because rigs run
 Windows and `open_phy.py` handles UNC and long paths.
 

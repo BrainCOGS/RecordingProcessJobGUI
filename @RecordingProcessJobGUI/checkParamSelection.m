@@ -64,7 +64,7 @@ if ~app.SamePreParamListRecordingCheckBox.Value && ~app.SameParamsRecordingCheck
     end
 end
 
-createRecording(app);
+createRecording(app, event);
     
     
     
