@@ -19,7 +19,8 @@ function RerunJob(app, event)
 %
 %   On success the transaction is committed, the user is notified, and the job
 %   table plus its user/subject filter dropdowns are reloaded. On any failure the
-%   transaction is cancelled, so the status and the log row can never disagree.
+%   transaction is cancelled, so the status and the log row can never disagree,
+%   and the failure is reported to Slack through notifySlackJobFailure.
 %
 %   Inputs:
 %       app (RecordingProcessJobGUI) - The application object
@@ -33,7 +34,7 @@ function RerunJob(app, event)
 %   Dependencies:
 %       - recording_process.Processing, recording_process.LogStatus
 %       - fillJobTable, fillRecordingSubject, fillRecordingUser
-%       - dj.conn (transaction handling)
+%       - dj.conn (transaction handling), notifySlackJobFailure
 %
 %   See also: jobTableSelected, RunJobDiffParams, CreateNewJob, fillJobStatusTable
 
@@ -69,6 +70,9 @@ try
     
 catch err
     conn.cancelTransaction
+    notifySlackJobFailure('Job rerun', struct( ...
+        'system', app.Configuration.System, ...
+        'job_id', job_id), err);
     uiconfirm(app.UIFigure,['Rerun of job failed ' err.message], ...
         '', ...
         'Options',{'OK'}, ...
