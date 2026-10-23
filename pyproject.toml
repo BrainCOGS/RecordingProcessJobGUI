@@ -29,8 +29,11 @@ dependencies = [
 exclude-newer = "7 days"
 # Pillow 13.0.0 (uploaded 2026-10-16) fixes the TiffDecode / multi-frame loader
 # advisories (GHSA-c6hw-5grf-ff96, GHSA-q45j-58j2-45rg, GHSA-v9pv-5gc8-w2m6, ...)
-# that fail `uv audit`. Taken before the week is up; drop this once it is older.
-exclude-newer-package = { pillow = "2026-10-17T00:00:00Z" }
+# that fail `uv audit`. Taken before the week is up; drop each entry once that
+# release is older than the window.
+# certifi 2026.10.19 (uploaded 2026-10-20) drops the emSign roots whose
+# intermediate keys were compromised (PYSEC-2026-4320). Same reasoning.
+exclude-newer-package = { pillow = "2026-10-17T00:00:00Z", certifi = "2026-10-21T00:00:00Z" }
 
 package = false
 preview-features = ["audit-command"]
