@@ -27,6 +27,10 @@ dependencies = [
 #   uv lock --exclude-newer <a timestamp after that upload>
 # or add a scoped exemption via `exclude-newer-package`.
 exclude-newer = "7 days"
+# Pillow 13.0.0 (uploaded 2026-10-16) fixes the TiffDecode / multi-frame loader
+# advisories (GHSA-c6hw-5grf-ff96, GHSA-q45j-58j2-45rg, GHSA-v9pv-5gc8-w2m6, ...)
+# that fail `uv audit`. Taken before the week is up; drop this once it is older.
+exclude-newer-package = { pillow = "2026-10-17T00:00:00Z" }
 
 package = false
 preview-features = ["audit-command"]
