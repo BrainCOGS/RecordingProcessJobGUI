@@ -2,12 +2,11 @@ name: EnvAutoPipeGUI
 channels:
   - defaults
 dependencies:
-  - python=3.9
+  - python=3.12
   - pip
   - pip:
     - scipy
     - pandas
     - datajoint==0.14.10
-    - phy --pre --upgrade
-    - pip
-      - git+https://github.com/datajoint/element-interface.git
+    - phy
+    - git+https://github.com/datajoint/element-interface.git
