@@ -11,9 +11,9 @@ After a recording finishes on the rig, a technician:
 
 1. **Registers the recording** — picks the recording directory found under the
    configured root, optionally links it to the behavior session it belongs to,
-   and presses Create. The GUI ROBOCOPYs the raw data from the rig's local disk
-   to cup and inserts `recording.Recording` (plus its session part-table and
-   default params) in one transaction.
+   and presses Create. Robocopy transfers the raw data to cup and deletes each
+   local file after copying it. The GUI then inserts `recording.Recording`
+   (plus its session part-table and default params) in one transaction.
 2. **Chooses parameters** — assigns a pre-processing step list and a processing
    paramset to each **fragment** of the recording (a probe for
    electrophysiology, a field-of-view for imaging), either per fragment or the
@@ -97,9 +97,9 @@ A secondary **surgery figure** (`createComponentsSurgeryFigure`, `addSurgeryData
 │
 │   Tab 1 — Add Recording
 ├── createRecordingButton.m           Create button → validate, then createRecording
-├── createRecording.m                 Copy to cup and insert recording.Recording (transaction)
+├── createRecording.m                 Move files to cup and insert recording.Recording (transaction)
 ├── createDefaultParamsRecord.m       Build the recording.DefaultParams record(s)
-├── copyRecording.m                   ROBOCOPY the local directory to cup
+├── copyRecording.m                   Move local recording files to cup with Robocopy
 ├── checkLocaldirSessionMatch.m       Ask whether the local dir matches the session
 ├── checkBoxSessionRecording.m        "Is there a behavior session" toggle
 ├── DefaultParamsCheckBoxToggle.m     Default-parameters toggle
@@ -225,7 +225,7 @@ modality.
   `open_ibl_atlas.py` installs iblapps straight from upstream, so there is no
   in-tree copy to keep in sync.
 - **`dirwalk/`** — recursive recording-directory discovery.
-- **ROBOCOPY** — copying recordings to cup (Windows).
+- **ROBOCOPY** — moving recording files to cup (Windows).
 - **Repo-root helpers** — `fetchDataDJTable`, `fetch_table_except`,
   `convertTable2Categorical`, `loadJSONfile`, `saveJSONfile`, `catstruct`,
   `copy_gui_vars` / `load_gui_vars`, `find_datestr_recording_directory`,

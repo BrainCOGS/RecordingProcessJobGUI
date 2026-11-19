@@ -1,6 +1,6 @@
 
 function createRecording(app, event)
-%CREATERECORDING Copy a recording to cup and insert it into recording.Recording
+%CREATERECORDING Move recording files to cup and insert the recording into recording.Recording
 %
 %   The centerpiece of the "Add Recording" flow. Assembles the recording.Recording
 %   key from the Tab 1 form, ROBOCOPYs the local data directory to cup, and then
@@ -30,7 +30,7 @@ function createRecording(app, event)
 %   is stored with forward slashes; the Windows-separator form is what is handed to
 %   copyRecording.
 %
-%   status_recording_id is set to 2 directly: because this method already copies the
+%   status_recording_id is set to 2 directly: because this method already moves the
 %   data to cup itself, statuses 0 (new) and 1 (copying) are skipped.
 %
 %   If app.SurgeryCheckBox is set and action.Surgery has no entry for the subject,
@@ -38,8 +38,8 @@ function createRecording(app, event)
 %   Recording Table tab is refreshed and selected, and the param selection state
 %   (app.PreParamSelectionTable / app.ParamSelectionTable and the fragment list
 %   boxes) is reset. On any error inside the transaction it is cancelled, so a
-%   failed insert never leaves a half-registered recording -- but the files copied
-%   to cup are NOT rolled back. Any failure -- reading the form and the DB before
+%   failed insert never leaves a half-registered recording. Files already moved
+%   remain on cup. Any failure -- reading the form and the DB before
 %   the copy, the copy itself, or the insert -- shows one error dialog, re-enables
 %   the button and is reported to Slack through notifySlackJobFailure.
 %
@@ -52,7 +52,7 @@ function createRecording(app, event)
 %   Outputs:
 %       None - Inserts recording.Recording, one of
 %              recording.RecordingBehaviorSession / RecordingRecordingSession,
-%              and recording.DefaultParams; copies the data directory to cup
+%              and recording.DefaultParams; moves recording files to cup
 %
 %   Dependencies:
 %       - DataJoint tables: recording.Recording, recording.RecordingBehaviorSession,
@@ -140,7 +140,7 @@ try
         key.local_directory     = this_local_directory;
         this_recording_directory = key.recording_directory;
     end
-    % With new method we already copy recording so we skip status 0 & 1
+    % The GUI transfers the files before registration, skipping status 0 & 1.
     key.status_recording_id = 2;
 
 
@@ -165,9 +165,9 @@ catch err
     return
 end
 
-% Copy recording directory from local machine to cup
+% Move recording files from the local machine to cup
 try
-    progressdlg = uiprogressdlg(app.UIFigure, 'Message','Copying session to cup Data directory. Be patient, no progress shown', 'Indeterminate','on');
+    progressdlg = uiprogressdlg(app.UIFigure, 'Message','Moving session files to cup. Local files are removed after copying.', 'Indeterminate','on');
     status = copyRecording(app, this_recording_directory, this_local_directory, key.recording_modality);
     close(progressdlg)
 catch err
@@ -246,7 +246,7 @@ else
     %copyRecording returned -1 without throwing, so there is no err to report
     notifySlackJobFailure('Recording copy to cup', slack_context, ...
         'copyRecording returned -1');
-    uiconfirm(app.UIFigure,'Recording was not created, copying the recording directory to cup failed', ...
+    uiconfirm(app.UIFigure,'Recording was not created because the move to cup failed', ...
         '', ...
         'Options',{'OK'}, ...
         'Icon','error');
